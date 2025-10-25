@@ -12,52 +12,17 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  detect-changes:
+  build-and-push:
     runs-on: ubuntu-latest
-    outputs:
-      api: ${{ steps.changes.outputs.api }}
-      platform: ${{ steps.changes.outputs.platform }}
-      admin: ${{ steps.changes.outputs.admin }}
-      any: ${{ steps.changes.outputs.any }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Check for file changes
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            api:
-              - 'apps/api/**'
-              - 'packages/core/**'
-              - 'pyproject.toml'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-            platform:
-              - 'apps/platform/**'
-              - 'packages/core/**'
-              - 'packages/ui/**'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-            admin:
-              - 'apps/admin/**'
-              - 'packages/core/**'
-              - 'packages/ui/**'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-
-  build-api:
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.api == 'true'
     permissions:
       contents: read
       packages: write
+
+    strategy:
+      matrix:
+        app: [api, platform, admin]
+      fail-fast: false
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.app }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -90,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/api/Dockerfile
+          file: ./apps/${{ matrix.app }}/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -99,115 +64,3 @@ jobs:
           platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
           load: ${{ github.event_name == 'pull_request' }}
           no-cache: ${{ contains(github.event.head_commit.message, '[no-cache]') }}
-
-  build-platform:
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.platform == 'true'
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/platform
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/platform/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          no-cache: ${{ contains(github.event.head_commit.message, '[no-cache]') }}
-
-  build-admin:
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.admin == 'true'
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/admin
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/admin/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          no-cache: ${{ contains(github.event.head_commit.message, '[no-cache]') }}
-
-  summary:
-    runs-on: ubuntu-latest
-    needs: [detect-changes, build-api, build-platform, build-admin]
-    if: always()
-    steps:
-      - name: Build Summary
-        run: |
-          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "| App | Changed | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-----|---------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| API | ${{ needs.detect-changes.outputs.api }} | ${{ needs.build-api.result == 'success' && '✅ Success' || needs.build-api.result == 'failure' && '❌ Failed' || needs.build-api.result == 'skipped' && '⏭️ Skipped' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Platform | ${{ needs.detect-changes.outputs.platform }} | ${{ needs.build-platform.result == 'success' && '✅ Success' || needs.build-platform.result == 'failure' && '❌ Failed' || needs.build-platform.result == 'skipped' && '⏭️ Skipped' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Admin | ${{ needs.detect-changes.outputs.admin }} | ${{ needs.build-admin.result == 'success' && '✅ Success' || needs.build-admin.result == 'failure' && '❌ Failed' || needs.build-admin.result == 'skipped' && '⏭️ Skipped' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
