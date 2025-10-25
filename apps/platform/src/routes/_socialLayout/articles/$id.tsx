@@ -7,7 +7,9 @@ import { Header } from "../../../components/header";
 import { useArticle } from "../../../features/articles/hooks/useArticle";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { PostCardReactions } from "../../../features/posts/components/postCardReactions";
+import { RepliesList } from "../../../features/posts/components/RepliesList";
 import { ReplyForm } from "../../../features/posts/components/replyForm";
+import { usePosts } from "../../../features/posts/hooks/usePosts";
 
 export const Route = createFileRoute("/_socialLayout/articles/$id")({
 	component: RouteComponent,
@@ -18,6 +20,9 @@ function RouteComponent() {
 	const { article, isLoading } = useArticle(id);
 	const { account } = useAccount();
 	const [showCommentForm, setShowCommentForm] = useState(false);
+	const { posts } = usePosts({
+		parentId: id,
+	});
 
 	if (isLoading) return <div>Loading...</div>;
 
@@ -35,19 +40,19 @@ function RouteComponent() {
 				{article && (
 					<>
 						<section className="flex gap-4 items-center mt-6 pt-4 border-t border-border">
-							<PostCardReactions post={article} />
-							<div className="flex items-center gap-2 text-sm">
-								<MessageCircle size={18} />
-								<div>{article.comment_count}</div>
-							</div>
 							<Button
 								size="sm"
 								variant="secondary"
 								onClick={() => setShowCommentForm(!showCommentForm)}
 								disabled={!account}
 							>
-								{showCommentForm ? "Cancel" : "Comment"}
+								{showCommentForm ? "Cancel" : "Reply"}
 							</Button>
+							<PostCardReactions post={article} />
+							<div className="flex items-center gap-2 text-sm">
+								<MessageCircle size={18} />
+								<div>{article.comment_count}</div>
+							</div>
 						</section>
 
 						{showCommentForm && (
@@ -59,6 +64,8 @@ function RouteComponent() {
 					</>
 				)}
 			</div>
+
+			<RepliesList posts={posts} />
 		</main>
 	);
 }

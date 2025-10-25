@@ -8,385 +8,385 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as SocialLayoutRouteImport } from './routes/_socialLayout'
-import { Route as LearningLayoutRouteImport } from './routes/_learningLayout'
-import { Route as SocialLayoutIndexRouteImport } from './routes/_socialLayout/index'
-import { Route as SocialLayoutEditProfileRouteImport } from './routes/_socialLayout/edit-profile'
-import { Route as SocialLayoutAboutRouteImport } from './routes/_socialLayout/about'
-import { Route as SocialLayoutUsernameRouteImport } from './routes/_socialLayout/$username'
-import { Route as SocialLayoutNotificationsIndexRouteImport } from './routes/_socialLayout/notifications/index'
-import { Route as SocialLayoutCoursesIndexRouteImport } from './routes/_socialLayout/courses/index'
-import { Route as SocialLayoutArticlesIndexRouteImport } from './routes/_socialLayout/articles/index'
-import { Route as SocialLayoutPostsIdRouteImport } from './routes/_socialLayout/posts/$id'
-import { Route as SocialLayoutNotificationsIdRouteImport } from './routes/_socialLayout/notifications/$id'
-import { Route as SocialLayoutCoursesIdRouteImport } from './routes/_socialLayout/courses/$id'
-import { Route as SocialLayoutArticlesIdRouteImport } from './routes/_socialLayout/articles/$id'
-import { Route as LearningLayoutLessonsIdRouteImport } from './routes/_learningLayout/lessons/$id'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as RegisterRouteImport } from "./routes/register";
+import { Route as LoginRouteImport } from "./routes/login";
+import { Route as SocialLayoutRouteImport } from "./routes/_socialLayout";
+import { Route as LearningLayoutRouteImport } from "./routes/_learningLayout";
+import { Route as SocialLayoutIndexRouteImport } from "./routes/_socialLayout/index";
+import { Route as SocialLayoutEditProfileRouteImport } from "./routes/_socialLayout/edit-profile";
+import { Route as SocialLayoutAboutRouteImport } from "./routes/_socialLayout/about";
+import { Route as SocialLayoutUsernameRouteImport } from "./routes/_socialLayout/$username";
+import { Route as SocialLayoutNotificationsIndexRouteImport } from "./routes/_socialLayout/notifications/index";
+import { Route as SocialLayoutCoursesIndexRouteImport } from "./routes/_socialLayout/courses/index";
+import { Route as SocialLayoutArticlesIndexRouteImport } from "./routes/_socialLayout/articles/index";
+import { Route as SocialLayoutPostsIdRouteImport } from "./routes/_socialLayout/posts/$id";
+import { Route as SocialLayoutNotificationsIdRouteImport } from "./routes/_socialLayout/notifications/$id";
+import { Route as SocialLayoutCoursesIdRouteImport } from "./routes/_socialLayout/courses/$id";
+import { Route as SocialLayoutArticlesIdRouteImport } from "./routes/_socialLayout/articles/$id";
+import { Route as LearningLayoutLessonsIdRouteImport } from "./routes/_learningLayout/lessons/$id";
 
 const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/register",
+	path: "/register",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/login",
+	path: "/login",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const SocialLayoutRoute = SocialLayoutRouteImport.update({
-  id: '/_socialLayout',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/_socialLayout",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const LearningLayoutRoute = LearningLayoutRouteImport.update({
-  id: '/_learningLayout',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/_learningLayout",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const SocialLayoutIndexRoute = SocialLayoutIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutEditProfileRoute = SocialLayoutEditProfileRouteImport.update({
-  id: '/edit-profile',
-  path: '/edit-profile',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/edit-profile",
+	path: "/edit-profile",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutAboutRoute = SocialLayoutAboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/about",
+	path: "/about",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutUsernameRoute = SocialLayoutUsernameRouteImport.update({
-  id: '/$username',
-  path: '/$username',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/$username",
+	path: "/$username",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutNotificationsIndexRoute =
-  SocialLayoutNotificationsIndexRouteImport.update({
-    id: '/notifications/',
-    path: '/notifications/',
-    getParentRoute: () => SocialLayoutRoute,
-  } as any)
+	SocialLayoutNotificationsIndexRouteImport.update({
+		id: "/notifications/",
+		path: "/notifications/",
+		getParentRoute: () => SocialLayoutRoute,
+	} as any);
 const SocialLayoutCoursesIndexRoute =
-  SocialLayoutCoursesIndexRouteImport.update({
-    id: '/courses/',
-    path: '/courses/',
-    getParentRoute: () => SocialLayoutRoute,
-  } as any)
+	SocialLayoutCoursesIndexRouteImport.update({
+		id: "/courses/",
+		path: "/courses/",
+		getParentRoute: () => SocialLayoutRoute,
+	} as any);
 const SocialLayoutArticlesIndexRoute =
-  SocialLayoutArticlesIndexRouteImport.update({
-    id: '/articles/',
-    path: '/articles/',
-    getParentRoute: () => SocialLayoutRoute,
-  } as any)
+	SocialLayoutArticlesIndexRouteImport.update({
+		id: "/articles/",
+		path: "/articles/",
+		getParentRoute: () => SocialLayoutRoute,
+	} as any);
 const SocialLayoutPostsIdRoute = SocialLayoutPostsIdRouteImport.update({
-  id: '/posts/$id',
-  path: '/posts/$id',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/posts/$id",
+	path: "/posts/$id",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutNotificationsIdRoute =
-  SocialLayoutNotificationsIdRouteImport.update({
-    id: '/notifications/$id',
-    path: '/notifications/$id',
-    getParentRoute: () => SocialLayoutRoute,
-  } as any)
+	SocialLayoutNotificationsIdRouteImport.update({
+		id: "/notifications/$id",
+		path: "/notifications/$id",
+		getParentRoute: () => SocialLayoutRoute,
+	} as any);
 const SocialLayoutCoursesIdRoute = SocialLayoutCoursesIdRouteImport.update({
-  id: '/courses/$id',
-  path: '/courses/$id',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/courses/$id",
+	path: "/courses/$id",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const SocialLayoutArticlesIdRoute = SocialLayoutArticlesIdRouteImport.update({
-  id: '/articles/$id',
-  path: '/articles/$id',
-  getParentRoute: () => SocialLayoutRoute,
-} as any)
+	id: "/articles/$id",
+	path: "/articles/$id",
+	getParentRoute: () => SocialLayoutRoute,
+} as any);
 const LearningLayoutLessonsIdRoute = LearningLayoutLessonsIdRouteImport.update({
-  id: '/lessons/$id',
-  path: '/lessons/$id',
-  getParentRoute: () => LearningLayoutRoute,
-} as any)
+	id: "/lessons/$id",
+	path: "/lessons/$id",
+	getParentRoute: () => LearningLayoutRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/$username': typeof SocialLayoutUsernameRoute
-  '/about': typeof SocialLayoutAboutRoute
-  '/edit-profile': typeof SocialLayoutEditProfileRoute
-  '/': typeof SocialLayoutIndexRoute
-  '/lessons/$id': typeof LearningLayoutLessonsIdRoute
-  '/articles/$id': typeof SocialLayoutArticlesIdRoute
-  '/courses/$id': typeof SocialLayoutCoursesIdRoute
-  '/notifications/$id': typeof SocialLayoutNotificationsIdRoute
-  '/posts/$id': typeof SocialLayoutPostsIdRoute
-  '/articles': typeof SocialLayoutArticlesIndexRoute
-  '/courses': typeof SocialLayoutCoursesIndexRoute
-  '/notifications': typeof SocialLayoutNotificationsIndexRoute
+	"/login": typeof LoginRoute;
+	"/register": typeof RegisterRoute;
+	"/$username": typeof SocialLayoutUsernameRoute;
+	"/about": typeof SocialLayoutAboutRoute;
+	"/edit-profile": typeof SocialLayoutEditProfileRoute;
+	"/": typeof SocialLayoutIndexRoute;
+	"/lessons/$id": typeof LearningLayoutLessonsIdRoute;
+	"/articles/$id": typeof SocialLayoutArticlesIdRoute;
+	"/courses/$id": typeof SocialLayoutCoursesIdRoute;
+	"/notifications/$id": typeof SocialLayoutNotificationsIdRoute;
+	"/posts/$id": typeof SocialLayoutPostsIdRoute;
+	"/articles": typeof SocialLayoutArticlesIndexRoute;
+	"/courses": typeof SocialLayoutCoursesIndexRoute;
+	"/notifications": typeof SocialLayoutNotificationsIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/$username': typeof SocialLayoutUsernameRoute
-  '/about': typeof SocialLayoutAboutRoute
-  '/edit-profile': typeof SocialLayoutEditProfileRoute
-  '/': typeof SocialLayoutIndexRoute
-  '/lessons/$id': typeof LearningLayoutLessonsIdRoute
-  '/articles/$id': typeof SocialLayoutArticlesIdRoute
-  '/courses/$id': typeof SocialLayoutCoursesIdRoute
-  '/notifications/$id': typeof SocialLayoutNotificationsIdRoute
-  '/posts/$id': typeof SocialLayoutPostsIdRoute
-  '/articles': typeof SocialLayoutArticlesIndexRoute
-  '/courses': typeof SocialLayoutCoursesIndexRoute
-  '/notifications': typeof SocialLayoutNotificationsIndexRoute
+	"/login": typeof LoginRoute;
+	"/register": typeof RegisterRoute;
+	"/$username": typeof SocialLayoutUsernameRoute;
+	"/about": typeof SocialLayoutAboutRoute;
+	"/edit-profile": typeof SocialLayoutEditProfileRoute;
+	"/": typeof SocialLayoutIndexRoute;
+	"/lessons/$id": typeof LearningLayoutLessonsIdRoute;
+	"/articles/$id": typeof SocialLayoutArticlesIdRoute;
+	"/courses/$id": typeof SocialLayoutCoursesIdRoute;
+	"/notifications/$id": typeof SocialLayoutNotificationsIdRoute;
+	"/posts/$id": typeof SocialLayoutPostsIdRoute;
+	"/articles": typeof SocialLayoutArticlesIndexRoute;
+	"/courses": typeof SocialLayoutCoursesIndexRoute;
+	"/notifications": typeof SocialLayoutNotificationsIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/_learningLayout': typeof LearningLayoutRouteWithChildren
-  '/_socialLayout': typeof SocialLayoutRouteWithChildren
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/_socialLayout/$username': typeof SocialLayoutUsernameRoute
-  '/_socialLayout/about': typeof SocialLayoutAboutRoute
-  '/_socialLayout/edit-profile': typeof SocialLayoutEditProfileRoute
-  '/_socialLayout/': typeof SocialLayoutIndexRoute
-  '/_learningLayout/lessons/$id': typeof LearningLayoutLessonsIdRoute
-  '/_socialLayout/articles/$id': typeof SocialLayoutArticlesIdRoute
-  '/_socialLayout/courses/$id': typeof SocialLayoutCoursesIdRoute
-  '/_socialLayout/notifications/$id': typeof SocialLayoutNotificationsIdRoute
-  '/_socialLayout/posts/$id': typeof SocialLayoutPostsIdRoute
-  '/_socialLayout/articles/': typeof SocialLayoutArticlesIndexRoute
-  '/_socialLayout/courses/': typeof SocialLayoutCoursesIndexRoute
-  '/_socialLayout/notifications/': typeof SocialLayoutNotificationsIndexRoute
+	__root__: typeof rootRouteImport;
+	"/_learningLayout": typeof LearningLayoutRouteWithChildren;
+	"/_socialLayout": typeof SocialLayoutRouteWithChildren;
+	"/login": typeof LoginRoute;
+	"/register": typeof RegisterRoute;
+	"/_socialLayout/$username": typeof SocialLayoutUsernameRoute;
+	"/_socialLayout/about": typeof SocialLayoutAboutRoute;
+	"/_socialLayout/edit-profile": typeof SocialLayoutEditProfileRoute;
+	"/_socialLayout/": typeof SocialLayoutIndexRoute;
+	"/_learningLayout/lessons/$id": typeof LearningLayoutLessonsIdRoute;
+	"/_socialLayout/articles/$id": typeof SocialLayoutArticlesIdRoute;
+	"/_socialLayout/courses/$id": typeof SocialLayoutCoursesIdRoute;
+	"/_socialLayout/notifications/$id": typeof SocialLayoutNotificationsIdRoute;
+	"/_socialLayout/posts/$id": typeof SocialLayoutPostsIdRoute;
+	"/_socialLayout/articles/": typeof SocialLayoutArticlesIndexRoute;
+	"/_socialLayout/courses/": typeof SocialLayoutCoursesIndexRoute;
+	"/_socialLayout/notifications/": typeof SocialLayoutNotificationsIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/login'
-    | '/register'
-    | '/$username'
-    | '/about'
-    | '/edit-profile'
-    | '/'
-    | '/lessons/$id'
-    | '/articles/$id'
-    | '/courses/$id'
-    | '/notifications/$id'
-    | '/posts/$id'
-    | '/articles'
-    | '/courses'
-    | '/notifications'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/login'
-    | '/register'
-    | '/$username'
-    | '/about'
-    | '/edit-profile'
-    | '/'
-    | '/lessons/$id'
-    | '/articles/$id'
-    | '/courses/$id'
-    | '/notifications/$id'
-    | '/posts/$id'
-    | '/articles'
-    | '/courses'
-    | '/notifications'
-  id:
-    | '__root__'
-    | '/_learningLayout'
-    | '/_socialLayout'
-    | '/login'
-    | '/register'
-    | '/_socialLayout/$username'
-    | '/_socialLayout/about'
-    | '/_socialLayout/edit-profile'
-    | '/_socialLayout/'
-    | '/_learningLayout/lessons/$id'
-    | '/_socialLayout/articles/$id'
-    | '/_socialLayout/courses/$id'
-    | '/_socialLayout/notifications/$id'
-    | '/_socialLayout/posts/$id'
-    | '/_socialLayout/articles/'
-    | '/_socialLayout/courses/'
-    | '/_socialLayout/notifications/'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths:
+		| "/login"
+		| "/register"
+		| "/$username"
+		| "/about"
+		| "/edit-profile"
+		| "/"
+		| "/lessons/$id"
+		| "/articles/$id"
+		| "/courses/$id"
+		| "/notifications/$id"
+		| "/posts/$id"
+		| "/articles"
+		| "/courses"
+		| "/notifications";
+	fileRoutesByTo: FileRoutesByTo;
+	to:
+		| "/login"
+		| "/register"
+		| "/$username"
+		| "/about"
+		| "/edit-profile"
+		| "/"
+		| "/lessons/$id"
+		| "/articles/$id"
+		| "/courses/$id"
+		| "/notifications/$id"
+		| "/posts/$id"
+		| "/articles"
+		| "/courses"
+		| "/notifications";
+	id:
+		| "__root__"
+		| "/_learningLayout"
+		| "/_socialLayout"
+		| "/login"
+		| "/register"
+		| "/_socialLayout/$username"
+		| "/_socialLayout/about"
+		| "/_socialLayout/edit-profile"
+		| "/_socialLayout/"
+		| "/_learningLayout/lessons/$id"
+		| "/_socialLayout/articles/$id"
+		| "/_socialLayout/courses/$id"
+		| "/_socialLayout/notifications/$id"
+		| "/_socialLayout/posts/$id"
+		| "/_socialLayout/articles/"
+		| "/_socialLayout/courses/"
+		| "/_socialLayout/notifications/";
+	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  LearningLayoutRoute: typeof LearningLayoutRouteWithChildren
-  SocialLayoutRoute: typeof SocialLayoutRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
+	LearningLayoutRoute: typeof LearningLayoutRouteWithChildren;
+	SocialLayoutRoute: typeof SocialLayoutRouteWithChildren;
+	LoginRoute: typeof LoginRoute;
+	RegisterRoute: typeof RegisterRoute;
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_socialLayout': {
-      id: '/_socialLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof SocialLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_learningLayout': {
-      id: '/_learningLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LearningLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_socialLayout/': {
-      id: '/_socialLayout/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof SocialLayoutIndexRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/edit-profile': {
-      id: '/_socialLayout/edit-profile'
-      path: '/edit-profile'
-      fullPath: '/edit-profile'
-      preLoaderRoute: typeof SocialLayoutEditProfileRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/about': {
-      id: '/_socialLayout/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof SocialLayoutAboutRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/$username': {
-      id: '/_socialLayout/$username'
-      path: '/$username'
-      fullPath: '/$username'
-      preLoaderRoute: typeof SocialLayoutUsernameRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/notifications/': {
-      id: '/_socialLayout/notifications/'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof SocialLayoutNotificationsIndexRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/courses/': {
-      id: '/_socialLayout/courses/'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof SocialLayoutCoursesIndexRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/articles/': {
-      id: '/_socialLayout/articles/'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof SocialLayoutArticlesIndexRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/posts/$id': {
-      id: '/_socialLayout/posts/$id'
-      path: '/posts/$id'
-      fullPath: '/posts/$id'
-      preLoaderRoute: typeof SocialLayoutPostsIdRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/notifications/$id': {
-      id: '/_socialLayout/notifications/$id'
-      path: '/notifications/$id'
-      fullPath: '/notifications/$id'
-      preLoaderRoute: typeof SocialLayoutNotificationsIdRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/courses/$id': {
-      id: '/_socialLayout/courses/$id'
-      path: '/courses/$id'
-      fullPath: '/courses/$id'
-      preLoaderRoute: typeof SocialLayoutCoursesIdRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_socialLayout/articles/$id': {
-      id: '/_socialLayout/articles/$id'
-      path: '/articles/$id'
-      fullPath: '/articles/$id'
-      preLoaderRoute: typeof SocialLayoutArticlesIdRouteImport
-      parentRoute: typeof SocialLayoutRoute
-    }
-    '/_learningLayout/lessons/$id': {
-      id: '/_learningLayout/lessons/$id'
-      path: '/lessons/$id'
-      fullPath: '/lessons/$id'
-      preLoaderRoute: typeof LearningLayoutLessonsIdRouteImport
-      parentRoute: typeof LearningLayoutRoute
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/register": {
+			id: "/register";
+			path: "/register";
+			fullPath: "/register";
+			preLoaderRoute: typeof RegisterRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/login": {
+			id: "/login";
+			path: "/login";
+			fullPath: "/login";
+			preLoaderRoute: typeof LoginRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/_socialLayout": {
+			id: "/_socialLayout";
+			path: "";
+			fullPath: "";
+			preLoaderRoute: typeof SocialLayoutRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/_learningLayout": {
+			id: "/_learningLayout";
+			path: "";
+			fullPath: "";
+			preLoaderRoute: typeof LearningLayoutRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/_socialLayout/": {
+			id: "/_socialLayout/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof SocialLayoutIndexRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/edit-profile": {
+			id: "/_socialLayout/edit-profile";
+			path: "/edit-profile";
+			fullPath: "/edit-profile";
+			preLoaderRoute: typeof SocialLayoutEditProfileRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/about": {
+			id: "/_socialLayout/about";
+			path: "/about";
+			fullPath: "/about";
+			preLoaderRoute: typeof SocialLayoutAboutRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/$username": {
+			id: "/_socialLayout/$username";
+			path: "/$username";
+			fullPath: "/$username";
+			preLoaderRoute: typeof SocialLayoutUsernameRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/notifications/": {
+			id: "/_socialLayout/notifications/";
+			path: "/notifications";
+			fullPath: "/notifications";
+			preLoaderRoute: typeof SocialLayoutNotificationsIndexRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/courses/": {
+			id: "/_socialLayout/courses/";
+			path: "/courses";
+			fullPath: "/courses";
+			preLoaderRoute: typeof SocialLayoutCoursesIndexRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/articles/": {
+			id: "/_socialLayout/articles/";
+			path: "/articles";
+			fullPath: "/articles";
+			preLoaderRoute: typeof SocialLayoutArticlesIndexRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/posts/$id": {
+			id: "/_socialLayout/posts/$id";
+			path: "/posts/$id";
+			fullPath: "/posts/$id";
+			preLoaderRoute: typeof SocialLayoutPostsIdRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/notifications/$id": {
+			id: "/_socialLayout/notifications/$id";
+			path: "/notifications/$id";
+			fullPath: "/notifications/$id";
+			preLoaderRoute: typeof SocialLayoutNotificationsIdRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/courses/$id": {
+			id: "/_socialLayout/courses/$id";
+			path: "/courses/$id";
+			fullPath: "/courses/$id";
+			preLoaderRoute: typeof SocialLayoutCoursesIdRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_socialLayout/articles/$id": {
+			id: "/_socialLayout/articles/$id";
+			path: "/articles/$id";
+			fullPath: "/articles/$id";
+			preLoaderRoute: typeof SocialLayoutArticlesIdRouteImport;
+			parentRoute: typeof SocialLayoutRoute;
+		};
+		"/_learningLayout/lessons/$id": {
+			id: "/_learningLayout/lessons/$id";
+			path: "/lessons/$id";
+			fullPath: "/lessons/$id";
+			preLoaderRoute: typeof LearningLayoutLessonsIdRouteImport;
+			parentRoute: typeof LearningLayoutRoute;
+		};
+	}
 }
 
 interface LearningLayoutRouteChildren {
-  LearningLayoutLessonsIdRoute: typeof LearningLayoutLessonsIdRoute
+	LearningLayoutLessonsIdRoute: typeof LearningLayoutLessonsIdRoute;
 }
 
 const LearningLayoutRouteChildren: LearningLayoutRouteChildren = {
-  LearningLayoutLessonsIdRoute: LearningLayoutLessonsIdRoute,
-}
+	LearningLayoutLessonsIdRoute: LearningLayoutLessonsIdRoute,
+};
 
 const LearningLayoutRouteWithChildren = LearningLayoutRoute._addFileChildren(
-  LearningLayoutRouteChildren,
-)
+	LearningLayoutRouteChildren,
+);
 
 interface SocialLayoutRouteChildren {
-  SocialLayoutUsernameRoute: typeof SocialLayoutUsernameRoute
-  SocialLayoutAboutRoute: typeof SocialLayoutAboutRoute
-  SocialLayoutEditProfileRoute: typeof SocialLayoutEditProfileRoute
-  SocialLayoutIndexRoute: typeof SocialLayoutIndexRoute
-  SocialLayoutArticlesIdRoute: typeof SocialLayoutArticlesIdRoute
-  SocialLayoutCoursesIdRoute: typeof SocialLayoutCoursesIdRoute
-  SocialLayoutNotificationsIdRoute: typeof SocialLayoutNotificationsIdRoute
-  SocialLayoutPostsIdRoute: typeof SocialLayoutPostsIdRoute
-  SocialLayoutArticlesIndexRoute: typeof SocialLayoutArticlesIndexRoute
-  SocialLayoutCoursesIndexRoute: typeof SocialLayoutCoursesIndexRoute
-  SocialLayoutNotificationsIndexRoute: typeof SocialLayoutNotificationsIndexRoute
+	SocialLayoutUsernameRoute: typeof SocialLayoutUsernameRoute;
+	SocialLayoutAboutRoute: typeof SocialLayoutAboutRoute;
+	SocialLayoutEditProfileRoute: typeof SocialLayoutEditProfileRoute;
+	SocialLayoutIndexRoute: typeof SocialLayoutIndexRoute;
+	SocialLayoutArticlesIdRoute: typeof SocialLayoutArticlesIdRoute;
+	SocialLayoutCoursesIdRoute: typeof SocialLayoutCoursesIdRoute;
+	SocialLayoutNotificationsIdRoute: typeof SocialLayoutNotificationsIdRoute;
+	SocialLayoutPostsIdRoute: typeof SocialLayoutPostsIdRoute;
+	SocialLayoutArticlesIndexRoute: typeof SocialLayoutArticlesIndexRoute;
+	SocialLayoutCoursesIndexRoute: typeof SocialLayoutCoursesIndexRoute;
+	SocialLayoutNotificationsIndexRoute: typeof SocialLayoutNotificationsIndexRoute;
 }
 
 const SocialLayoutRouteChildren: SocialLayoutRouteChildren = {
-  SocialLayoutUsernameRoute: SocialLayoutUsernameRoute,
-  SocialLayoutAboutRoute: SocialLayoutAboutRoute,
-  SocialLayoutEditProfileRoute: SocialLayoutEditProfileRoute,
-  SocialLayoutIndexRoute: SocialLayoutIndexRoute,
-  SocialLayoutArticlesIdRoute: SocialLayoutArticlesIdRoute,
-  SocialLayoutCoursesIdRoute: SocialLayoutCoursesIdRoute,
-  SocialLayoutNotificationsIdRoute: SocialLayoutNotificationsIdRoute,
-  SocialLayoutPostsIdRoute: SocialLayoutPostsIdRoute,
-  SocialLayoutArticlesIndexRoute: SocialLayoutArticlesIndexRoute,
-  SocialLayoutCoursesIndexRoute: SocialLayoutCoursesIndexRoute,
-  SocialLayoutNotificationsIndexRoute: SocialLayoutNotificationsIndexRoute,
-}
+	SocialLayoutUsernameRoute: SocialLayoutUsernameRoute,
+	SocialLayoutAboutRoute: SocialLayoutAboutRoute,
+	SocialLayoutEditProfileRoute: SocialLayoutEditProfileRoute,
+	SocialLayoutIndexRoute: SocialLayoutIndexRoute,
+	SocialLayoutArticlesIdRoute: SocialLayoutArticlesIdRoute,
+	SocialLayoutCoursesIdRoute: SocialLayoutCoursesIdRoute,
+	SocialLayoutNotificationsIdRoute: SocialLayoutNotificationsIdRoute,
+	SocialLayoutPostsIdRoute: SocialLayoutPostsIdRoute,
+	SocialLayoutArticlesIndexRoute: SocialLayoutArticlesIndexRoute,
+	SocialLayoutCoursesIndexRoute: SocialLayoutCoursesIndexRoute,
+	SocialLayoutNotificationsIndexRoute: SocialLayoutNotificationsIndexRoute,
+};
 
 const SocialLayoutRouteWithChildren = SocialLayoutRoute._addFileChildren(
-  SocialLayoutRouteChildren,
-)
+	SocialLayoutRouteChildren,
+);
 
 const rootRouteChildren: RootRouteChildren = {
-  LearningLayoutRoute: LearningLayoutRouteWithChildren,
-  SocialLayoutRoute: SocialLayoutRouteWithChildren,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
-}
+	LearningLayoutRoute: LearningLayoutRouteWithChildren,
+	SocialLayoutRoute: SocialLayoutRouteWithChildren,
+	LoginRoute: LoginRoute,
+	RegisterRoute: RegisterRoute,
+};
 export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
