@@ -100,6 +100,8 @@ services:
     container_name: opencircle-platform
     ports:
       - "3000:80"
+    env_file:
+      - .env
     depends_on:
       - api
     restart: unless-stopped
@@ -119,6 +121,8 @@ services:
     container_name: opencircle-admin
     ports:
       - "4000:80"
+    env_file:
+      - .env
     depends_on:
       - api
     restart: unless-stopped
