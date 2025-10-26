@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
 
 const button = tv({
-	base: "border flex gap-2 items-center font-medium rounded-md active:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed",
+	base: "border flex gap-2 justify-center items-center font-medium rounded-md active:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed",
 	variants: {
 		variant: {
 			primary: "bg-primary border-primary",
