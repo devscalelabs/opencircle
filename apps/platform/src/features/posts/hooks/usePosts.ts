@@ -1,6 +1,11 @@
+import type { Post } from "@opencircle/core";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { api } from "../../../utils/api";
+
+interface SearchParams {
+	channel?: string;
+}
 
 interface usePostsProps {
 	skip?: number;
@@ -12,10 +17,10 @@ interface usePostsProps {
 }
 
 export const usePosts = (props?: usePostsProps) => {
-	const search = useSearch({ strict: false });
-	const channelSlug = props?.channelSlug || (search as any)?.channel;
+	const search = useSearch({ strict: false }) as SearchParams;
+	const channelSlug = props?.channelSlug || search?.channel;
 
-	const { data, isLoading } = useQuery({
+	const { data, isLoading } = useQuery<Post[]>({
 		initialData: [],
 		queryKey: ["posts", props, channelSlug],
 		queryFn: async () => {
