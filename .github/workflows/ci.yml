@@ -11,20 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: moonrepo/setup-moon@v1
-      - uses: moonrepo/setup-proto@v1
-      - name: Install dependencies
-        run: moon install
-      - name: Lint TypeScript projects
-        run: moon run admin:lint platform:lint core-package:lint ui-package:lint --parallel
-      - name: Lint Python project
-        run: moon run api:lint
-      - name: Type check TypeScript projects
-        run: moon run admin:typecheck platform:typecheck core-package:typecheck ui-package:typecheck --parallel
-      - name: Type check Python project
-        run: moon run api:typecheck
-      - name: Run tests
-        run: moon run api:test --parallel
+        with:
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+      - run: moon ci
 
   build:
     runs-on: ubuntu-latest
@@ -35,11 +25,7 @@ jobs:
         options: --privileged
     steps:
       - uses: actions/checkout@v4
-      - uses: moonrepo/setup-moon@v1
-      - uses: moonrepo/setup-proto@v1
-      - name: Install dependencies
-        run: moon install
-      - name: Build TypeScript projects
-        run: moon run admin:build platform:build core-package:build ui-package:build --parallel
+        with:
+          fetch-depth: 0
       - name: Build Docker images
         run: docker compose build
