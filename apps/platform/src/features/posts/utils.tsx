@@ -88,7 +88,7 @@ export const parseUrls = (content: string): UrlMatch[] => {
 		let url = match[0];
 		// Add https:// if it starts with www.
 		if (url.startsWith("www.")) {
-			url = "https://" + url;
+			url = `https://${url}`;
 		}
 
 		parts.push({

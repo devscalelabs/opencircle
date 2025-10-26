@@ -9,22 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as RegisterRouteImport } from "./routes/register";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as SocialLayoutRouteImport } from "./routes/_socialLayout";
 import { Route as LearningLayoutRouteImport } from "./routes/_learningLayout";
-import { Route as SocialLayoutIndexRouteImport } from "./routes/_socialLayout/index";
-import { Route as SocialLayoutEditProfileRouteImport } from "./routes/_socialLayout/edit-profile";
-import { Route as SocialLayoutAboutRouteImport } from "./routes/_socialLayout/about";
-import { Route as SocialLayoutUsernameRouteImport } from "./routes/_socialLayout/$username";
-import { Route as SocialLayoutNotificationsIndexRouteImport } from "./routes/_socialLayout/notifications/index";
-import { Route as SocialLayoutCoursesIndexRouteImport } from "./routes/_socialLayout/courses/index";
-import { Route as SocialLayoutArticlesIndexRouteImport } from "./routes/_socialLayout/articles/index";
-import { Route as SocialLayoutPostsIdRouteImport } from "./routes/_socialLayout/posts/$id";
-import { Route as SocialLayoutNotificationsIdRouteImport } from "./routes/_socialLayout/notifications/$id";
-import { Route as SocialLayoutCoursesIdRouteImport } from "./routes/_socialLayout/courses/$id";
-import { Route as SocialLayoutArticlesIdRouteImport } from "./routes/_socialLayout/articles/$id";
 import { Route as LearningLayoutLessonsIdRouteImport } from "./routes/_learningLayout/lessons/$id";
+import { Route as SocialLayoutRouteImport } from "./routes/_socialLayout";
+import { Route as SocialLayoutUsernameRouteImport } from "./routes/_socialLayout/$username";
+import { Route as SocialLayoutAboutRouteImport } from "./routes/_socialLayout/about";
+import { Route as SocialLayoutArticlesIdRouteImport } from "./routes/_socialLayout/articles/$id";
+import { Route as SocialLayoutArticlesIndexRouteImport } from "./routes/_socialLayout/articles/index";
+import { Route as SocialLayoutCoursesIdRouteImport } from "./routes/_socialLayout/courses/$id";
+import { Route as SocialLayoutCoursesIndexRouteImport } from "./routes/_socialLayout/courses/index";
+import { Route as SocialLayoutEditProfileRouteImport } from "./routes/_socialLayout/edit-profile";
+import { Route as SocialLayoutIndexRouteImport } from "./routes/_socialLayout/index";
+import { Route as SocialLayoutNotificationsIdRouteImport } from "./routes/_socialLayout/notifications/$id";
+import { Route as SocialLayoutNotificationsIndexRouteImport } from "./routes/_socialLayout/notifications/index";
+import { Route as SocialLayoutPostsIdRouteImport } from "./routes/_socialLayout/posts/$id";
+import { Route as LoginRouteImport } from "./routes/login";
+import { Route as RegisterRouteImport } from "./routes/register";
 
 const RegisterRoute = RegisterRouteImport.update({
 	id: "/register",

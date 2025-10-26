@@ -6,6 +6,7 @@ import { DropdownMenu } from "radix-ui";
 import { useState } from "react";
 import { Header } from "../../../components/header";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
+import { UrlPreview } from "../../../features/extras/components/UrlPreview";
 import { MediaGallery } from "../../../features/media/components/media";
 import { PostCardReactions } from "../../../features/posts/components/postCardReactions";
 import { RepliesList } from "../../../features/posts/components/RepliesList";
@@ -14,7 +15,6 @@ import { usePost } from "../../../features/posts/hooks/usePost";
 import { usePostDelete } from "../../../features/posts/hooks/usePostDelete";
 import { usePosts } from "../../../features/posts/hooks/usePosts";
 import { renderContent } from "../../../features/posts/utils";
-import { UrlPreview } from "../../../features/extras/components/UrlPreview";
 import { getInitials } from "../../../utils/common";
 
 export const Route = createFileRoute("/_socialLayout/posts/$id")({

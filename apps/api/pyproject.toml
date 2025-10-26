@@ -26,11 +26,20 @@ dependencies = [
     "alembic>=1.13.0",
 ]
 
- [dependency-groups]
- dev = [
-     "ruff>=0.14.1",
-     "ty>=0.0.1a23",
-     "pytest>=8.0.0",
-     "httpx>=0.25.0",
-     "pytest-asyncio>=0.21.0",
- ]
+  [dependency-groups]
+  dev = [
+      "ruff>=0.14.1",
+      "ty>=0.0.1a23",
+      "pytest>=8.0.0",
+      "httpx>=0.25.0",
+      "pytest-asyncio>=0.21.0",
+      "python-semantic-release>=9.0.0",
+  ]
+
+  [tool.semantic-release]
+  version_variable = "pyproject.toml:project.version"
+  branch = "main"
+  changelog_file = "CHANGELOG.md"
+  upload_to_pypi = false
+  upload_to_release = false
+  upload_to_testpypi = false

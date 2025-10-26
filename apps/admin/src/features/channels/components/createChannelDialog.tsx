@@ -1,8 +1,4 @@
 import type { ChannelCreate, ChannelType } from "@opencircle/core";
-import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { Smile } from "lucide-react";
-import { DropdownMenu } from "radix-ui";
-import slugify from "slugify";
 import {
 	Button,
 	Dialog,
@@ -14,7 +10,11 @@ import {
 	DialogTrigger,
 	Input,
 } from "@opencircle/ui";
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
+import { Smile } from "lucide-react";
+import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
+import slugify from "slugify";
 import { useChannelCreation } from "../hooks/useChannelCreation";
 
 interface CreateChannelDialogProps {

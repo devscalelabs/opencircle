@@ -8,8 +8,8 @@ import { Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import { Edit2, GripVertical, Plus, Save, Trash2, X } from "lucide-react";
 import { useState } from "react";
-import { LessonEditor } from "../../lesson/components/lessonEditor";
 import { useLessons } from "../../../features/lesson/hooks/useLessons";
+import { LessonEditor } from "../../lesson/components/lessonEditor";
 
 interface SectionEditorProps {
 	section?: Partial<SectionCreate> & { id?: string };
@@ -55,14 +55,14 @@ export const SectionEditor = ({
 				const updateData: SectionUpdate = {
 					title: title.trim(),
 					description: description.trim() || undefined,
-					order: parseInt(order) || 0,
+					order: parseInt(order, 10) || 0,
 				};
 				await onSave(updateData);
 			} else {
 				const createData: SectionCreate = {
 					title: title.trim(),
 					description: description.trim() || undefined,
-					order: parseInt(order) || 0,
+					order: parseInt(order, 10) || 0,
 					course_id: courseId,
 				};
 				await onSave(createData);

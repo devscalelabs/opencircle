@@ -127,7 +127,7 @@ export const CreateInviteCode = ({
 						placeholder="0"
 						value={formData.max_uses ?? ""}
 						onChange={(e) =>
-							handleChange("max_uses", parseInt(e.target.value) || 0)
+							handleChange("max_uses", parseInt(e.target.value, 10) || 0)
 						}
 					/>
 				</div>

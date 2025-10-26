@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+exec pnpm exec commitlint --edit "$1"

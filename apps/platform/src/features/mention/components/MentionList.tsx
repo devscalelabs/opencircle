@@ -46,7 +46,7 @@ export const MentionList = ({
 		document.body.removeChild(measuringDiv);
 
 		const rect = textarea.getBoundingClientRect();
-		const lineHeight = parseInt(computedStyle.lineHeight) || 24;
+		const lineHeight = parseInt(computedStyle.lineHeight, 10) || 24;
 		const scrollTop = textarea.scrollTop;
 		const scrollLeft = textarea.scrollLeft;
 

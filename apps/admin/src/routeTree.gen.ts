@@ -8,453 +8,453 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as DashboardLayoutRouteImport } from './routes/_dashboardLayout'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardLayoutUsersRouteImport } from './routes/_dashboardLayout/users'
-import { Route as DashboardLayoutSettingsRouteImport } from './routes/_dashboardLayout/settings'
-import { Route as DashboardLayoutDashboardRouteImport } from './routes/_dashboardLayout/dashboard'
-import { Route as DashboardLayoutChannelsRouteImport } from './routes/_dashboardLayout/channels'
-import { Route as DashboardLayoutBroadcastRouteImport } from './routes/_dashboardLayout/broadcast'
-import { Route as DashboardLayoutActivityRouteImport } from './routes/_dashboardLayout/activity'
-import { Route as DashboardLayoutInviteCodesIndexRouteImport } from './routes/_dashboardLayout/invite-codes/index'
-import { Route as DashboardLayoutCoursesIndexRouteImport } from './routes/_dashboardLayout/courses/index'
-import { Route as DashboardLayoutArticlesIndexRouteImport } from './routes/_dashboardLayout/articles.index'
-import { Route as DashboardLayoutInviteCodesNewRouteImport } from './routes/_dashboardLayout/invite-codes/new'
-import { Route as DashboardLayoutCoursesNewRouteImport } from './routes/_dashboardLayout/courses/new'
-import { Route as DashboardLayoutArticlesNewRouteImport } from './routes/_dashboardLayout/articles.new'
-import { Route as DashboardLayoutArticlesIdRouteImport } from './routes/_dashboardLayout/articles.$id'
-import { Route as DashboardLayoutInviteCodesEditIdRouteImport } from './routes/_dashboardLayout/invite-codes/edit.$id'
-import { Route as DashboardLayoutCoursesEditIdRouteImport } from './routes/_dashboardLayout/courses/edit.$id'
-import { Route as DashboardLayoutArticlesEditIdRouteImport } from './routes/_dashboardLayout/articles.edit.$id'
-import { Route as DashboardLayoutCoursesLessonsEditLessonIdRouteImport } from './routes/_dashboardLayout/courses/lessons/edit.$lessonId'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as DashboardLayoutRouteImport } from "./routes/_dashboardLayout";
+import { Route as DashboardLayoutActivityRouteImport } from "./routes/_dashboardLayout/activity";
+import { Route as DashboardLayoutArticlesIdRouteImport } from "./routes/_dashboardLayout/articles.$id";
+import { Route as DashboardLayoutArticlesEditIdRouteImport } from "./routes/_dashboardLayout/articles.edit.$id";
+import { Route as DashboardLayoutArticlesIndexRouteImport } from "./routes/_dashboardLayout/articles.index";
+import { Route as DashboardLayoutArticlesNewRouteImport } from "./routes/_dashboardLayout/articles.new";
+import { Route as DashboardLayoutBroadcastRouteImport } from "./routes/_dashboardLayout/broadcast";
+import { Route as DashboardLayoutChannelsRouteImport } from "./routes/_dashboardLayout/channels";
+import { Route as DashboardLayoutCoursesEditIdRouteImport } from "./routes/_dashboardLayout/courses/edit.$id";
+import { Route as DashboardLayoutCoursesIndexRouteImport } from "./routes/_dashboardLayout/courses/index";
+import { Route as DashboardLayoutCoursesLessonsEditLessonIdRouteImport } from "./routes/_dashboardLayout/courses/lessons/edit.$lessonId";
+import { Route as DashboardLayoutCoursesNewRouteImport } from "./routes/_dashboardLayout/courses/new";
+import { Route as DashboardLayoutDashboardRouteImport } from "./routes/_dashboardLayout/dashboard";
+import { Route as DashboardLayoutInviteCodesEditIdRouteImport } from "./routes/_dashboardLayout/invite-codes/edit.$id";
+import { Route as DashboardLayoutInviteCodesIndexRouteImport } from "./routes/_dashboardLayout/invite-codes/index";
+import { Route as DashboardLayoutInviteCodesNewRouteImport } from "./routes/_dashboardLayout/invite-codes/new";
+import { Route as DashboardLayoutSettingsRouteImport } from "./routes/_dashboardLayout/settings";
+import { Route as DashboardLayoutUsersRouteImport } from "./routes/_dashboardLayout/users";
+import { Route as IndexRouteImport } from "./routes/index";
 
 const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
-  id: '/_dashboardLayout',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/_dashboardLayout",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const DashboardLayoutUsersRoute = DashboardLayoutUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
+	id: "/users",
+	path: "/users",
+	getParentRoute: () => DashboardLayoutRoute,
+} as any);
 const DashboardLayoutSettingsRoute = DashboardLayoutSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
+	id: "/settings",
+	path: "/settings",
+	getParentRoute: () => DashboardLayoutRoute,
+} as any);
 const DashboardLayoutDashboardRoute =
-  DashboardLayoutDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutDashboardRouteImport.update({
+		id: "/dashboard",
+		path: "/dashboard",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutChannelsRoute = DashboardLayoutChannelsRouteImport.update({
-  id: '/channels',
-  path: '/channels',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
+	id: "/channels",
+	path: "/channels",
+	getParentRoute: () => DashboardLayoutRoute,
+} as any);
 const DashboardLayoutBroadcastRoute =
-  DashboardLayoutBroadcastRouteImport.update({
-    id: '/broadcast',
-    path: '/broadcast',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutBroadcastRouteImport.update({
+		id: "/broadcast",
+		path: "/broadcast",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutActivityRoute = DashboardLayoutActivityRouteImport.update({
-  id: '/activity',
-  path: '/activity',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
+	id: "/activity",
+	path: "/activity",
+	getParentRoute: () => DashboardLayoutRoute,
+} as any);
 const DashboardLayoutInviteCodesIndexRoute =
-  DashboardLayoutInviteCodesIndexRouteImport.update({
-    id: '/invite-codes/',
-    path: '/invite-codes/',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutInviteCodesIndexRouteImport.update({
+		id: "/invite-codes/",
+		path: "/invite-codes/",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutCoursesIndexRoute =
-  DashboardLayoutCoursesIndexRouteImport.update({
-    id: '/courses/',
-    path: '/courses/',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutCoursesIndexRouteImport.update({
+		id: "/courses/",
+		path: "/courses/",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutArticlesIndexRoute =
-  DashboardLayoutArticlesIndexRouteImport.update({
-    id: '/articles/',
-    path: '/articles/',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutArticlesIndexRouteImport.update({
+		id: "/articles/",
+		path: "/articles/",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutInviteCodesNewRoute =
-  DashboardLayoutInviteCodesNewRouteImport.update({
-    id: '/invite-codes/new',
-    path: '/invite-codes/new',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutInviteCodesNewRouteImport.update({
+		id: "/invite-codes/new",
+		path: "/invite-codes/new",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutCoursesNewRoute =
-  DashboardLayoutCoursesNewRouteImport.update({
-    id: '/courses/new',
-    path: '/courses/new',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutCoursesNewRouteImport.update({
+		id: "/courses/new",
+		path: "/courses/new",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutArticlesNewRoute =
-  DashboardLayoutArticlesNewRouteImport.update({
-    id: '/articles/new',
-    path: '/articles/new',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutArticlesNewRouteImport.update({
+		id: "/articles/new",
+		path: "/articles/new",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutArticlesIdRoute =
-  DashboardLayoutArticlesIdRouteImport.update({
-    id: '/articles/$id',
-    path: '/articles/$id',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutArticlesIdRouteImport.update({
+		id: "/articles/$id",
+		path: "/articles/$id",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutInviteCodesEditIdRoute =
-  DashboardLayoutInviteCodesEditIdRouteImport.update({
-    id: '/invite-codes/edit/$id',
-    path: '/invite-codes/edit/$id',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutInviteCodesEditIdRouteImport.update({
+		id: "/invite-codes/edit/$id",
+		path: "/invite-codes/edit/$id",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutCoursesEditIdRoute =
-  DashboardLayoutCoursesEditIdRouteImport.update({
-    id: '/courses/edit/$id',
-    path: '/courses/edit/$id',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutCoursesEditIdRouteImport.update({
+		id: "/courses/edit/$id",
+		path: "/courses/edit/$id",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutArticlesEditIdRoute =
-  DashboardLayoutArticlesEditIdRouteImport.update({
-    id: '/articles/edit/$id',
-    path: '/articles/edit/$id',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutArticlesEditIdRouteImport.update({
+		id: "/articles/edit/$id",
+		path: "/articles/edit/$id",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 const DashboardLayoutCoursesLessonsEditLessonIdRoute =
-  DashboardLayoutCoursesLessonsEditLessonIdRouteImport.update({
-    id: '/courses/lessons/edit/$lessonId',
-    path: '/courses/lessons/edit/$lessonId',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
+	DashboardLayoutCoursesLessonsEditLessonIdRouteImport.update({
+		id: "/courses/lessons/edit/$lessonId",
+		path: "/courses/lessons/edit/$lessonId",
+		getParentRoute: () => DashboardLayoutRoute,
+	} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/activity': typeof DashboardLayoutActivityRoute
-  '/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/channels': typeof DashboardLayoutChannelsRoute
-  '/dashboard': typeof DashboardLayoutDashboardRoute
-  '/settings': typeof DashboardLayoutSettingsRoute
-  '/users': typeof DashboardLayoutUsersRoute
-  '/articles/$id': typeof DashboardLayoutArticlesIdRoute
-  '/articles/new': typeof DashboardLayoutArticlesNewRoute
-  '/courses/new': typeof DashboardLayoutCoursesNewRoute
-  '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
-  '/articles': typeof DashboardLayoutArticlesIndexRoute
-  '/courses': typeof DashboardLayoutCoursesIndexRoute
-  '/invite-codes': typeof DashboardLayoutInviteCodesIndexRoute
-  '/articles/edit/$id': typeof DashboardLayoutArticlesEditIdRoute
-  '/courses/edit/$id': typeof DashboardLayoutCoursesEditIdRoute
-  '/invite-codes/edit/$id': typeof DashboardLayoutInviteCodesEditIdRoute
-  '/courses/lessons/edit/$lessonId': typeof DashboardLayoutCoursesLessonsEditLessonIdRoute
+	"/": typeof IndexRoute;
+	"/activity": typeof DashboardLayoutActivityRoute;
+	"/broadcast": typeof DashboardLayoutBroadcastRoute;
+	"/channels": typeof DashboardLayoutChannelsRoute;
+	"/dashboard": typeof DashboardLayoutDashboardRoute;
+	"/settings": typeof DashboardLayoutSettingsRoute;
+	"/users": typeof DashboardLayoutUsersRoute;
+	"/articles/$id": typeof DashboardLayoutArticlesIdRoute;
+	"/articles/new": typeof DashboardLayoutArticlesNewRoute;
+	"/courses/new": typeof DashboardLayoutCoursesNewRoute;
+	"/invite-codes/new": typeof DashboardLayoutInviteCodesNewRoute;
+	"/articles": typeof DashboardLayoutArticlesIndexRoute;
+	"/courses": typeof DashboardLayoutCoursesIndexRoute;
+	"/invite-codes": typeof DashboardLayoutInviteCodesIndexRoute;
+	"/articles/edit/$id": typeof DashboardLayoutArticlesEditIdRoute;
+	"/courses/edit/$id": typeof DashboardLayoutCoursesEditIdRoute;
+	"/invite-codes/edit/$id": typeof DashboardLayoutInviteCodesEditIdRoute;
+	"/courses/lessons/edit/$lessonId": typeof DashboardLayoutCoursesLessonsEditLessonIdRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/activity': typeof DashboardLayoutActivityRoute
-  '/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/channels': typeof DashboardLayoutChannelsRoute
-  '/dashboard': typeof DashboardLayoutDashboardRoute
-  '/settings': typeof DashboardLayoutSettingsRoute
-  '/users': typeof DashboardLayoutUsersRoute
-  '/articles/$id': typeof DashboardLayoutArticlesIdRoute
-  '/articles/new': typeof DashboardLayoutArticlesNewRoute
-  '/courses/new': typeof DashboardLayoutCoursesNewRoute
-  '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
-  '/articles': typeof DashboardLayoutArticlesIndexRoute
-  '/courses': typeof DashboardLayoutCoursesIndexRoute
-  '/invite-codes': typeof DashboardLayoutInviteCodesIndexRoute
-  '/articles/edit/$id': typeof DashboardLayoutArticlesEditIdRoute
-  '/courses/edit/$id': typeof DashboardLayoutCoursesEditIdRoute
-  '/invite-codes/edit/$id': typeof DashboardLayoutInviteCodesEditIdRoute
-  '/courses/lessons/edit/$lessonId': typeof DashboardLayoutCoursesLessonsEditLessonIdRoute
+	"/": typeof IndexRoute;
+	"/activity": typeof DashboardLayoutActivityRoute;
+	"/broadcast": typeof DashboardLayoutBroadcastRoute;
+	"/channels": typeof DashboardLayoutChannelsRoute;
+	"/dashboard": typeof DashboardLayoutDashboardRoute;
+	"/settings": typeof DashboardLayoutSettingsRoute;
+	"/users": typeof DashboardLayoutUsersRoute;
+	"/articles/$id": typeof DashboardLayoutArticlesIdRoute;
+	"/articles/new": typeof DashboardLayoutArticlesNewRoute;
+	"/courses/new": typeof DashboardLayoutCoursesNewRoute;
+	"/invite-codes/new": typeof DashboardLayoutInviteCodesNewRoute;
+	"/articles": typeof DashboardLayoutArticlesIndexRoute;
+	"/courses": typeof DashboardLayoutCoursesIndexRoute;
+	"/invite-codes": typeof DashboardLayoutInviteCodesIndexRoute;
+	"/articles/edit/$id": typeof DashboardLayoutArticlesEditIdRoute;
+	"/courses/edit/$id": typeof DashboardLayoutCoursesEditIdRoute;
+	"/invite-codes/edit/$id": typeof DashboardLayoutInviteCodesEditIdRoute;
+	"/courses/lessons/edit/$lessonId": typeof DashboardLayoutCoursesLessonsEditLessonIdRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_dashboardLayout': typeof DashboardLayoutRouteWithChildren
-  '/_dashboardLayout/activity': typeof DashboardLayoutActivityRoute
-  '/_dashboardLayout/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/_dashboardLayout/channels': typeof DashboardLayoutChannelsRoute
-  '/_dashboardLayout/dashboard': typeof DashboardLayoutDashboardRoute
-  '/_dashboardLayout/settings': typeof DashboardLayoutSettingsRoute
-  '/_dashboardLayout/users': typeof DashboardLayoutUsersRoute
-  '/_dashboardLayout/articles/$id': typeof DashboardLayoutArticlesIdRoute
-  '/_dashboardLayout/articles/new': typeof DashboardLayoutArticlesNewRoute
-  '/_dashboardLayout/courses/new': typeof DashboardLayoutCoursesNewRoute
-  '/_dashboardLayout/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
-  '/_dashboardLayout/articles/': typeof DashboardLayoutArticlesIndexRoute
-  '/_dashboardLayout/courses/': typeof DashboardLayoutCoursesIndexRoute
-  '/_dashboardLayout/invite-codes/': typeof DashboardLayoutInviteCodesIndexRoute
-  '/_dashboardLayout/articles/edit/$id': typeof DashboardLayoutArticlesEditIdRoute
-  '/_dashboardLayout/courses/edit/$id': typeof DashboardLayoutCoursesEditIdRoute
-  '/_dashboardLayout/invite-codes/edit/$id': typeof DashboardLayoutInviteCodesEditIdRoute
-  '/_dashboardLayout/courses/lessons/edit/$lessonId': typeof DashboardLayoutCoursesLessonsEditLessonIdRoute
+	__root__: typeof rootRouteImport;
+	"/": typeof IndexRoute;
+	"/_dashboardLayout": typeof DashboardLayoutRouteWithChildren;
+	"/_dashboardLayout/activity": typeof DashboardLayoutActivityRoute;
+	"/_dashboardLayout/broadcast": typeof DashboardLayoutBroadcastRoute;
+	"/_dashboardLayout/channels": typeof DashboardLayoutChannelsRoute;
+	"/_dashboardLayout/dashboard": typeof DashboardLayoutDashboardRoute;
+	"/_dashboardLayout/settings": typeof DashboardLayoutSettingsRoute;
+	"/_dashboardLayout/users": typeof DashboardLayoutUsersRoute;
+	"/_dashboardLayout/articles/$id": typeof DashboardLayoutArticlesIdRoute;
+	"/_dashboardLayout/articles/new": typeof DashboardLayoutArticlesNewRoute;
+	"/_dashboardLayout/courses/new": typeof DashboardLayoutCoursesNewRoute;
+	"/_dashboardLayout/invite-codes/new": typeof DashboardLayoutInviteCodesNewRoute;
+	"/_dashboardLayout/articles/": typeof DashboardLayoutArticlesIndexRoute;
+	"/_dashboardLayout/courses/": typeof DashboardLayoutCoursesIndexRoute;
+	"/_dashboardLayout/invite-codes/": typeof DashboardLayoutInviteCodesIndexRoute;
+	"/_dashboardLayout/articles/edit/$id": typeof DashboardLayoutArticlesEditIdRoute;
+	"/_dashboardLayout/courses/edit/$id": typeof DashboardLayoutCoursesEditIdRoute;
+	"/_dashboardLayout/invite-codes/edit/$id": typeof DashboardLayoutInviteCodesEditIdRoute;
+	"/_dashboardLayout/courses/lessons/edit/$lessonId": typeof DashboardLayoutCoursesLessonsEditLessonIdRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/activity'
-    | '/broadcast'
-    | '/channels'
-    | '/dashboard'
-    | '/settings'
-    | '/users'
-    | '/articles/$id'
-    | '/articles/new'
-    | '/courses/new'
-    | '/invite-codes/new'
-    | '/articles'
-    | '/courses'
-    | '/invite-codes'
-    | '/articles/edit/$id'
-    | '/courses/edit/$id'
-    | '/invite-codes/edit/$id'
-    | '/courses/lessons/edit/$lessonId'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/activity'
-    | '/broadcast'
-    | '/channels'
-    | '/dashboard'
-    | '/settings'
-    | '/users'
-    | '/articles/$id'
-    | '/articles/new'
-    | '/courses/new'
-    | '/invite-codes/new'
-    | '/articles'
-    | '/courses'
-    | '/invite-codes'
-    | '/articles/edit/$id'
-    | '/courses/edit/$id'
-    | '/invite-codes/edit/$id'
-    | '/courses/lessons/edit/$lessonId'
-  id:
-    | '__root__'
-    | '/'
-    | '/_dashboardLayout'
-    | '/_dashboardLayout/activity'
-    | '/_dashboardLayout/broadcast'
-    | '/_dashboardLayout/channels'
-    | '/_dashboardLayout/dashboard'
-    | '/_dashboardLayout/settings'
-    | '/_dashboardLayout/users'
-    | '/_dashboardLayout/articles/$id'
-    | '/_dashboardLayout/articles/new'
-    | '/_dashboardLayout/courses/new'
-    | '/_dashboardLayout/invite-codes/new'
-    | '/_dashboardLayout/articles/'
-    | '/_dashboardLayout/courses/'
-    | '/_dashboardLayout/invite-codes/'
-    | '/_dashboardLayout/articles/edit/$id'
-    | '/_dashboardLayout/courses/edit/$id'
-    | '/_dashboardLayout/invite-codes/edit/$id'
-    | '/_dashboardLayout/courses/lessons/edit/$lessonId'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths:
+		| "/"
+		| "/activity"
+		| "/broadcast"
+		| "/channels"
+		| "/dashboard"
+		| "/settings"
+		| "/users"
+		| "/articles/$id"
+		| "/articles/new"
+		| "/courses/new"
+		| "/invite-codes/new"
+		| "/articles"
+		| "/courses"
+		| "/invite-codes"
+		| "/articles/edit/$id"
+		| "/courses/edit/$id"
+		| "/invite-codes/edit/$id"
+		| "/courses/lessons/edit/$lessonId";
+	fileRoutesByTo: FileRoutesByTo;
+	to:
+		| "/"
+		| "/activity"
+		| "/broadcast"
+		| "/channels"
+		| "/dashboard"
+		| "/settings"
+		| "/users"
+		| "/articles/$id"
+		| "/articles/new"
+		| "/courses/new"
+		| "/invite-codes/new"
+		| "/articles"
+		| "/courses"
+		| "/invite-codes"
+		| "/articles/edit/$id"
+		| "/courses/edit/$id"
+		| "/invite-codes/edit/$id"
+		| "/courses/lessons/edit/$lessonId";
+	id:
+		| "__root__"
+		| "/"
+		| "/_dashboardLayout"
+		| "/_dashboardLayout/activity"
+		| "/_dashboardLayout/broadcast"
+		| "/_dashboardLayout/channels"
+		| "/_dashboardLayout/dashboard"
+		| "/_dashboardLayout/settings"
+		| "/_dashboardLayout/users"
+		| "/_dashboardLayout/articles/$id"
+		| "/_dashboardLayout/articles/new"
+		| "/_dashboardLayout/courses/new"
+		| "/_dashboardLayout/invite-codes/new"
+		| "/_dashboardLayout/articles/"
+		| "/_dashboardLayout/courses/"
+		| "/_dashboardLayout/invite-codes/"
+		| "/_dashboardLayout/articles/edit/$id"
+		| "/_dashboardLayout/courses/edit/$id"
+		| "/_dashboardLayout/invite-codes/edit/$id"
+		| "/_dashboardLayout/courses/lessons/edit/$lessonId";
+	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
+	IndexRoute: typeof IndexRoute;
+	DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren;
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_dashboardLayout': {
-      id: '/_dashboardLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof DashboardLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_dashboardLayout/users': {
-      id: '/_dashboardLayout/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof DashboardLayoutUsersRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/settings': {
-      id: '/_dashboardLayout/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof DashboardLayoutSettingsRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/dashboard': {
-      id: '/_dashboardLayout/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardLayoutDashboardRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/channels': {
-      id: '/_dashboardLayout/channels'
-      path: '/channels'
-      fullPath: '/channels'
-      preLoaderRoute: typeof DashboardLayoutChannelsRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/broadcast': {
-      id: '/_dashboardLayout/broadcast'
-      path: '/broadcast'
-      fullPath: '/broadcast'
-      preLoaderRoute: typeof DashboardLayoutBroadcastRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/activity': {
-      id: '/_dashboardLayout/activity'
-      path: '/activity'
-      fullPath: '/activity'
-      preLoaderRoute: typeof DashboardLayoutActivityRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/invite-codes/': {
-      id: '/_dashboardLayout/invite-codes/'
-      path: '/invite-codes'
-      fullPath: '/invite-codes'
-      preLoaderRoute: typeof DashboardLayoutInviteCodesIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/courses/': {
-      id: '/_dashboardLayout/courses/'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof DashboardLayoutCoursesIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/articles/': {
-      id: '/_dashboardLayout/articles/'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof DashboardLayoutArticlesIndexRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/invite-codes/new': {
-      id: '/_dashboardLayout/invite-codes/new'
-      path: '/invite-codes/new'
-      fullPath: '/invite-codes/new'
-      preLoaderRoute: typeof DashboardLayoutInviteCodesNewRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/courses/new': {
-      id: '/_dashboardLayout/courses/new'
-      path: '/courses/new'
-      fullPath: '/courses/new'
-      preLoaderRoute: typeof DashboardLayoutCoursesNewRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/articles/new': {
-      id: '/_dashboardLayout/articles/new'
-      path: '/articles/new'
-      fullPath: '/articles/new'
-      preLoaderRoute: typeof DashboardLayoutArticlesNewRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/articles/$id': {
-      id: '/_dashboardLayout/articles/$id'
-      path: '/articles/$id'
-      fullPath: '/articles/$id'
-      preLoaderRoute: typeof DashboardLayoutArticlesIdRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/invite-codes/edit/$id': {
-      id: '/_dashboardLayout/invite-codes/edit/$id'
-      path: '/invite-codes/edit/$id'
-      fullPath: '/invite-codes/edit/$id'
-      preLoaderRoute: typeof DashboardLayoutInviteCodesEditIdRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/courses/edit/$id': {
-      id: '/_dashboardLayout/courses/edit/$id'
-      path: '/courses/edit/$id'
-      fullPath: '/courses/edit/$id'
-      preLoaderRoute: typeof DashboardLayoutCoursesEditIdRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/articles/edit/$id': {
-      id: '/_dashboardLayout/articles/edit/$id'
-      path: '/articles/edit/$id'
-      fullPath: '/articles/edit/$id'
-      preLoaderRoute: typeof DashboardLayoutArticlesEditIdRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/courses/lessons/edit/$lessonId': {
-      id: '/_dashboardLayout/courses/lessons/edit/$lessonId'
-      path: '/courses/lessons/edit/$lessonId'
-      fullPath: '/courses/lessons/edit/$lessonId'
-      preLoaderRoute: typeof DashboardLayoutCoursesLessonsEditLessonIdRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/_dashboardLayout": {
+			id: "/_dashboardLayout";
+			path: "";
+			fullPath: "";
+			preLoaderRoute: typeof DashboardLayoutRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/_dashboardLayout/users": {
+			id: "/_dashboardLayout/users";
+			path: "/users";
+			fullPath: "/users";
+			preLoaderRoute: typeof DashboardLayoutUsersRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/settings": {
+			id: "/_dashboardLayout/settings";
+			path: "/settings";
+			fullPath: "/settings";
+			preLoaderRoute: typeof DashboardLayoutSettingsRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/dashboard": {
+			id: "/_dashboardLayout/dashboard";
+			path: "/dashboard";
+			fullPath: "/dashboard";
+			preLoaderRoute: typeof DashboardLayoutDashboardRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/channels": {
+			id: "/_dashboardLayout/channels";
+			path: "/channels";
+			fullPath: "/channels";
+			preLoaderRoute: typeof DashboardLayoutChannelsRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/broadcast": {
+			id: "/_dashboardLayout/broadcast";
+			path: "/broadcast";
+			fullPath: "/broadcast";
+			preLoaderRoute: typeof DashboardLayoutBroadcastRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/activity": {
+			id: "/_dashboardLayout/activity";
+			path: "/activity";
+			fullPath: "/activity";
+			preLoaderRoute: typeof DashboardLayoutActivityRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/invite-codes/": {
+			id: "/_dashboardLayout/invite-codes/";
+			path: "/invite-codes";
+			fullPath: "/invite-codes";
+			preLoaderRoute: typeof DashboardLayoutInviteCodesIndexRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/courses/": {
+			id: "/_dashboardLayout/courses/";
+			path: "/courses";
+			fullPath: "/courses";
+			preLoaderRoute: typeof DashboardLayoutCoursesIndexRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/articles/": {
+			id: "/_dashboardLayout/articles/";
+			path: "/articles";
+			fullPath: "/articles";
+			preLoaderRoute: typeof DashboardLayoutArticlesIndexRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/invite-codes/new": {
+			id: "/_dashboardLayout/invite-codes/new";
+			path: "/invite-codes/new";
+			fullPath: "/invite-codes/new";
+			preLoaderRoute: typeof DashboardLayoutInviteCodesNewRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/courses/new": {
+			id: "/_dashboardLayout/courses/new";
+			path: "/courses/new";
+			fullPath: "/courses/new";
+			preLoaderRoute: typeof DashboardLayoutCoursesNewRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/articles/new": {
+			id: "/_dashboardLayout/articles/new";
+			path: "/articles/new";
+			fullPath: "/articles/new";
+			preLoaderRoute: typeof DashboardLayoutArticlesNewRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/articles/$id": {
+			id: "/_dashboardLayout/articles/$id";
+			path: "/articles/$id";
+			fullPath: "/articles/$id";
+			preLoaderRoute: typeof DashboardLayoutArticlesIdRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/invite-codes/edit/$id": {
+			id: "/_dashboardLayout/invite-codes/edit/$id";
+			path: "/invite-codes/edit/$id";
+			fullPath: "/invite-codes/edit/$id";
+			preLoaderRoute: typeof DashboardLayoutInviteCodesEditIdRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/courses/edit/$id": {
+			id: "/_dashboardLayout/courses/edit/$id";
+			path: "/courses/edit/$id";
+			fullPath: "/courses/edit/$id";
+			preLoaderRoute: typeof DashboardLayoutCoursesEditIdRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/articles/edit/$id": {
+			id: "/_dashboardLayout/articles/edit/$id";
+			path: "/articles/edit/$id";
+			fullPath: "/articles/edit/$id";
+			preLoaderRoute: typeof DashboardLayoutArticlesEditIdRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+		"/_dashboardLayout/courses/lessons/edit/$lessonId": {
+			id: "/_dashboardLayout/courses/lessons/edit/$lessonId";
+			path: "/courses/lessons/edit/$lessonId";
+			fullPath: "/courses/lessons/edit/$lessonId";
+			preLoaderRoute: typeof DashboardLayoutCoursesLessonsEditLessonIdRouteImport;
+			parentRoute: typeof DashboardLayoutRoute;
+		};
+	}
 }
 
 interface DashboardLayoutRouteChildren {
-  DashboardLayoutActivityRoute: typeof DashboardLayoutActivityRoute
-  DashboardLayoutBroadcastRoute: typeof DashboardLayoutBroadcastRoute
-  DashboardLayoutChannelsRoute: typeof DashboardLayoutChannelsRoute
-  DashboardLayoutDashboardRoute: typeof DashboardLayoutDashboardRoute
-  DashboardLayoutSettingsRoute: typeof DashboardLayoutSettingsRoute
-  DashboardLayoutUsersRoute: typeof DashboardLayoutUsersRoute
-  DashboardLayoutArticlesIdRoute: typeof DashboardLayoutArticlesIdRoute
-  DashboardLayoutArticlesNewRoute: typeof DashboardLayoutArticlesNewRoute
-  DashboardLayoutCoursesNewRoute: typeof DashboardLayoutCoursesNewRoute
-  DashboardLayoutInviteCodesNewRoute: typeof DashboardLayoutInviteCodesNewRoute
-  DashboardLayoutArticlesIndexRoute: typeof DashboardLayoutArticlesIndexRoute
-  DashboardLayoutCoursesIndexRoute: typeof DashboardLayoutCoursesIndexRoute
-  DashboardLayoutInviteCodesIndexRoute: typeof DashboardLayoutInviteCodesIndexRoute
-  DashboardLayoutArticlesEditIdRoute: typeof DashboardLayoutArticlesEditIdRoute
-  DashboardLayoutCoursesEditIdRoute: typeof DashboardLayoutCoursesEditIdRoute
-  DashboardLayoutInviteCodesEditIdRoute: typeof DashboardLayoutInviteCodesEditIdRoute
-  DashboardLayoutCoursesLessonsEditLessonIdRoute: typeof DashboardLayoutCoursesLessonsEditLessonIdRoute
+	DashboardLayoutActivityRoute: typeof DashboardLayoutActivityRoute;
+	DashboardLayoutBroadcastRoute: typeof DashboardLayoutBroadcastRoute;
+	DashboardLayoutChannelsRoute: typeof DashboardLayoutChannelsRoute;
+	DashboardLayoutDashboardRoute: typeof DashboardLayoutDashboardRoute;
+	DashboardLayoutSettingsRoute: typeof DashboardLayoutSettingsRoute;
+	DashboardLayoutUsersRoute: typeof DashboardLayoutUsersRoute;
+	DashboardLayoutArticlesIdRoute: typeof DashboardLayoutArticlesIdRoute;
+	DashboardLayoutArticlesNewRoute: typeof DashboardLayoutArticlesNewRoute;
+	DashboardLayoutCoursesNewRoute: typeof DashboardLayoutCoursesNewRoute;
+	DashboardLayoutInviteCodesNewRoute: typeof DashboardLayoutInviteCodesNewRoute;
+	DashboardLayoutArticlesIndexRoute: typeof DashboardLayoutArticlesIndexRoute;
+	DashboardLayoutCoursesIndexRoute: typeof DashboardLayoutCoursesIndexRoute;
+	DashboardLayoutInviteCodesIndexRoute: typeof DashboardLayoutInviteCodesIndexRoute;
+	DashboardLayoutArticlesEditIdRoute: typeof DashboardLayoutArticlesEditIdRoute;
+	DashboardLayoutCoursesEditIdRoute: typeof DashboardLayoutCoursesEditIdRoute;
+	DashboardLayoutInviteCodesEditIdRoute: typeof DashboardLayoutInviteCodesEditIdRoute;
+	DashboardLayoutCoursesLessonsEditLessonIdRoute: typeof DashboardLayoutCoursesLessonsEditLessonIdRoute;
 }
 
 const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
-  DashboardLayoutActivityRoute: DashboardLayoutActivityRoute,
-  DashboardLayoutBroadcastRoute: DashboardLayoutBroadcastRoute,
-  DashboardLayoutChannelsRoute: DashboardLayoutChannelsRoute,
-  DashboardLayoutDashboardRoute: DashboardLayoutDashboardRoute,
-  DashboardLayoutSettingsRoute: DashboardLayoutSettingsRoute,
-  DashboardLayoutUsersRoute: DashboardLayoutUsersRoute,
-  DashboardLayoutArticlesIdRoute: DashboardLayoutArticlesIdRoute,
-  DashboardLayoutArticlesNewRoute: DashboardLayoutArticlesNewRoute,
-  DashboardLayoutCoursesNewRoute: DashboardLayoutCoursesNewRoute,
-  DashboardLayoutInviteCodesNewRoute: DashboardLayoutInviteCodesNewRoute,
-  DashboardLayoutArticlesIndexRoute: DashboardLayoutArticlesIndexRoute,
-  DashboardLayoutCoursesIndexRoute: DashboardLayoutCoursesIndexRoute,
-  DashboardLayoutInviteCodesIndexRoute: DashboardLayoutInviteCodesIndexRoute,
-  DashboardLayoutArticlesEditIdRoute: DashboardLayoutArticlesEditIdRoute,
-  DashboardLayoutCoursesEditIdRoute: DashboardLayoutCoursesEditIdRoute,
-  DashboardLayoutInviteCodesEditIdRoute: DashboardLayoutInviteCodesEditIdRoute,
-  DashboardLayoutCoursesLessonsEditLessonIdRoute:
-    DashboardLayoutCoursesLessonsEditLessonIdRoute,
-}
+	DashboardLayoutActivityRoute: DashboardLayoutActivityRoute,
+	DashboardLayoutBroadcastRoute: DashboardLayoutBroadcastRoute,
+	DashboardLayoutChannelsRoute: DashboardLayoutChannelsRoute,
+	DashboardLayoutDashboardRoute: DashboardLayoutDashboardRoute,
+	DashboardLayoutSettingsRoute: DashboardLayoutSettingsRoute,
+	DashboardLayoutUsersRoute: DashboardLayoutUsersRoute,
+	DashboardLayoutArticlesIdRoute: DashboardLayoutArticlesIdRoute,
+	DashboardLayoutArticlesNewRoute: DashboardLayoutArticlesNewRoute,
+	DashboardLayoutCoursesNewRoute: DashboardLayoutCoursesNewRoute,
+	DashboardLayoutInviteCodesNewRoute: DashboardLayoutInviteCodesNewRoute,
+	DashboardLayoutArticlesIndexRoute: DashboardLayoutArticlesIndexRoute,
+	DashboardLayoutCoursesIndexRoute: DashboardLayoutCoursesIndexRoute,
+	DashboardLayoutInviteCodesIndexRoute: DashboardLayoutInviteCodesIndexRoute,
+	DashboardLayoutArticlesEditIdRoute: DashboardLayoutArticlesEditIdRoute,
+	DashboardLayoutCoursesEditIdRoute: DashboardLayoutCoursesEditIdRoute,
+	DashboardLayoutInviteCodesEditIdRoute: DashboardLayoutInviteCodesEditIdRoute,
+	DashboardLayoutCoursesLessonsEditLessonIdRoute:
+		DashboardLayoutCoursesLessonsEditLessonIdRoute,
+};
 
 const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
-  DashboardLayoutRouteChildren,
-)
+	DashboardLayoutRouteChildren,
+);
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
-}
+	IndexRoute: IndexRoute,
+	DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
+};
 export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();

@@ -38,7 +38,7 @@ export const LessonEditor = ({
 				title: title.trim(),
 				content: content.trim() || undefined,
 				video_url: videoUrl.trim() || undefined,
-				order: parseInt(order) || 0,
+				order: parseInt(order, 10) || 0,
 				type,
 			};
 			await onSave(updateData);
@@ -47,7 +47,7 @@ export const LessonEditor = ({
 				title: title.trim(),
 				content: content.trim() || undefined,
 				video_url: videoUrl.trim() || undefined,
-				order: parseInt(order) || 0,
+				order: parseInt(order, 10) || 0,
 				type,
 				section_id: "", // Will be set by the parent component
 			};
