@@ -17,6 +17,7 @@ module.exports = {
         'style',
         'test'
       ]
-    ]
+    ],
+    'body-max-line-length': [0]
   }
 };
