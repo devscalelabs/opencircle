@@ -1,4 +1,4 @@
-export { Button } from './components/Button';
-export { Avatar } from './components/Avatar';
-export { Input } from './components/Input';
-export * from './components/Dialog';
+export { Avatar } from "./components/Avatar";
+export { Button } from "./components/Button";
+export * from "./components/Dialog";
+export { Input } from "./components/Input";
