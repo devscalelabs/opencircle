@@ -21,10 +21,14 @@ const input = tv({
 	},
 });
 
-type InputProps = VariantProps<typeof input> & React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = VariantProps<typeof input> &
+	React.InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = (props: InputProps) => {
 	return (
-		<input {...props} className={twMerge(input({ ...props }), props.className)} />
+		<input
+			{...props}
+			className={twMerge(input({ ...props }), props.className)}
+		/>
 	);
 };

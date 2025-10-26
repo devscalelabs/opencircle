@@ -6,7 +6,10 @@ tasks:
     command: "uv run ruff format ."
 
   lint:
-    command: "uv run ruff check . && uv run ty check ."
+    command: "uv run ruff check ."
+
+  typecheck:
+    command: "uv run ty check ."
 
   sync:
     command: "uv sync"
@@ -25,3 +28,7 @@ tasks:
 
   seed:
     command: "uv run python bin/seeder.py"
+
+  build:
+    command: "echo 'API build handled by Docker'"
+    description: "Build API service"

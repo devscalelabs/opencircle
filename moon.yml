@@ -1,0 +1,37 @@
+# https://moonrepo.dev/docs/config/project
+
+tasks:
+  # Lint all projects
+  lint:
+    command: "moon run :lint"
+    description: "Run linting for all projects"
+
+  # Format all projects
+  format:
+    command: "moon run :format"
+    description: "Format code for all projects"
+
+  # Type check all projects
+  typecheck:
+    command: "moon run :typecheck"
+    description: "Run type checking for all projects"
+
+  # Test all projects
+  test:
+    command: "moon run :test"
+    description: "Run tests for all projects"
+
+  # Build all projects
+  build:
+    command: "moon run :build"
+    description: "Build all projects"
+
+  # Sync dependencies for all projects
+  sync:
+    command: "moon run :sync"
+    description: "Sync dependencies for all projects"
+
+  # Development mode for all projects
+  dev:
+    command: "moon run :dev"
+    description: "Start development servers for all projects"

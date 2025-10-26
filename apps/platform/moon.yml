@@ -10,3 +10,14 @@ tasks:
 
   lint:
     command: "pnpm lint"
+
+  typecheck:
+    command: "tsc --noEmit"
+
+  test:
+    command: "echo 'No tests configured for platform app yet'"
+    description: "Run tests for platform app"
+
+  build:
+    command: "pnpm build"
+    description: "Build platform app"

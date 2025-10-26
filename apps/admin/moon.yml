@@ -10,3 +10,14 @@ tasks:
 
   lint:
     command: "pnpm lint"
+
+  typecheck:
+    command: "tsc --noEmit"
+
+  test:
+    command: "echo 'No tests configured for admin app yet'"
+    description: "Run tests for admin app"
+
+  build:
+    command: "pnpm build"
+    description: "Build admin app"

@@ -7,47 +7,39 @@ on:
     branches: [main]
 
 jobs:
-  lint:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
-      - name: Add uv to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: moonrepo/setup-moon@v1
+      - uses: moonrepo/setup-proto@v1
       - name: Install dependencies
-        run: pnpm install
-      - name: Sync uv
-        run: cd apps/api && uv sync
-      - name: Lint
-        run: |
-          pnpm lint
-          cd apps/api && uv run ruff check . && uv run ty check .
+        run: moon install
+      - name: Lint TypeScript projects
+        run: moon run admin:lint platform:lint core-package:lint ui-package:lint --parallel
+      - name: Lint Python project
+        run: moon run api:lint
+      - name: Type check TypeScript projects
+        run: moon run admin:typecheck platform:typecheck core-package:typecheck ui-package:typecheck --parallel
+      - name: Type check Python project
+        run: moon run api:typecheck
+      - name: Run tests
+        run: moon run api:test --parallel
 
-  build-test:
+  build:
     runs-on: ubuntu-latest
-    needs: lint
+    needs: quality
     services:
       docker:
         image: docker:dind
         options: --privileged
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
-      - name: Add uv to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - uses: moonrepo/setup-moon@v1
+      - uses: moonrepo/setup-proto@v1
       - name: Install dependencies
-        run: pnpm install
-      - name: Sync uv
-        run: cd apps/api && uv sync
+        run: moon install
+      - name: Build TypeScript projects
+        run: moon run admin:build platform:build core-package:build ui-package:build --parallel
       - name: Build Docker images
         run: docker compose build

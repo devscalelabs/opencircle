@@ -4,3 +4,24 @@ language: typescript
 tasks:
   dev:
     command: "pnpm dev"
+    description: "Start development server for ui package"
+
+  build:
+    command: "pnpm build"
+    description: "Build ui package"
+
+  format:
+    command: "pnpm format"
+    description: "Format ui package code"
+
+  lint:
+    command: "pnpm lint"
+    description: "Lint ui package code"
+
+  typecheck:
+    command: "tsc --noEmit"
+    description: "Type check ui package code"
+
+  test:
+    command: "echo 'No tests configured for ui package yet'"
+    description: "Run tests for ui package"

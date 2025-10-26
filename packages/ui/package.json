@@ -5,7 +5,10 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "pnpm dlx @tailwindcss/cli -i ./src/global.css -o ./dist/global.css --watch",
-    "build": "pnpm dlx @tailwindcss/cli -i ./src/global.css -o ./dist/global.css"
+    "build": "pnpm dlx @tailwindcss/cli -i ./src/global.css -o ./dist/global.css",
+    "format": "pnpm exec biome format --write",
+    "lint:fix": "pnpm exec biome check --write",
+    "lint": "pnpm exec biome check"
   },
   "exports": {
     ".": {

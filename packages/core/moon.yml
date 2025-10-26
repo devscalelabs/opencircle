@@ -4,3 +4,20 @@ language: typescript
 tasks:
   build:
     command: "pnpm build"
+    description: "Build core package"
+
+  format:
+    command: "pnpm format"
+    description: "Format core package code"
+
+  lint:
+    command: "pnpm lint"
+    description: "Lint core package code"
+
+  typecheck:
+    command: "tsc --noEmit"
+    description: "Type check core package code"
+
+  test:
+    command: "echo 'No tests configured for core package yet'"
+    description: "Run tests for core package"
