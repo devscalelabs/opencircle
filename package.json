@@ -8,8 +8,7 @@
     "lint:fix": "pnpm exec biome check --write --unsafe",
     "lint": "pnpm exec biome check",
     "changeset": "changeset",
-    "version-packages": "changeset version && python scripts/sync-python-version.py",
-    "release": "echo '🎉 Release completed! Versions updated and synced.'",
+    "version": "changeset version && python scripts/sync-python-version.py",
     "prepare": "husky"
   },
   "keywords": [],

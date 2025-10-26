@@ -1,17 +1,27 @@
 name: Release
+
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,66 +51,56 @@ jobs:
           cd apps/api
           uv sync --dev
 
-      - name: Check for changesets
-        id: check-changesets
-        run: |
-          if [ -n "$(git ls-files .changeset/*.md)" ]; then
-            echo "has-changesets=true" >> $GITHUB_OUTPUT
-            echo "📝 Found changesets - preparing release"
-          else
-            echo "has-changesets=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ No changesets found - skipping release"
-          fi
-
       - name: Update versions
-        if: steps.check-changesets.outputs.has-changesets == 'true'
-        run: |
-          echo "🔧 Updating package versions..."
-          pnpm version-packages
-          echo "✅ Package versions updated"
-
-      - name: Create Release Pull Request
-        if: steps.check-changesets.outputs.has-changesets == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          commit-message: "chore: update package versions"
-          title: "chore: update package versions"
-          body: |
-            This PR was created by Changesets to update package versions.
-
-            ## What's included:
-            - Updated package versions based on changesets
-            - Synchronized Python API version
-            - Generated changelog
-
-            ## Next steps:
-            1. Review the changes
-            2. Merge this PR to create a release
-          branch: release/versions
-          delete-branch: true
-
-      - name: Create GitHub Release
-        if: steps.check-changesets.outputs.has-changesets == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Get current version
-          VERSION=$(node -p "require('./package.json').version")
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
 
-          # Create release
-          gh release create "v$VERSION" \
-            --title "Release $VERSION" \
-            --notes "Release $VERSION - see CHANGELOG.md for details" \
+          # Create a simple changeset for the version bump
+          mkdir -p .changeset
+          cat > .changeset/release.md << EOF
+          ---
+          "@opencircle/core": ${{ github.event.inputs.version_type }}
+          "@opencircle/ui": ${{ github.event.inputs.version_type }}
+          ---
+
+          Release ${{ github.event.inputs.version_type }} version bump
+          EOF
+
+          # Update versions
+          pnpm changeset version
+
+          # Sync Python version
+          python scripts/sync-python-version.py
+
+          # Get new version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Commit version changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "chore: bump version to ${{ env.NEW_VERSION }}"
+          git tag "v${{ env.NEW_VERSION }}"
+          git push origin main --follow-tags
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "v${{ env.NEW_VERSION }}" \
+            --title "Release ${{ env.NEW_VERSION }}" \
+            --notes "Release ${{ env.NEW_VERSION }}" \
             --latest
-
-          echo "🎉 GitHub release v$VERSION created successfully!"
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Release Summary
-        if: steps.check-changesets.outputs.has-changesets == 'true'
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "## 🎉 Release Prepared!"
-          echo "**Version:** $VERSION"
-          echo "**Status:** Ready for merge and release"
-          echo "**Next:** Merge the version update PR to create the release"
+          echo "## 🎉 Release ${{ env.NEW_VERSION }} Created!"
+          echo "**Version:** ${{ env.NEW_VERSION }}"
+          echo "**Type:** ${{ github.event.inputs.version_type }}"
+          echo "**Packages Updated:** @opencircle/core, @opencircle/ui"
+          echo "**Python API:** Version synced to ${{ env.NEW_VERSION }}"
