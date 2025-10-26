@@ -63,7 +63,7 @@ jobs:
         if: steps.check-changesets.outputs.has-changesets == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: "chore: update package versions"
           title: "chore: update package versions"
           body: |
@@ -94,7 +94,7 @@ jobs:
 
           echo "🎉 GitHub release v$VERSION created successfully!"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Release Summary
         if: steps.check-changesets.outputs.has-changesets == 'true'
