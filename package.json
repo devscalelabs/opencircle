@@ -7,8 +7,9 @@
     "format": "pnpm exec biome format --write",
     "lint:fix": "pnpm exec biome check --write --unsafe",
     "lint": "pnpm exec biome check",
-    "release": "semantic-release",
-    "release:dry": "semantic-release --dry-run",
+    "changeset": "changeset",
+    "version-packages": "changeset version && python scripts/sync-python-version.py",
+    "release": "changeset publish",
     "prepare": "husky"
   },
   "keywords": [],
@@ -19,11 +20,8 @@
     "@biomejs/biome": "2.2.6",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/git": "^10.0.0",
+    "@changesets/cli": "^2.29.7",
     "conventional-changelog-conventionalcommits": "^8.0.0",
-    "husky": "^9.0.0",
-    "semantic-release": "^24.0.0",
-    "semantic-release-monorepo": "^8.0.0"
+    "husky": "^9.0.0"
   }
 }

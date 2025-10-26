@@ -2,23 +2,52 @@ name: Release
 on:
   push:
     branches: [main]
+
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - uses: pnpm/action-setup@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 10.18.3
+
       - name: Install dependencies
         run: pnpm install
-      - name: Release
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          cd apps/api
+          uv sync
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # This expects you to have a script called version-packages which updates the versions
+          version: pnpm version-packages
+          # This expects you to have a script called release which publishes the packages
+          commit: "chore: update package versions"
+          title: "chore: update package versions"
+          publish: pnpm release
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: pnpm release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Add any other environment variables needed for publishing
