@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from sqlmodel import Session, select
 
-from src.database.models import Channel, ChannelMember, ChannelType
+from src.database.models import Channel, ChannelMember
 
 
 def create_channel(db: Session, channel_data: dict) -> Channel:
@@ -52,48 +52,10 @@ def delete_channel(db: Session, channel_id: str) -> bool:
 def get_all_channels(
     db: Session, skip: int = 0, limit: int = 100, user_id: Optional[str] = None
 ) -> List[Channel]:
-    """Get all channels with pagination - public channels and user's member channels."""
-    if user_id:
-        # Get public channels
-        public_channels = list(
-            db.exec(
-                select(Channel)
-                .where(Channel.type == ChannelType.PUBLIC)
-                .offset(skip)
-                .limit(limit)
-            ).all()
-        )
-
-        # Get channels where user is a member
-        member_channels = list(
-            db.exec(
-                select(Channel)
-                .join(ChannelMember, Channel.id == ChannelMember.channel_id)
-                .where(ChannelMember.user_id == user_id)
-                .offset(skip)
-                .limit(limit)
-            ).all()
-        )
-
-        # Combine and remove duplicates
-        all_channels = public_channels + member_channels
-        seen_ids = set()
-        unique_channels = []
-        for channel in all_channels:
-            if channel.id not in seen_ids:
-                seen_ids.add(channel.id)
-                unique_channels.append(channel)
-
-        return unique_channels[skip : skip + limit]
-    else:
-        # If no user_id provided, only return public channels
-        statement = (
-            select(Channel)
-            .where(Channel.type == ChannelType.PUBLIC)
-            .offset(skip)
-            .limit(limit)
-        )
-        return list(db.exec(statement).all())
+    """Get all channels with pagination - all public and private channels."""
+    # Get all channels (public and private) with pagination
+    statement = select(Channel).offset(skip).limit(limit)
+    return list(db.exec(statement).all())
 
 
 def add_member(db: Session, channel_id: str, user_id: str) -> Optional[ChannelMember]:
