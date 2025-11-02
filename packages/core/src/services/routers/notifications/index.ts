@@ -8,13 +8,13 @@ export class NotificationsRouter extends BaseRouter {
 			limit: limit.toString(),
 		});
 		return this.client.get<Notification[]>(
-			`notifications/?${params.toString()}`,
+			`notifications?${params.toString()}`,
 		);
 	}
 
 	async markAsRead(notificationId: string): Promise<Notification> {
 		return this.client.post<Notification>(
-			`notifications/${notificationId}/read`,
+			`notifications/${notificationId}/read/`,
 		);
 	}
 }
