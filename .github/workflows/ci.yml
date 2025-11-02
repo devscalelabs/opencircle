@@ -7,13 +7,10 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
+  deploy-admin:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    strategy:
-      matrix:
-        app: [admin, platform]
-        project: [opencircle-admin, opencircle-platform]
+    name: Deploy Admin to Cloudflare Pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,18 +28,49 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build UI Package
-        run: pnpm --filter @opencircle/ui build
-
-      - name: Build ${{ matrix.app }}
-        run: pnpm --filter ${{ matrix.app }} build
+      - name: Build Admin
+        run: pnpm --filter admin build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - name: Deploy ${{ matrix.app }} to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ matrix.project }}
-          directory: apps/${{ matrix.app }}/dist
+          projectName: circle-admin
+          directory: apps/admin/dist
+
+  deploy-platform:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    name: Deploy Platform to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Platform
+        run: pnpm --filter platform build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: devscale-circle
+          directory: apps/platform/dist
