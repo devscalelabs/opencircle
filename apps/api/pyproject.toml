@@ -25,6 +25,7 @@ dependencies = [
  "uvicorn>=0.38.0",
  "alembic>=1.13.0",
  "python-dotenv>=1.1.1",
+ "httpx-oauth>=0.15.0",
 ]
 
 [dependency-groups]

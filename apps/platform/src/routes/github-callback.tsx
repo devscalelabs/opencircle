@@ -1,0 +1,53 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { toast } from "react-hot-toast";
+import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
+
+export const Route = createFileRoute("/github-callback")({
+	component: RouteComponent,
+});
+function RouteComponent() {
+	const navigate = useNavigate();
+	const { handleCallback } = useGitHubAuth();
+	const hasProcessedCallback = useRef(false);
+
+	useEffect(() => {
+		// Prevent multiple executions (OAuth codes are single-use)
+		if (hasProcessedCallback.current) {
+			return;
+		}
+
+		// Extract code from URL parameters
+		const urlParams = new URLSearchParams(window.location.search);
+		const code = urlParams.get("code");
+		const error = urlParams.get("error");
+		const errorDescription = urlParams.get("error_description");
+
+		if (error) {
+			toast.error(`GitHub authentication failed: ${errorDescription || error}`);
+			navigate({ to: "/login" });
+			return;
+		}
+
+		if (!code) {
+			toast.error("No authorization code received from GitHub");
+			navigate({ to: "/login" });
+			return;
+		}
+
+		// Mark as processed before making the request
+		hasProcessedCallback.current = true;
+
+		// Handle the GitHub callback
+		handleCallback(code);
+	}, [handleCallback, navigate]);
+
+	return (
+		<div className="flex items-center justify-center min-h-screen">
+			<div className="text-center space-y-4">
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+				<p className="text-foreground/70">Completing GitHub login...</p>
+			</div>
+		</div>
+	);
+}

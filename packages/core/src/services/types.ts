@@ -141,6 +141,25 @@ export interface LoginResponse {
 	token_type: string;
 }
 
+export interface GitHubAuthUrlResponse {
+	authorization_url: string;
+	state: string;
+}
+
+export interface GitHubLoginRequest {
+	code: string;
+}
+
+export interface GitHubLoginResponse {
+	access_token: string;
+	token_type: string;
+	user_id: string;
+	username: string;
+	email: string;
+	name?: string;
+	avatar_url?: string;
+}
+
 export interface Channel {
 	id: string;
 	name: string;

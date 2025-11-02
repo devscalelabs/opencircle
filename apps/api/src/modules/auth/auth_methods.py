@@ -86,7 +86,7 @@ def register_user(
         "email": email,
         "password": hashed_password,
         "name": name,
-        "is_active": True,
+        "is_active": False,
         "is_verified": False,
     }
 
