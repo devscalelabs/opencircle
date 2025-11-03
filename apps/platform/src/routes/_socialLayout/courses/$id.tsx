@@ -2,10 +2,8 @@ import { Avatar } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "../../../components/header";
 import { useCourse } from "../../../features/courses/hooks/useCourse";
-import {
-	useCheckEnrollment,
-	useEnrollCourse,
-} from "../../../features/enrollment";
+import { useCheckEnrollment } from "../../../features/enrollment/hooks/useCheckEnrollment";
+import { useEnrollCourse } from "../../../features/enrollment/hooks/useEnrollCourse";
 import { getInitials } from "../../../utils/common";
 
 export const Route = createFileRoute("/_socialLayout/courses/$id")({

@@ -1,1 +1,2 @@
 moon run :lint
+moon run :build

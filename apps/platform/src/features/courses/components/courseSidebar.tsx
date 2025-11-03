@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useSections } from "../../sections";
+import { useSections } from "../../sections/hooks/useSections";
 
 interface CourseSidebarProps {
 	courseId: string;

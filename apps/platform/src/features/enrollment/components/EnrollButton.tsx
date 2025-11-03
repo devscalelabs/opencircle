@@ -1,4 +1,5 @@
-import { useCheckEnrollment, useEnrollCourse } from "../hooks";
+import { useCheckEnrollment } from "../hooks/useCheckEnrollment";
+import { useEnrollCourse } from "../hooks/useEnrollCourse";
 
 interface EnrollButtonProps {
 	courseId: string;
