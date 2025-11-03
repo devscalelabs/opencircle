@@ -1,5 +1,6 @@
 import { Avatar } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
+import { useId } from "react";
 import { Header } from "../../components/header";
 import { usePosts } from "../../features/posts/hooks/usePosts";
 import { UserTabs } from "../../features/user/components/userTabs";
@@ -14,6 +15,7 @@ function UserDetail() {
 	const username = Route.useParams().username;
 	const { user } = useUser(username);
 	const { posts } = usePosts({ userId: user?.id });
+	const gradientId = useId();
 
 	if (!user) {
 		return <div>User not found</div>;
@@ -32,7 +34,36 @@ function UserDetail() {
 				/>
 				<main className="flex flex-col items-center gap-4">
 					<div className="text-center space-y-2">
-						<div className="text-xl">{user.name}</div>
+						<div className="flex gap-1 items-center justify-center text-xl">
+							<div>{user.name}</div>
+							{user.role === "admin" && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="1.1em"
+									height="1.1em"
+									viewBox="0 0 24 24"
+									className="mt-1"
+								>
+									<title>verified</title>
+									<defs>
+										<linearGradient
+											id={gradientId}
+											x1="0%"
+											y1="0%"
+											x2="100%"
+											y2="0%"
+										>
+											<stop offset="0%" stopColor="rgb(234 125 8)" />
+											<stop offset="100%" stopColor="rgb(234 179 8)" />
+										</linearGradient>
+									</defs>
+									<path
+										fill={`url(#${gradientId})`}
+										d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm2.35-6.95L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"
+									/>
+								</svg>
+							)}
+						</div>
 						<div className="text-xs font-medium text-foreground/50">
 							{user.email}
 						</div>

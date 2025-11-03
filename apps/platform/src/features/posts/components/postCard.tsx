@@ -4,6 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { EllipsisVertical, MessageCircle, PinIcon } from "lucide-react";
 import moment from "moment";
 import { DropdownMenu } from "radix-ui";
+import { useId } from "react";
 import { getInitials } from "../../../utils/common";
 import { useAccount } from "../../auth/hooks/useAccount";
 import { UrlPreview } from "../../extras/components/UrlPreview";
@@ -21,6 +22,7 @@ export const PostCard = ({ post }: PostCardProps) => {
 	const initials = getInitials(post.user.username);
 	const { account } = useAccount();
 	const { deletePost } = usePostDelete();
+	const gradientId = useId();
 
 	const navigate = useNavigate();
 
@@ -66,17 +68,23 @@ export const PostCard = ({ post }: PostCardProps) => {
 									width="1.1em"
 									height="1.1em"
 									viewBox="0 0 24 24"
-									className="mt-1 bg-gradient-to-r from-primary to-yellow-500 bg-clip-text text-transparent"
+									className="mt-1"
 								>
 									<title>verified</title>
 									<defs>
-										<linearGradient x1="0%" y1="0%" x2="100%" y2="0%">
+										<linearGradient
+											id={gradientId}
+											x1="0%"
+											y1="0%"
+											x2="100%"
+											y2="0%"
+										>
 											<stop offset="0%" stopColor="rgb(234 125 8)" />
 											<stop offset="100%" stopColor="rgb(234 179 8)" />
 										</linearGradient>
 									</defs>
 									<path
-										fill="url(#verifiedGradient)"
+										fill={`url(#${gradientId})`}
 										d="m8.6 22.5l-1.9-3.2l-3.6-.8l.35-3.7L1 12l2.45-2.8l-.35-3.7l3.6-.8l1.9-3.2L12 2.95l3.4-1.45l1.9 3.2l3.6.8l-.35 3.7L23 12l-2.45 2.8l.35 3.7l-3.6.8l-1.9 3.2l-3.4-1.45zm2.35-6.95L16.6 9.9l-1.4-1.45l-4.25 4.25l-2.15-2.1L7.4 12z"
 									/>
 								</svg>
