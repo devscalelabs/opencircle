@@ -14,7 +14,7 @@ export class NotificationsRouter extends BaseRouter {
 
 	async markAsRead(notificationId: string): Promise<Notification> {
 		return this.client.post<Notification>(
-			`notifications/${notificationId}/read/`,
+			`notifications/${notificationId}/read`,
 		);
 	}
 }
