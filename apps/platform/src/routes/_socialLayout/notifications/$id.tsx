@@ -27,9 +27,9 @@ function NotificationDetail() {
 		<>
 			<Header label="Notification" />
 			<main className="p-4">
-				<div className="border rounded-lg p-4">
+				<div className="rounded-lg border p-4">
 					<div className="font-medium">{notification.sender.username}</div>
-					<div className="text-sm text-foreground/80 mt-2">
+					<div className="mt-2 text-foreground/80 text-sm">
 						{notification.type === "mention" && "mentioned you"}
 						{notification.type === "like" && "liked your post"}
 					</div>

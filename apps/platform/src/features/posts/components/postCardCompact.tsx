@@ -12,8 +12,8 @@ interface PostCardCompactProps {
 
 export const PostCardCompact = ({ user, content }: PostCardCompactProps) => {
 	return (
-		<main className="space-y-2 max-w-2xl">
-			<section className="flex gap-2 items-center">
+		<main className="max-w-2xl space-y-2">
+			<section className="flex items-center gap-2">
 				<Avatar size="sm" initials={user.initials} image_url={user.image_url} />
 				<div>
 					<div>{user.name}</div>

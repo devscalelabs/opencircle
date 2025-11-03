@@ -57,8 +57,8 @@ export const LessonEditor = ({
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			<div className="flex justify-between items-center">
-				<h4 className="text-3xl font-bold">
+			<div className="flex items-center justify-between">
+				<h4 className="font-bold text-3xl">
 					{isEdit ? "Edit Lesson" : "Create New Lesson"}
 				</h4>
 				<div className="flex gap-2">
@@ -74,10 +74,10 @@ export const LessonEditor = ({
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-				<div className="lg:col-span-2 space-y-6">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+				<div className="space-y-6 lg:col-span-2">
 					<div>
-						<label htmlFor="title" className="block text-sm font-medium mb-2">
+						<label htmlFor="title" className="mb-2 block font-medium text-sm">
 							Title *
 						</label>
 						<Input
@@ -89,13 +89,13 @@ export const LessonEditor = ({
 					</div>
 
 					<div>
-						<label htmlFor="type" className="block text-sm font-medium mb-2">
+						<label htmlFor="type" className="mb-2 block font-medium text-sm">
 							Lesson Type
 						</label>
 						<select
 							value={type}
 							onChange={(e) => setType(e.target.value as LessonType)}
-							className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+							className="w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
 						>
 							<option value="text">Text</option>
 							<option value="video">Video</option>
@@ -107,7 +107,7 @@ export const LessonEditor = ({
 					<div>
 						<label
 							htmlFor="videoUrl"
-							className="block text-sm font-medium mb-2"
+							className="mb-2 block font-medium text-sm"
 						>
 							Video URL
 						</label>
@@ -119,8 +119,8 @@ export const LessonEditor = ({
 					</div>
 
 					<div>
-						<div className="flex justify-between items-center mb-2">
-							<label htmlFor="content" className="block text-sm font-medium">
+						<div className="mb-2 flex items-center justify-between">
+							<label htmlFor="content" className="block font-medium text-sm">
 								Content
 							</label>
 							<Button
@@ -137,7 +137,7 @@ export const LessonEditor = ({
 							</Button>
 						</div>
 						{showPreview ? (
-							<div className="border border-border rounded-lg p-4 min-h-[400px] prose prose-invert max-w-none">
+							<div className="prose prose-invert min-h-[400px] max-w-none rounded-lg border border-border p-4">
 								<MDEditor.Markdown source={content} />
 							</div>
 						) : (
@@ -158,7 +158,7 @@ export const LessonEditor = ({
 				<div className="space-y-6">
 					{!isEdit && (
 						<div>
-							<label htmlFor="order" className="block text-sm font-medium mb-2">
+							<label htmlFor="order" className="mb-2 block font-medium text-sm">
 								Order
 							</label>
 							<Input

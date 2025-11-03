@@ -27,6 +27,9 @@
 			"suspicious": {
 				"noExplicitAny": "off"
 			},
+			"nursery": {
+				"useSortedClasses": "error"
+			},
 			"a11y": {
 				"useKeyWithClickEvents": "off",
 				"noStaticElementInteractions": "off"

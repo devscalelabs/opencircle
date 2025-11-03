@@ -47,8 +47,8 @@ export const PostsList = () => {
 
 	if (error) {
 		return (
-			<div className="flex flex-col justify-center items-center gap-4 h-90">
-				<div className="bg-background-secondary p-4 rounded-xl">
+			<div className="flex h-90 flex-col items-center justify-center gap-4">
+				<div className="rounded-xl bg-background-secondary p-4">
 					<LockIcon className="text-foreground" />
 				</div>
 				<div className="text-balance">

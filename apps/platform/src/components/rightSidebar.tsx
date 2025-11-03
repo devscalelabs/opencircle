@@ -11,11 +11,11 @@ export const RightSidebar = () => {
 			{account ? (
 				<UserCard account={account} />
 			) : (
-				<section className="px-4 h-14 flex justify-between items-center">
+				<section className="flex h-14 items-center justify-between px-4">
 					<div />
-					<div className="flex gap-4 items-center">
+					<div className="flex items-center gap-4">
 						<Link to="/register">
-							<div className="text-xs font-medium">Sign up</div>
+							<div className="font-medium text-xs">Sign up</div>
 						</Link>
 						<Link to="/login">
 							<Button size="sm">Login</Button>
@@ -23,7 +23,7 @@ export const RightSidebar = () => {
 					</div>
 				</section>
 			)}
-			<main className="p-4 space-y-8"></main>
+			<main className="space-y-8 p-4"></main>
 		</div>
 	);
 };

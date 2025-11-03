@@ -11,8 +11,8 @@ function RouteComponent() {
 	const { courses } = useCourses();
 	return (
 		<main>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-medium">Courses</h1>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="font-medium text-2xl">Courses</h1>
 				<Link to="/courses/new">
 					<Button size="sm">Create Course</Button>
 				</Link>

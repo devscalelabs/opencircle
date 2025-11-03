@@ -94,7 +94,7 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 	};
 
 	return (
-		<div className="border-b border-border p-4 space-y-4">
+		<div className="space-y-4 border-border border-b p-4">
 			<textarea
 				ref={textareaRef}
 				value={content}
@@ -102,7 +102,7 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 				onKeyDown={handleKeyDown}
 				rows={3}
 				placeholder="Write your reply here"
-				className="w-full block resize-none focus-within:outline-none"
+				className="block w-full resize-none focus-within:outline-none"
 			></textarea>
 
 			{showMentions && !isLoading && (
@@ -120,9 +120,9 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 					{files.map((file, index) => (
 						<div
 							key={`file-${file.name}`}
-							className="relative bg-muted rounded-lg p-2 flex items-center gap-2"
+							className="relative flex items-center gap-2 rounded-lg bg-muted p-2"
 						>
-							<span className="text-sm text-muted-foreground truncate max-w-[200px]">
+							<span className="max-w-[200px] truncate text-muted-foreground text-sm">
 								{file.name}
 							</span>
 							<button
@@ -137,8 +137,8 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 				</div>
 			)}
 
-			<div className="flex justify-between items-center">
-				<div className="flex gap-4 items-center">
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-4">
 					<input
 						ref={fileInputRef}
 						type="file"

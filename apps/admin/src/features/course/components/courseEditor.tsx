@@ -62,8 +62,8 @@ export const CourseEditor = ({
 	return (
 		<>
 			<form onSubmit={handleSubmit} className="space-y-6">
-				<div className="flex justify-between items-center">
-					<h1 className="text-3xl font-bold">
+				<div className="flex items-center justify-between">
+					<h1 className="font-bold text-3xl">
 						{isEdit ? "Edit Course" : "Create New Course"}
 					</h1>
 					<div className="flex gap-2">
@@ -79,10 +79,10 @@ export const CourseEditor = ({
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-					<div className="lg:col-span-2 space-y-6">
+				<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div className="space-y-6 lg:col-span-2">
 						<div>
-							<label htmlFor="title" className="block text-sm font-medium mb-2">
+							<label htmlFor="title" className="mb-2 block font-medium text-sm">
 								Title *
 							</label>
 							<Input
@@ -96,7 +96,7 @@ export const CourseEditor = ({
 						<div>
 							<label
 								htmlFor="description"
-								className="block text-sm font-medium mb-2"
+								className="mb-2 block font-medium text-sm"
 							>
 								Description
 							</label>
@@ -105,14 +105,14 @@ export const CourseEditor = ({
 								onChange={(e) => setDescription(e.target.value)}
 								placeholder="Enter course description..."
 								rows={4}
-								className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+								className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
 							/>
 						</div>
 
 						<div>
 							<label
 								htmlFor="thumbnailUrl"
-								className="block text-sm font-medium mb-2"
+								className="mb-2 block font-medium text-sm"
 							>
 								Thumbnail URL
 							</label>
@@ -127,7 +127,7 @@ export const CourseEditor = ({
 							<div>
 								<label
 									htmlFor="status"
-									className="block text-sm font-medium mb-2"
+									className="mb-2 block font-medium text-sm"
 								>
 									Status
 								</label>
@@ -135,7 +135,7 @@ export const CourseEditor = ({
 									<DropdownMenu.Trigger asChild>
 										<button
 											type="button"
-											className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left flex items-center justify-between"
+											className="flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-left text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
 										>
 											<span className="capitalize">{status}</span>
 											<svg
@@ -158,22 +158,22 @@ export const CourseEditor = ({
 									<DropdownMenu.Content
 										sideOffset={5}
 										align="start"
-										className="rounded-lg overflow-hidden bg-background border border-border min-w-[200px] shadow-lg z-50"
+										className="z-50 min-w-[200px] overflow-hidden rounded-lg border border-border bg-background shadow-lg"
 									>
 										<DropdownMenu.Item
-											className="px-3 py-2 text-sm hover:bg-muted focus-within:outline-none cursor-pointer capitalize"
+											className="cursor-pointer px-3 py-2 text-sm capitalize focus-within:outline-none hover:bg-muted"
 											onClick={() => setStatus("draft")}
 										>
 											Draft
 										</DropdownMenu.Item>
 										<DropdownMenu.Item
-											className="px-3 py-2 text-sm hover:bg-muted focus-within:outline-none cursor-pointer capitalize"
+											className="cursor-pointer px-3 py-2 text-sm capitalize focus-within:outline-none hover:bg-muted"
 											onClick={() => setStatus("published")}
 										>
 											Published
 										</DropdownMenu.Item>
 										<DropdownMenu.Item
-											className="px-3 py-2 text-sm hover:bg-muted focus-within:outline-none cursor-pointer capitalize"
+											className="cursor-pointer px-3 py-2 text-sm capitalize focus-within:outline-none hover:bg-muted"
 											onClick={() => setStatus("archived")}
 										>
 											Archived
@@ -185,7 +185,7 @@ export const CourseEditor = ({
 							<div>
 								<label
 									htmlFor="price"
-									className="block text-sm font-medium mb-2"
+									className="mb-2 block font-medium text-sm"
 								>
 									Price ($)
 								</label>
@@ -202,14 +202,14 @@ export const CourseEditor = ({
 					</div>
 
 					<div className="space-y-6">
-						<div className="bg-muted/50 rounded-lg p-6">
-							<h3 className="font-medium mb-4">Course Preview</h3>
+						<div className="rounded-lg bg-muted/50 p-6">
+							<h3 className="mb-4 font-medium">Course Preview</h3>
 							<div className="space-y-3">
 								{thumbnailUrl && (
 									<img
 										src={thumbnailUrl}
 										alt="Course thumbnail"
-										className="w-full h-32 object-cover rounded-md"
+										className="h-32 w-full rounded-md object-cover"
 										onError={(e) => {
 											e.currentTarget.style.display = "none";
 										}}
@@ -219,13 +219,13 @@ export const CourseEditor = ({
 									{title || "Course Title"}
 								</h4>
 								{description && (
-									<p className="text-sm text-muted-foreground line-clamp-3">
+									<p className="line-clamp-3 text-muted-foreground text-sm">
 										{description}
 									</p>
 								)}
 								<div className="flex items-center justify-between pt-2">
 									<span
-										className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+										className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-medium text-xs ${
 											status === "published"
 												? "bg-green-100 text-green-800"
 												: status === "draft"
@@ -245,7 +245,7 @@ export const CourseEditor = ({
 				</div>
 			</form>
 			{course?.id && (
-				<div className="border-t pt-6 mt-6">
+				<div className="mt-6 border-t pt-6">
 					<CourseContentManager courseId={course.id} />
 				</div>
 			)}

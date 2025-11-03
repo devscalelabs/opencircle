@@ -25,7 +25,7 @@ export const ArticleList = ({
 			accessorKey: "title",
 			header: "Title",
 			cell: ({ row }) => (
-				<div className="font-medium max-w-xs truncate">
+				<div className="max-w-xs truncate font-medium">
 					{row.getValue("title")}
 				</div>
 			),
@@ -72,7 +72,7 @@ export const ArticleList = ({
 						<Link
 							to="/articles/$id"
 							params={{ id: article.id }}
-							className="p-1 hover:bg-gray-100 rounded"
+							className="rounded p-1 hover:bg-gray-100"
 							title="View"
 						>
 							<Eye size={16} />
@@ -80,7 +80,7 @@ export const ArticleList = ({
 						<Link
 							to="/articles/edit/$id"
 							params={{ id: article.id }}
-							className="p-1 hover:bg-gray-100 rounded"
+							className="rounded p-1 hover:bg-gray-100"
 							title="Edit"
 						>
 							<Edit size={16} />
@@ -89,7 +89,7 @@ export const ArticleList = ({
 							<button
 								type="button"
 								onClick={() => onDelete(article.id)}
-								className="p-1 hover:bg-red-100 rounded text-red-600"
+								className="rounded p-1 text-red-600 hover:bg-red-100"
 								title="Delete"
 							>
 								<Trash2 size={16} />
@@ -138,7 +138,7 @@ export const ArticleList = ({
 						table.getRowModel().rows.map((row) => (
 							<tr
 								key={row.id}
-								className="border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+								className="border-border border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 							>
 								{row.getVisibleCells().map((cell) => (
 									<td key={cell.id} className="p-4 align-middle">

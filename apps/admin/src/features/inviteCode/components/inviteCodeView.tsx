@@ -32,15 +32,15 @@ export const InviteCodeView = ({
 	if (isLoading) {
 		return (
 			<div className="flex justify-center py-8">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border"></div>
+				<div className="h-8 w-8 animate-spin rounded-full border-border border-b-2"></div>
 			</div>
 		);
 	}
 
 	if (!inviteCode) {
 		return (
-			<div className="text-center py-12">
-				<p className="text-gray-500 mb-4">Invite code not found</p>
+			<div className="py-12 text-center">
+				<p className="mb-4 text-gray-500">Invite code not found</p>
 				<Link to="/invite-codes">
 					<Button>Back to Invite Codes</Button>
 				</Link>
@@ -49,8 +49,8 @@ export const InviteCodeView = ({
 	}
 
 	return (
-		<div className="max-w-4xl mx-auto p-6">
-			<div className="flex justify-between items-center mb-6">
+		<div className="mx-auto max-w-4xl p-6">
+			<div className="mb-6 flex items-center justify-between">
 				<div className="flex items-center gap-4">
 					<Link to="/invite-codes">
 						<Button variant="secondary" size="sm">
@@ -58,7 +58,7 @@ export const InviteCodeView = ({
 							Back
 						</Button>
 					</Link>
-					<h1 className="text-3xl font-bold">Invite Code Details</h1>
+					<h1 className="font-bold text-3xl">Invite Code Details</h1>
 				</div>
 				<div className="flex gap-2">
 					{onEdit && (
@@ -80,20 +80,20 @@ export const InviteCodeView = ({
 				</div>
 			</div>
 
-			<div className="bg-white border border-border rounded-lg p-6 space-y-6">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div className="space-y-6 rounded-lg border border-border bg-white p-6">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">Code</h3>
-						<p className="font-mono text-lg bg-gray-50 p-3 rounded border">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">Code</h3>
+						<p className="rounded border bg-gray-50 p-3 font-mono text-lg">
 							{inviteCode.code}
 						</p>
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">Status</h3>
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">Status</h3>
 						<div className="flex items-center gap-2">
 							<span
-								className={`capitalize px-3 py-1 rounded-full text-sm font-medium ${
+								className={`rounded-full px-3 py-1 font-medium text-sm capitalize ${
 									inviteCode.status === "active"
 										? "bg-green-100 text-green-800"
 										: inviteCode.status === "used"
@@ -107,15 +107,15 @@ export const InviteCodeView = ({
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">Usage</h3>
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">Usage</h3>
 						<p className="text-lg">
 							{inviteCode.used_count} /{" "}
 							{inviteCode.max_uses === 0 ? "Unlimited" : inviteCode.max_uses}
 						</p>
 						{inviteCode.max_uses > 0 && (
-							<div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+							<div className="mt-2 h-2 w-full rounded-full bg-gray-200">
 								<div
-									className="bg-blue-600 h-2 rounded-full"
+									className="h-2 rounded-full bg-blue-600"
 									style={{
 										width: `${Math.min(
 											(inviteCode.used_count / inviteCode.max_uses) * 100,
@@ -128,7 +128,7 @@ export const InviteCodeView = ({
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">
 							Expires At
 						</h3>
 						<p className="text-lg">
@@ -139,12 +139,12 @@ export const InviteCodeView = ({
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">
 							Auto Join Channel
 						</h3>
 						<p className="text-lg">
 							{inviteCode.auto_join_channel_id ? (
-								<span className="font-mono bg-gray-50 px-3 py-1 rounded border">
+								<span className="rounded border bg-gray-50 px-3 py-1 font-mono">
 									{inviteCode.auto_join_channel_id}
 								</span>
 							) : (
@@ -154,14 +154,14 @@ export const InviteCodeView = ({
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">
 							Created By
 						</h3>
-						<p className="text-lg font-mono">{inviteCode.created_by}</p>
+						<p className="font-mono text-lg">{inviteCode.created_by}</p>
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">
 							Created At
 						</h3>
 						<p className="text-lg">
@@ -170,7 +170,7 @@ export const InviteCodeView = ({
 					</div>
 
 					<div>
-						<h3 className="text-sm font-medium text-gray-500 mb-2">
+						<h3 className="mb-2 font-medium text-gray-500 text-sm">
 							Updated At
 						</h3>
 						<p className="text-lg">
@@ -180,25 +180,25 @@ export const InviteCodeView = ({
 				</div>
 
 				<div className="border-t pt-6">
-					<h3 className="text-lg font-medium mb-4">Usage Statistics</h3>
-					<div className="bg-gray-50 rounded-lg p-4">
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+					<h3 className="mb-4 font-medium text-lg">Usage Statistics</h3>
+					<div className="rounded-lg bg-gray-50 p-4">
+						<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 							<div className="text-center">
-								<p className="text-2xl font-bold text-blue-600">
+								<p className="font-bold text-2xl text-blue-600">
 									{inviteCode.used_count}
 								</p>
-								<p className="text-sm text-gray-500">Times Used</p>
+								<p className="text-gray-500 text-sm">Times Used</p>
 							</div>
 							<div className="text-center">
-								<p className="text-2xl font-bold text-green-600">
+								<p className="font-bold text-2xl text-green-600">
 									{inviteCode.max_uses === 0
 										? "∞"
 										: Math.max(0, inviteCode.max_uses - inviteCode.used_count)}
 								</p>
-								<p className="text-sm text-gray-500">Remaining Uses</p>
+								<p className="text-gray-500 text-sm">Remaining Uses</p>
 							</div>
 							<div className="text-center">
-								<p className="text-2xl font-bold text-purple-600">
+								<p className="font-bold text-2xl text-purple-600">
 									{inviteCode.max_uses === 0
 										? "N/A"
 										: Math.round(
@@ -206,7 +206,7 @@ export const InviteCodeView = ({
 											)}
 									%
 								</p>
-								<p className="text-sm text-gray-500">Usage Rate</p>
+								<p className="text-gray-500 text-sm">Usage Rate</p>
 							</div>
 						</div>
 					</div>

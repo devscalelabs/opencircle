@@ -93,12 +93,12 @@ export const SectionEditor = ({
 
 	if (isEdit) {
 		return (
-			<div className="border border-border rounded-lg p-6 space-y-4">
+			<div className="space-y-4 rounded-lg border border-border p-6">
 				<div className="space-y-4">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
-							<GripVertical className="w-5 h-5 text-muted-foreground cursor-move" />
-							<h3 className="text-lg font-semibold">Section Editor</h3>
+							<GripVertical className="h-5 w-5 cursor-move text-muted-foreground" />
+							<h3 className="font-semibold text-lg">Section Editor</h3>
 						</div>
 						<div className="flex gap-2">
 							{onCancel && (
@@ -118,9 +118,9 @@ export const SectionEditor = ({
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						<div>
-							<label htmlFor="title" className="block text-sm font-medium mb-2">
+							<label htmlFor="title" className="mb-2 block font-medium text-sm">
 								Title *
 							</label>
 							<Input
@@ -132,7 +132,7 @@ export const SectionEditor = ({
 						</div>
 
 						<div>
-							<label htmlFor="order" className="block text-sm font-medium mb-2">
+							<label htmlFor="order" className="mb-2 block font-medium text-sm">
 								Order
 							</label>
 							<Input
@@ -148,7 +148,7 @@ export const SectionEditor = ({
 					<div>
 						<label
 							htmlFor="description"
-							className="block text-sm font-medium mb-2"
+							className="mb-2 block font-medium text-sm"
 						>
 							Description
 						</label>
@@ -157,14 +157,14 @@ export const SectionEditor = ({
 							onChange={(e) => setDescription(e.target.value)}
 							placeholder="Enter section description..."
 							rows={3}
-							className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+							className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
 						/>
 					</div>
 				</div>
 
 				{section?.id && (
 					<div className="border-t pt-4">
-						<div className="flex items-center justify-between mb-4">
+						<div className="mb-4 flex items-center justify-between">
 							<h4 className="font-medium">Lessons</h4>
 							<Button
 								type="button"
@@ -177,7 +177,7 @@ export const SectionEditor = ({
 						</div>
 
 						{showLessonForm && (
-							<div className="mb-4 p-4 border border-border rounded-lg bg-muted/30">
+							<div className="mb-4 rounded-lg border border-border bg-muted/30 p-4">
 								<LessonEditor
 									onSave={handleCreateLesson}
 									onCancel={() => setShowLessonForm(false)}
@@ -187,11 +187,11 @@ export const SectionEditor = ({
 						)}
 
 						{isLessonsLoading ? (
-							<div className="text-center py-4 text-muted-foreground">
+							<div className="py-4 text-center text-muted-foreground">
 								Loading lessons...
 							</div>
 						) : lessons.length === 0 ? (
-							<div className="text-center py-8 text-muted-foreground border-2 border-dashed border-border rounded-lg">
+							<div className="rounded-lg border-2 border-border border-dashed py-8 text-center text-muted-foreground">
 								No lessons yet. Click "Add Lesson" to create your first lesson.
 							</div>
 						) : (
@@ -199,13 +199,13 @@ export const SectionEditor = ({
 								{lessons.map((lesson) => (
 									<div
 										key={lesson.id}
-										className="flex items-center justify-between p-3 border border-border rounded-lg bg-background"
+										className="flex items-center justify-between rounded-lg border border-border bg-background p-3"
 									>
 										<div className="flex items-center gap-3">
-											<GripVertical className="w-4 h-4 text-muted-foreground cursor-move" />
+											<GripVertical className="h-4 w-4 cursor-move text-muted-foreground" />
 											<div>
 												<h5 className="font-medium">{lesson.title}</h5>
-												<p className="text-sm text-muted-foreground capitalize">
+												<p className="text-muted-foreground text-sm capitalize">
 													{lesson.type}
 												</p>
 											</div>
@@ -242,24 +242,24 @@ export const SectionEditor = ({
 	}
 
 	return (
-		<div className="border border-border rounded-lg overflow-hidden">
+		<div className="overflow-hidden rounded-lg border border-border">
 			<div
-				className="p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
+				className="cursor-pointer bg-muted/30 p-4 transition-colors hover:bg-muted/50"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<GripVertical className="w-5 h-5 text-muted-foreground" />
+						<GripVertical className="h-5 w-5 text-muted-foreground" />
 						<h3 className="font-medium">{title || "New Section"}</h3>
 						{description && (
-							<p className="text-sm text-muted-foreground line-clamp-1">
+							<p className="line-clamp-1 text-muted-foreground text-sm">
 								{description}
 							</p>
 						)}
 					</div>
 					<div className="flex items-center gap-2">
 						{section?.id && (
-							<span className="text-sm text-muted-foreground">
+							<span className="text-muted-foreground text-sm">
 								{lessons.length} lessons
 							</span>
 						)}
@@ -284,13 +284,13 @@ export const SectionEditor = ({
 			</div>
 
 			{isExpanded && (
-				<div className="p-4 border-t border-border">
+				<div className="border-border border-t p-4">
 					<div className="space-y-4">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							<div>
 								<label
 									htmlFor="title"
-									className="block text-sm font-medium mb-2"
+									className="mb-2 block font-medium text-sm"
 								>
 									Title *
 								</label>
@@ -305,7 +305,7 @@ export const SectionEditor = ({
 							<div>
 								<label
 									htmlFor="order"
-									className="block text-sm font-medium mb-2"
+									className="mb-2 block font-medium text-sm"
 								>
 									Order
 								</label>
@@ -322,7 +322,7 @@ export const SectionEditor = ({
 						<div>
 							<label
 								htmlFor="description"
-								className="block text-sm font-medium mb-2"
+								className="mb-2 block font-medium text-sm"
 							>
 								Description
 							</label>
@@ -331,7 +331,7 @@ export const SectionEditor = ({
 								onChange={(e) => setDescription(e.target.value)}
 								placeholder="Enter section description..."
 								rows={3}
-								className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+								className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
 							/>
 						</div>
 

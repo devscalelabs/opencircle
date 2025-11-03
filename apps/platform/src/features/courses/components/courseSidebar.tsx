@@ -41,9 +41,9 @@ export const CourseSidebar = ({
 	if (sectionsLoading) {
 		return (
 			<div className="space-y-4">
-				<div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-				<div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-				<div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+				<div className="h-4 animate-pulse rounded bg-gray-200"></div>
+				<div className="h-4 animate-pulse rounded bg-gray-200"></div>
+				<div className="h-4 animate-pulse rounded bg-gray-200"></div>
 			</div>
 		);
 	}
@@ -57,20 +57,20 @@ export const CourseSidebar = ({
 			{sections.map((section) => {
 				const isExpanded = expandedSections[section.id] ?? false;
 				return (
-					<div key={section.id} className="border-b border-border pb-2">
+					<div key={section.id} className="border-border border-b pb-2">
 						<button
 							type="button"
-							className="flex justify-between items-center w-full py-2 text-left font-medium text-foreground hover:bg-background/50 rounded px-2"
+							className="flex w-full items-center justify-between rounded px-2 py-2 text-left font-medium text-foreground hover:bg-background/50"
 							onClick={() => toggleSection(section.id)}
 						>
 							<span className="text-sm">{section.title}</span>
-							<span className="text-xs text-foreground/50">
+							<span className="text-foreground/50 text-xs">
 								{section.lessons?.length || 0} lessons
 							</span>
 						</button>
 
 						{isExpanded && section.lessons && (
-							<div className="ml-2 mt-1 space-y-1">
+							<div className="mt-1 ml-2 space-y-1">
 								{section.lessons.map((lesson) => {
 									const isActive = lesson.id === currentLessonId;
 									return (
@@ -78,9 +78,9 @@ export const CourseSidebar = ({
 											key={lesson.id}
 											to="/lessons/$id"
 											params={{ id: lesson.id }}
-											className={`block py-1.5 px-2 rounded text-sm transition-colors ${
+											className={`block rounded px-2 py-1.5 text-sm transition-colors ${
 												isActive
-													? "bg-primary text-foreground font-medium"
+													? "bg-primary font-medium text-foreground"
 													: "text-foreground/70 hover:bg-background/50"
 											}`}
 										>

@@ -92,7 +92,7 @@ export const CreateChannelDialog = ({ children }: CreateChannelDialogProps) => {
 				<form onSubmit={handleSubmit}>
 					<div className="grid gap-4 py-4">
 						<div className="grid gap-2">
-							<label htmlFor={nameId} className="text-sm font-medium">
+							<label htmlFor={nameId} className="font-medium text-sm">
 								Name
 							</label>
 							<Input
@@ -104,7 +104,7 @@ export const CreateChannelDialog = ({ children }: CreateChannelDialogProps) => {
 							/>
 						</div>
 						<div className="grid gap-2">
-							<label htmlFor={descriptionId} className="text-sm font-medium">
+							<label htmlFor={descriptionId} className="font-medium text-sm">
 								Description
 							</label>
 							<Input
@@ -115,7 +115,7 @@ export const CreateChannelDialog = ({ children }: CreateChannelDialogProps) => {
 							/>
 						</div>
 						<div className="grid gap-2">
-							<label htmlFor={emojiId} className="text-sm font-medium">
+							<label htmlFor={emojiId} className="font-medium text-sm">
 								Emoji
 							</label>
 							<div className="flex gap-2">
@@ -150,14 +150,14 @@ export const CreateChannelDialog = ({ children }: CreateChannelDialogProps) => {
 							</div>
 						</div>
 						<div className="grid gap-2">
-							<label htmlFor={typeId} className="text-sm font-medium">
+							<label htmlFor={typeId} className="font-medium text-sm">
 								Type
 							</label>
 							<select
 								id={typeId}
 								value={formData.type}
 								onChange={handleInputChange("type")}
-								className="w-full block border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+								className="block w-full rounded-md border border-border px-3 py-2 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary"
 							>
 								<option value="public">Public</option>
 								<option value="private">Private</option>

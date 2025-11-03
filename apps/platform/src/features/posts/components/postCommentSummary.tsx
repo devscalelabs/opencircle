@@ -9,5 +9,5 @@ export const PostCommentSummary = ({ names }: PostCommentSummaryProps) => {
 
 	if (!summary) return null;
 
-	return <div className="text-sm text-foreground/50">{summary}</div>;
+	return <div className="text-foreground/50 text-sm">{summary}</div>;
 };

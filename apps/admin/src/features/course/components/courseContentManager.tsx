@@ -70,7 +70,7 @@ export const CourseContentManager = ({
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h2 className="text-2xl font-bold">Course Content</h2>
+				<h2 className="font-bold text-2xl">Course Content</h2>
 				<Button
 					onClick={() => setShowSectionForm(true)}
 					disabled={showSectionForm}
@@ -81,7 +81,7 @@ export const CourseContentManager = ({
 			</div>
 
 			{showSectionForm && (
-				<div className="border border-border rounded-lg p-6 bg-muted/30">
+				<div className="rounded-lg border border-border bg-muted/30 p-6">
 					<SectionEditor
 						courseId={courseId}
 						onSave={handleCreateSection}
@@ -92,13 +92,13 @@ export const CourseContentManager = ({
 			)}
 
 			{isSectionsLoading ? (
-				<div className="text-center py-12 text-muted-foreground">
+				<div className="py-12 text-center text-muted-foreground">
 					Loading course content...
 				</div>
 			) : sections.length === 0 && !showSectionForm ? (
-				<div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-					<h3 className="text-lg font-medium mb-2">No sections yet</h3>
-					<p className="text-muted-foreground mb-4">
+				<div className="rounded-lg border-2 border-border border-dashed py-12 text-center">
+					<h3 className="mb-2 font-medium text-lg">No sections yet</h3>
+					<p className="mb-4 text-muted-foreground">
 						Start building your course by adding your first section.
 					</p>
 					<Button onClick={() => setShowSectionForm(true)}>
@@ -121,21 +121,21 @@ export const CourseContentManager = ({
 									isEdit={true}
 								/>
 							) : (
-								<div className="border border-border rounded-lg p-4">
+								<div className="rounded-lg border border-border p-4">
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-3">
-											<div className="w-5 h-5 text-muted-foreground">⋮⋮</div>
+											<div className="h-5 w-5 text-muted-foreground">⋮⋮</div>
 											<div>
 												<h3 className="font-medium">{section.title}</h3>
 												{section.description && (
-													<p className="text-sm text-muted-foreground line-clamp-1">
+													<p className="line-clamp-1 text-muted-foreground text-sm">
 														{section.description}
 													</p>
 												)}
 											</div>
 										</div>
 										<div className="flex items-center gap-2">
-											<span className="text-sm text-muted-foreground">
+											<span className="text-muted-foreground text-sm">
 												{section.lessons?.length || 0} lessons
 											</span>
 											<Button

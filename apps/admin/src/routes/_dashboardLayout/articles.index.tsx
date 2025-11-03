@@ -24,8 +24,8 @@ function RouteComponent() {
 
 	return (
 		<main>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-medium">Articles</h1>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="font-medium text-2xl">Articles</h1>
 				<Link to="/articles/new">
 					<Button size="sm">Create Article</Button>
 				</Link>

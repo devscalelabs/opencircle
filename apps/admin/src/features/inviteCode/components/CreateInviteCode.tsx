@@ -89,9 +89,9 @@ export const CreateInviteCode = ({
 	};
 
 	return (
-		<div className="max-w-2xl mx-auto p-6">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">
+		<div className="mx-auto max-w-2xl p-6">
+			<div className="mb-6 flex items-center justify-between">
+				<h1 className="font-bold text-3xl">
 					{isEdit ? "Edit Invite Code" : "Create New Invite Code"}
 				</h1>
 				<Button variant="secondary" onClick={onCancel}>
@@ -101,7 +101,7 @@ export const CreateInviteCode = ({
 
 			<form onSubmit={handleSubmit} className="space-y-6">
 				<div className="space-y-2">
-					<label htmlFor={codeId} className="text-sm font-medium text-gray-700">
+					<label htmlFor={codeId} className="font-medium text-gray-700 text-sm">
 						Code (optional)
 					</label>
 					<Input
@@ -116,7 +116,7 @@ export const CreateInviteCode = ({
 				<div className="space-y-2">
 					<label
 						htmlFor={maxUsesId}
-						className="text-sm font-medium text-gray-700"
+						className="font-medium text-gray-700 text-sm"
 					>
 						Max Uses (0 for unlimited)
 					</label>
@@ -135,7 +135,7 @@ export const CreateInviteCode = ({
 				<div className="space-y-2">
 					<label
 						htmlFor={expiresAtId}
-						className="text-sm font-medium text-gray-700"
+						className="font-medium text-gray-700 text-sm"
 					>
 						Expires At (optional)
 					</label>
@@ -159,7 +159,7 @@ export const CreateInviteCode = ({
 				<div className="space-y-2">
 					<label
 						htmlFor={autoJoinChannelId}
-						className="text-sm font-medium text-gray-700"
+						className="font-medium text-gray-700 text-sm"
 					>
 						Auto Join Channel (optional)
 					</label>
@@ -178,10 +178,10 @@ export const CreateInviteCode = ({
 							</Button>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Portal>
-							<DropdownMenu.Content className="w-56 bg-white border border-gray-200 rounded-md shadow-lg p-1">
+							<DropdownMenu.Content className="w-56 rounded-md border border-gray-200 bg-white p-1 shadow-lg">
 								<DropdownMenu.Item
 									onClick={() => handleChange("auto_join_channel_id", "")}
-									className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
+									className="cursor-pointer rounded px-3 py-2 text-gray-700 text-sm hover:bg-gray-100"
 								>
 									None
 								</DropdownMenu.Item>
@@ -191,7 +191,7 @@ export const CreateInviteCode = ({
 										onClick={() =>
 											handleChange("auto_join_channel_id", channel.id)
 										}
-										className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer"
+										className="cursor-pointer rounded px-3 py-2 text-gray-700 text-sm hover:bg-gray-100"
 									>
 										{channel.name}
 									</DropdownMenu.Item>

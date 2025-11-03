@@ -81,7 +81,7 @@ export function AppSettings() {
 	if (isAppSettingsLoading) {
 		return (
 			<main className="p-6">
-				<div className="flex items-center justify-center h-64">
+				<div className="flex h-64 items-center justify-center">
 					<div className="animate-pulse text-muted-foreground">
 						Loading settings...
 					</div>
@@ -91,28 +91,28 @@ export function AppSettings() {
 	}
 
 	return (
-		<main className="p-6 max-w-4xl">
+		<main className="max-w-4xl p-6">
 			<div className="mb-6">
-				<h1 className="text-2xl font-medium flex items-center gap-2">
-					<Settings className="w-6 h-6" />
+				<h1 className="flex items-center gap-2 font-medium text-2xl">
+					<Settings className="h-6 w-6" />
 					App Settings
 				</h1>
-				<p className="text-muted-foreground mt-1">
+				<p className="mt-1 text-muted-foreground">
 					Manage your application settings and preferences
 				</p>
 			</div>
 
-			<div className="border border-border rounded-lg shadow-sm">
-				<div className="p-6 border-b border-border">
-					<h2 className="text-lg font-semibold">General Settings</h2>
-					<p className="text-sm text-gray-600 mt-1">
+			<div className="rounded-lg border border-border shadow-sm">
+				<div className="border-border border-b p-6">
+					<h2 className="font-semibold text-lg">General Settings</h2>
+					<p className="mt-1 text-gray-600 text-sm">
 						Configure your application name, logo, and user registration
 						settings
 					</p>
 				</div>
-				<div className="p-6 space-y-6">
+				<div className="space-y-6 p-6">
 					<div className="space-y-2">
-						<label htmlFor={appNameId} className="block text-sm font-medium">
+						<label htmlFor={appNameId} className="block font-medium text-sm">
 							Application Name
 						</label>
 						<Input
@@ -124,7 +124,7 @@ export function AppSettings() {
 					</div>
 
 					<div className="space-y-2">
-						<label htmlFor={appLogoId} className="block text-sm font-medium">
+						<label htmlFor={appLogoId} className="block font-medium text-sm">
 							Application Logo
 						</label>
 						<div className="flex gap-2">
@@ -157,7 +157,7 @@ export function AppSettings() {
 								<img
 									src={formData.app_logo_url}
 									alt="Logo preview"
-									className="h-16 w-16 object-contain rounded border"
+									className="h-16 w-16 rounded border object-contain"
 								/>
 							</div>
 						)}
@@ -173,7 +173,7 @@ export function AppSettings() {
 							}
 							className="rounded"
 						/>
-						<label htmlFor="enable_sign_up" className="text-sm font-medium">
+						<label htmlFor="enable_sign_up" className="font-medium text-sm">
 							Enable user registration
 						</label>
 					</div>
@@ -182,12 +182,12 @@ export function AppSettings() {
 						<Button onClick={handleSave} disabled={isUpdatingAppSettings}>
 							{isUpdatingAppSettings ? (
 								<>
-									<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+									<div className="mr-2 h-4 w-4 animate-spin rounded-full border-white border-b-2" />
 									Saving...
 								</>
 							) : (
 								<>
-									<Save className="w-4 h-4 mr-2" />
+									<Save className="mr-2 h-4 w-4" />
 									Save Changes
 								</>
 							)}

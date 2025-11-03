@@ -23,11 +23,11 @@ export const ArticleList = () => {
 				return (
 					<main
 						key={article.id}
-						className="p-4 border-b border-border space-y-4"
+						className="space-y-4 border-border border-b p-4"
 					>
 						<div
 							onClick={() => navigate({ to: `/articles/${article.id}` })}
-							className="cursor-pointer max-w-lg prose prose-invert prose-headings:text-base prose-headings:text-foreground prose-headings:font-medium prose-p:text-sm prose-p:text-foreground/40"
+							className="prose prose-invert max-w-lg cursor-pointer prose-headings:font-medium prose-headings:text-base prose-headings:text-foreground prose-p:text-foreground/40 prose-p:text-sm"
 						>
 							<h3 className="text-xl">{article.title}</h3>
 							<MDEditor.Markdown
@@ -35,7 +35,7 @@ export const ArticleList = () => {
 								className="!bg-transparent"
 							/>
 						</div>
-						<section className="flex gap-2 items-center mt-4">
+						<section className="mt-4 flex items-center gap-2">
 							<Avatar
 								initials={initials}
 								image_url={article.user.avatar_url || ""}
@@ -55,7 +55,7 @@ export const ArticleList = () => {
 								</div>
 							</Link>
 						</section>
-						<section className="flex gap-4 items-center mt-4">
+						<section className="mt-4 flex items-center gap-4">
 							<PostCardReactions post={article} />
 							<div className="flex items-center gap-2 text-sm">
 								<MessageCircle size={18} />

@@ -36,8 +36,8 @@ function RouteComponent() {
 
 	return (
 		<main>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-medium">Invite Codes</h1>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="font-medium text-2xl">Invite Codes</h1>
 				<Link to="/invite-codes/new">
 					<Button size="sm">Create Invite Code</Button>
 				</Link>

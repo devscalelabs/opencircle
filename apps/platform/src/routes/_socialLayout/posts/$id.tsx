@@ -39,21 +39,21 @@ function PostDetail() {
 	return (
 		<main>
 			<Header label="Back" />
-			<main className="relative border-b border-border space-y-2 max-w-2xl p-6">
+			<main className="relative max-w-2xl space-y-2 border-border border-b p-6">
 				{post.user_id === account?.id && (
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild>
-							<div className="w-6 h-6 bg-background-secondary absolute top-4 right-4 flex justify-center items-center rounded-lg">
+							<div className="absolute top-4 right-4 flex h-6 w-6 items-center justify-center rounded-lg bg-background-secondary">
 								<EllipsisVertical size={12} className="" />
 							</div>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content
 							sideOffset={10}
 							align="end"
-							className="rounded-lg overflow-hidden bg-background-secondary border border-border min-w-[80px] shadow-2xl text-xs font-medium"
+							className="min-w-[80px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 						>
 							<DropdownMenu.Item
-								className="p-3 hover:bg-primary focus-within:outline-none"
+								className="p-3 focus-within:outline-none hover:bg-primary"
 								onClick={() => deletePost(post.id)}
 							>
 								Delete
@@ -61,7 +61,7 @@ function PostDetail() {
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				)}
-				<section className="flex gap-2 items-center">
+				<section className="flex items-center gap-2">
 					<Avatar initials={initials} image_url={post.user.avatar_url || ""} />
 					<Link
 						to="/$username"
@@ -69,7 +69,7 @@ function PostDetail() {
 						className="group"
 					>
 						<div className="space-y-0.5">
-							<div className="flex gap-1 items-center group-hover:underline">
+							<div className="flex items-center gap-1 group-hover:underline">
 								<div>{post.user.name || post.user.email}</div>
 								{post.user.role === "admin" && (
 									<svg
@@ -108,17 +108,17 @@ function PostDetail() {
 				<p className="whitespace-pre-line">{renderContent(post.content)}</p>
 				<UrlPreview content={post.content} />
 				<MediaGallery media={post.medias} />
-				<div className="flex gap-2 items-center mt-8">
+				<div className="mt-8 flex items-center gap-2">
 					{post.channel && (
-						<div className="flex px-2 py-1 rounded-full text-xs font-medium bg-background-secondary w-fit ">
+						<div className="flex w-fit rounded-full bg-background-secondary px-2 py-1 font-medium text-xs">
 							{post.channel.emoji} {post.channel.name}
 						</div>
 					)}
-					<div className="text-xs text-foreground/50">
+					<div className="text-foreground/50 text-xs">
 						{moment.utc(post.created_at).fromNow()}
 					</div>
 				</div>
-				<section className="flex gap-4 items-center pt-4">
+				<section className="flex items-center gap-4 pt-4">
 					<Button
 						variant="secondary"
 						onClick={() => setShowReplyForm(!showReplyForm)}

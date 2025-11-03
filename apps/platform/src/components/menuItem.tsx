@@ -18,7 +18,7 @@ export const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 		return (
 			<Link
 				to={to}
-				className="flex text-sm items-center cursor-pointer hover:bg-primary rounded-lg p-2 transition duration-150"
+				className="flex cursor-pointer items-center rounded-lg p-2 text-sm transition duration-150 hover:bg-primary"
 			>
 				{content}
 			</Link>
@@ -26,7 +26,7 @@ export const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 	}
 
 	return (
-		<div className="flex text-sm items-center cursor-pointer hover:bg-primary rounded-lg p-2 transition duration-150">
+		<div className="flex cursor-pointer items-center rounded-lg p-2 text-sm transition duration-150 hover:bg-primary">
 			{content}
 		</div>
 	);

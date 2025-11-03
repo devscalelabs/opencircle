@@ -26,15 +26,15 @@ function UserDetail() {
 	return (
 		<main>
 			<Header label="Back" />
-			<section className="flex flex-col items-center py-12 space-y-4">
+			<section className="flex flex-col items-center space-y-4 py-12">
 				<Avatar
 					size="xl"
 					initials={initials}
 					image_url={user.avatar_url || ""}
 				/>
 				<main className="flex flex-col items-center gap-4">
-					<div className="text-center space-y-2">
-						<div className="flex gap-1 items-center justify-center text-xl">
+					<div className="space-y-2 text-center">
+						<div className="flex items-center justify-center gap-1 text-xl">
 							<div>{user.name}</div>
 							{user.role === "admin" && (
 								<svg
@@ -64,19 +64,19 @@ function UserDetail() {
 								</svg>
 							)}
 						</div>
-						<div className="text-xs font-medium text-foreground/50">
+						<div className="font-medium text-foreground/50 text-xs">
 							{user.email}
 						</div>
 					</div>
 					<div>{user.bio}</div>
 				</main>
-				<div className="flex gap-4 items-center">
+				<div className="flex items-center gap-4">
 					{user.user_social?.twitter_url && (
 						<a
 							href={user.user_social.twitter_url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-foreground/70 hover:text-foreground transition-colors"
+							className="text-foreground/70 transition-colors hover:text-foreground"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@ function UserDetail() {
 							href={user.user_social.linkedin_url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-foreground/70 hover:text-foreground transition-colors"
+							className="text-foreground/70 transition-colors hover:text-foreground"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +148,7 @@ function UserDetail() {
 							href={user.user_social.github_url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-foreground/70 hover:text-foreground transition-colors"
+							className="text-foreground/70 transition-colors hover:text-foreground"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -198,7 +198,7 @@ function UserDetail() {
 							href={user.user_social.website_url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-foreground/70 hover:text-foreground transition-colors"
+							className="text-foreground/70 transition-colors hover:text-foreground"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
