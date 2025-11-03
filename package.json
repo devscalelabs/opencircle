@@ -16,5 +16,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "husky": "^9.0.0"
+  },
+  "dependencies": {
+    "tailwindcss": "^4.1.14"
   }
 }

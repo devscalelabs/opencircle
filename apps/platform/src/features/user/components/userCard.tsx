@@ -17,7 +17,7 @@ export const UserCard = ({ account }: UserCardProps) => {
 	}
 
 	return (
-		<section className="h-14 flex items-center justify-between font-semibold text-sm px-4 border-b border-border">
+		<section className="flex h-14 items-center justify-between border-border border-b px-4 font-semibold text-sm">
 			<div>{account.name}</div>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
@@ -29,10 +29,10 @@ export const UserCard = ({ account }: UserCardProps) => {
 				<DropdownMenu.Content
 					sideOffset={10}
 					align="end"
-					className="rounded-lg overflow-hidden bg-background-secondary border border-border min-w-[200px] shadow-2xl text-xs font-medium"
+					className="min-w-[200px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 				>
 					<DropdownMenu.Item
-						className="p-3 hover:bg-primary focus-within:outline-none"
+						className="p-3 focus-within:outline-none hover:bg-primary"
 						onClick={() =>
 							navigate({
 								to: "/$username",
@@ -43,14 +43,14 @@ export const UserCard = ({ account }: UserCardProps) => {
 						Profile
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						className="p-3 hover:bg-primary focus-within:outline-none"
+						className="p-3 focus-within:outline-none hover:bg-primary"
 						onClick={() => navigate({ to: "/edit-profile" })}
 					>
 						Edit Profile
 					</DropdownMenu.Item>
 					<DropdownMenu.Separator className="h-0.5 bg-border" />
 					<DropdownMenu.Item
-						className="p-3 hover:bg-primary focus-within:outline-none"
+						className="p-3 focus-within:outline-none hover:bg-primary"
 						onClick={handleLogout}
 					>
 						Logout

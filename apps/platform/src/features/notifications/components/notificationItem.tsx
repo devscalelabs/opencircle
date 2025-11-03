@@ -50,19 +50,19 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 	return (
 		<main>
 			<div
-				className="flex gap-3 p-3 hover:bg-accent transition-colors duration-150"
+				className="flex gap-3 p-3 transition-colors duration-150 hover:bg-accent"
 				style={{ opacity: notification.is_read ? "50%" : "100%" }}
 			>
 				<Avatar
 					image_url={notification.sender.avatar_url || ""}
 					initials={notification.sender.username.charAt(0).toUpperCase()}
 				/>
-				<div className="flex-1 min-w-0 space-y-1">
-					<p className="text-sm text-foreground truncate">
+				<div className="min-w-0 flex-1 space-y-1">
+					<p className="truncate text-foreground text-sm">
 						{getNotificationMessage()}
 					</p>
 
-					<p className="text-xs text-muted-foreground">
+					<p className="text-muted-foreground text-xs">
 						{getTimeAgo(notification.created_at)}
 					</p>
 				</div>
@@ -88,13 +88,13 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 							>
 								{isMarkingAsRead ? "Marking..." : "Mark as read"}
 							</Button>
-							<div className="flex-shrink-0 w-2 h-2 bg-primary rounded-full"></div>
+							<div className="h-2 w-2 flex-shrink-0 rounded-full bg-primary"></div>
 						</>
 					)}
 				</div>
 			</div>
-			<div className="pb-4 pr-4 pl-12">
-				<p className="p-3 rounded-lg border border-border bg-background-secondary">
+			<div className="pr-4 pb-4 pl-12">
+				<p className="rounded-lg border border-border bg-background-secondary p-3">
 					{renderContent(notification.data?.content || "")}
 				</p>
 			</div>

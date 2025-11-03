@@ -29,23 +29,23 @@ function RouteComponent() {
 	return (
 		<>
 			<Header label="Back" />
-			<main className="p-4 space-y-6">
+			<main className="space-y-6 p-4">
 				<div className="space-y-4">
 					{course.thumbnail_url && (
 						<img
 							src={course.thumbnail_url}
 							alt={course.title}
-							className="w-full h-48 object-cover rounded-lg"
+							className="h-48 w-full rounded-lg object-cover"
 						/>
 					)}
 					<div className="space-y-2">
-						<h1 className="text-2xl font-bold text-foreground">
+						<h1 className="font-bold text-2xl text-foreground">
 							{course.title}
 						</h1>
 						{course.description && (
 							<p className="text-foreground/70">{course.description}</p>
 						)}
-						<div className="flex items-center gap-4 text-sm text-foreground/50">
+						<div className="flex items-center gap-4 text-foreground/50 text-sm">
 							<span className="capitalize">Status: {course.status}</span>
 							{course.price !== undefined && (
 								<span>{course.price === 0 ? "Free" : `$${course.price}`}</span>
@@ -56,7 +56,7 @@ function RouteComponent() {
 
 						<div className="mt-4">
 							{isEnrolled ? (
-								<div className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-center font-medium">
+								<div className="rounded-lg bg-green-100 px-4 py-2 text-center font-medium text-green-800">
 									✓ Enrolled
 								</div>
 							) : (
@@ -64,7 +64,7 @@ function RouteComponent() {
 									type="button"
 									onClick={handleEnroll}
 									disabled={isEnrolling || isEnrollmentLoading}
-									className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+									className="w-full rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
 								>
 									{isEnrolling ? "Enrolling..." : "Enroll Now"}
 								</button>
@@ -73,7 +73,7 @@ function RouteComponent() {
 					</div>
 				</div>
 
-				<section className="flex gap-2 items-center p-4 bg-background/50 rounded-lg">
+				<section className="flex items-center gap-2 rounded-lg bg-background/50 p-4">
 					<Avatar
 						initials={initials}
 						image_url={course.instructor.avatar_url || ""}
@@ -84,7 +84,7 @@ function RouteComponent() {
 						className="group"
 					>
 						<div className="space-y-0.5">
-							<div className="group-hover:underline font-medium">
+							<div className="font-medium group-hover:underline">
 								{course.instructor.name || course.instructor.email}
 							</div>
 							<p className="text-foreground/50 text-xs">Instructor</p>
@@ -94,24 +94,24 @@ function RouteComponent() {
 
 				{course.sections && course.sections.length > 0 && (
 					<div className="space-y-4">
-						<h2 className="text-lg font-semibold text-foreground">
+						<h2 className="font-semibold text-foreground text-lg">
 							Course Content
 						</h2>
 						<div className="space-y-4">
 							{course.sections.map((section) => (
 								<div
 									key={section.id}
-									className="p-4 bg-background/50 rounded-lg space-y-3 border border-border"
+									className="space-y-3 rounded-lg border border-border bg-background/50 p-4"
 								>
 									<h3 className="font-medium text-foreground">
 										{section.title}
 									</h3>
 									{section.description && (
-										<p className="text-sm text-foreground/70">
+										<p className="text-foreground/70 text-sm">
 											{section.description}
 										</p>
 									)}
-									<div className="text-xs text-foreground/50">
+									<div className="text-foreground/50 text-xs">
 										{section.lessons?.length || 0} lesson
 										{(section.lessons?.length || 0) !== 1 ? "s" : ""}
 									</div>
@@ -123,39 +123,39 @@ function RouteComponent() {
 														<Link
 															to="/lessons/$id"
 															params={{ id: lesson.id }}
-															className="border border-border block p-3 bg-background/30 rounded-md space-y-1 hover:bg-background/50 transition-colors"
+															className="block space-y-1 rounded-md border border-border bg-background/30 p-3 transition-colors hover:bg-background/50"
 														>
 															<div className="flex items-center gap-2">
 																{lesson.order + 1}. {lesson.title}
 															</div>
 															{lesson.content && (
-																<p className="text-xs text-foreground/60 line-clamp-2">
+																<p className="line-clamp-2 text-foreground/60 text-xs">
 																	{lesson.content}
 																</p>
 															)}
 															{lesson.video_url && (
-																<div className="text-xs text-foreground/50">
+																<div className="text-foreground/50 text-xs">
 																	📹 Video lesson
 																</div>
 															)}
 														</Link>
 													) : (
-														<div className="p-3 bg-background/30 rounded-md space-y-1 opacity-60">
+														<div className="space-y-1 rounded-md bg-background/30 p-3 opacity-60">
 															<div className="flex items-center gap-2">
-																<span className="text-sm font-medium text-foreground">
+																<span className="font-medium text-foreground text-sm">
 																	{lesson.order}. {lesson.title}
 																</span>
-																<span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full capitalize">
+																<span className="rounded-full bg-primary/10 px-2 py-1 text-primary text-xs capitalize">
 																	{lesson.type}
 																</span>
 															</div>
 															{lesson.content && (
-																<p className="text-xs text-foreground/60 line-clamp-2">
+																<p className="line-clamp-2 text-foreground/60 text-xs">
 																	{lesson.content}
 																</p>
 															)}
 															{lesson.video_url && (
-																<div className="text-xs text-foreground/50">
+																<div className="text-foreground/50 text-xs">
 																	📹 Video lesson
 																</div>
 															)}

@@ -38,7 +38,7 @@ function EditProfile() {
 	return (
 		<main>
 			<Header label="Back" />
-			<section className="flex flex-col items-center py-12 space-y-4">
+			<section className="flex flex-col items-center space-y-4 py-12">
 				<div className="flex flex-col items-center space-y-2">
 					<Avatar
 						size="xl"
@@ -56,8 +56,8 @@ function EditProfile() {
 						className="hidden"
 					/>
 				</div>
-				<h1 className="text-xl font-semibold">Edit Profile</h1>
-				<form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+				<h1 className="font-semibold text-xl">Edit Profile</h1>
+				<form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
 					<Input
 						value={formData.name}
 						onChange={(e) => handleChange("name", e.target.value)}
@@ -69,12 +69,12 @@ function EditProfile() {
 							handleChange("bio", e.target.value)
 						}
 						placeholder="Bio"
-						className="w-full p-2 border border-border rounded-md bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
+						className="w-full rounded-md border border-border bg-background p-2 text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
 						rows={4}
 					/>
 
 					<div className="space-y-3">
-						<h3 className="text-sm font-medium text-foreground/80">
+						<h3 className="font-medium text-foreground/80 text-sm">
 							Social Media
 						</h3>
 						<Input

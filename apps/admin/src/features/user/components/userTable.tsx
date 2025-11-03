@@ -98,7 +98,7 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 							onClick={() => {
 								console.log("View details for:", user);
 							}}
-							className="p-1 hover:bg-gray-100 rounded"
+							className="rounded p-1 hover:bg-gray-100"
 							title="View Details"
 						>
 							<Eye size={16} />
@@ -108,7 +108,7 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 							onClick={() => {
 								console.log("Ban user:", user);
 							}}
-							className="p-1 hover:bg-red-100 rounded text-red-600"
+							className="rounded p-1 text-red-600 hover:bg-red-100"
 							title="Ban"
 						>
 							<Trash2 size={16} />
@@ -162,7 +162,7 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 						table.getRowModel().rows.map((row) => (
 							<tr
 								key={row.id}
-								className="border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+								className="border-border border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 							>
 								{row.getVisibleCells().map((cell) => (
 									<td key={cell.id} className="p-4 align-middle">

@@ -13,8 +13,8 @@ function RouteComponent() {
 
 	return (
 		<main>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-medium">Channels</h1>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="font-medium text-2xl">Channels</h1>
 				<CreateChannelDialog>
 					<Button size="sm">Create Channel</Button>
 				</CreateChannelDialog>

@@ -11,8 +11,8 @@ function RouteComponent() {
 
 	return (
 		<main>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-medium">Users</h1>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="font-medium text-2xl">Users</h1>
 			</div>
 			<UserTable users={users} isLoading={isUsersLoading} />
 		</main>

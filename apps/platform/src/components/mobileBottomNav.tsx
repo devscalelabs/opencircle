@@ -47,19 +47,19 @@ export const MobileBottomNav = () => {
 	) as MobileNavItem[];
 
 	return (
-		<nav className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
-			<div className="flex justify-around items-center h-16 px-2">
+		<nav className="fixed right-0 bottom-0 left-0 z-50 border-border border-t bg-background md:hidden">
+			<div className="flex h-16 items-center justify-around px-2">
 				{allItems.map((item) => (
 					<Link
 						key={item.to}
 						to={item.to}
-						className="flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors duration-150 py-2 px-3 rounded-lg hover:bg-primary/10"
+						className="flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-muted-foreground text-xs transition-colors duration-150 hover:bg-primary/10 hover:text-foreground"
 						activeProps={{
 							className: "text-foreground bg-primary/10",
 						}}
 					>
 						{item.icon}
-						<span className="truncate max-w-[60px]">{item.label}</span>
+						<span className="max-w-[60px] truncate">{item.label}</span>
 					</Link>
 				))}
 			</div>

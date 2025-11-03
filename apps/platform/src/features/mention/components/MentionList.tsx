@@ -65,7 +65,7 @@ export const MentionList = ({
 
 	return (
 		<div
-			className="fixed z-50 bg-background border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto min-w-[250px]"
+			className="fixed z-50 max-h-48 min-w-[250px] overflow-y-auto rounded-lg border border-border bg-background shadow-lg"
 			style={{
 				top: `${position.top}px`,
 				left: `${position.left}px`,
@@ -76,7 +76,7 @@ export const MentionList = ({
 					key={user.id}
 					type="button"
 					onClick={() => onSelect(user)}
-					className={`w-full flex items-center gap-3 px-3 py-2 hover:bg-muted transition-colors text-left ${
+					className={`flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-muted ${
 						index === selectedIndex ? "bg-muted" : ""
 					}`}
 				>

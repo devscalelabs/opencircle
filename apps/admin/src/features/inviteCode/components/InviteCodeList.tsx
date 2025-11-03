@@ -28,7 +28,7 @@ export const InviteCodeList = ({
 			accessorKey: "code",
 			header: "Code",
 			cell: ({ row }) => (
-				<div className="font-mono text-sm font-medium max-w-xs truncate">
+				<div className="max-w-xs truncate font-medium font-mono text-sm">
 					{row.getValue("code")}
 				</div>
 			),
@@ -93,7 +93,7 @@ export const InviteCodeList = ({
 			cell: ({ row }) => {
 				const channelId = row.getValue("auto_join_channel_id") as string;
 				return channelId ? (
-					<div className="font-mono text-xs max-w-xs truncate">{channelId}</div>
+					<div className="max-w-xs truncate font-mono text-xs">{channelId}</div>
 				) : (
 					<div className="text-gray-500">None</div>
 				);
@@ -123,7 +123,7 @@ export const InviteCodeList = ({
 							onClick={() => {
 								router.navigate({ to: `/invite-codes/edit/${inviteCode.id}` });
 							}}
-							className="p-1 hover:bg-gray-100 rounded"
+							className="rounded p-1 hover:bg-gray-100"
 							title="Edit"
 						>
 							<Edit size={16} />
@@ -132,7 +132,7 @@ export const InviteCodeList = ({
 							<button
 								type="button"
 								onClick={() => onDeactivate(inviteCode.id)}
-								className="p-1 hover:bg-yellow-100 rounded text-yellow-600"
+								className="rounded p-1 text-yellow-600 hover:bg-yellow-100"
 								title="Deactivate"
 							>
 								<Ban size={16} />
@@ -142,7 +142,7 @@ export const InviteCodeList = ({
 							<button
 								type="button"
 								onClick={() => onDelete(inviteCode.id)}
-								className="p-1 hover:bg-red-100 rounded text-red-600"
+								className="rounded p-1 text-red-600 hover:bg-red-100"
 								title="Delete"
 							>
 								<Trash2 size={16} />
@@ -191,7 +191,7 @@ export const InviteCodeList = ({
 						table.getRowModel().rows.map((row) => (
 							<tr
 								key={row.id}
-								className="border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+								className="border-border border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 							>
 								{row.getVisibleCells().map((cell) => (
 									<td key={cell.id} className="p-4 align-middle">

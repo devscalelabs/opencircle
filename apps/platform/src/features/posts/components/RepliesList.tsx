@@ -32,7 +32,7 @@ export function RepliesList({ posts }: RepliesListProps) {
 	};
 
 	return (
-		<section className="border-t border-border">
+		<section className="border-border border-t">
 			{posts.map((post) => {
 				const replyInitials = getInitials(post.user.username);
 				const depth = getDepth(post);
@@ -40,12 +40,12 @@ export function RepliesList({ posts }: RepliesListProps) {
 				return (
 					<main
 						key={post.id}
-						className={`relative max-w-2xl p-4 border-b border-border ${depth > 0 ? "ml-8" : ""}`}
+						className={`relative max-w-2xl border-border border-b p-4 ${depth > 0 ? "ml-8" : ""}`}
 					>
 						{/* Vertical line for nested replies */}
 						{depth > 0 && (
 							<div
-								className="absolute left-0 top-0 bottom-0 w-px bg-border"
+								className="absolute top-0 bottom-0 left-0 w-px bg-border"
 								style={{ left: "0" }}
 							/>
 						)}
@@ -53,17 +53,17 @@ export function RepliesList({ posts }: RepliesListProps) {
 						{post.user_id === account?.id && (
 							<DropdownMenu.Root>
 								<DropdownMenu.Trigger asChild>
-									<div className="w-6 h-6 bg-background-secondary absolute top-4 right-4 flex justify-center items-center rounded-lg">
+									<div className="absolute top-4 right-4 flex h-6 w-6 items-center justify-center rounded-lg bg-background-secondary">
 										<EllipsisVertical size={12} className="" />
 									</div>
 								</DropdownMenu.Trigger>
 								<DropdownMenu.Content
 									sideOffset={10}
 									align="end"
-									className="rounded-lg overflow-hidden bg-background-secondary border border-border min-w-[80px] shadow-2xl text-xs font-medium"
+									className="min-w-[80px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 								>
 									<DropdownMenu.Item
-										className="p-3 hover:bg-primary focus-within:outline-none"
+										className="p-3 focus-within:outline-none hover:bg-primary"
 										onClick={() => deletePost(post.id)}
 									>
 										Delete
@@ -71,7 +71,7 @@ export function RepliesList({ posts }: RepliesListProps) {
 								</DropdownMenu.Content>
 							</DropdownMenu.Root>
 						)}
-						<section className="flex gap-2 items-center">
+						<section className="flex items-center gap-2">
 							<Avatar
 								initials={replyInitials}
 								image_url={post.user.avatar_url || ""}
@@ -82,7 +82,7 @@ export function RepliesList({ posts }: RepliesListProps) {
 								className="group"
 							>
 								<div className="space-y-0.5">
-									<div className="flex gap-1 items-center group-hover:underline">
+									<div className="flex items-center gap-1 group-hover:underline">
 										<div>{post.user.name || post.user.email}</div>
 										{post.user.role === "admin" && (
 											<svg
@@ -123,10 +123,10 @@ export function RepliesList({ posts }: RepliesListProps) {
 								{renderContent(post.content)}
 							</p>
 							<MediaGallery media={post.medias} />
-							<div className="text-xs text-foreground/50">
+							<div className="text-foreground/50 text-xs">
 								{moment.utc(post.created_at).fromNow()}
 							</div>
-							<section className="flex gap-4 items-center">
+							<section className="flex items-center gap-4">
 								<Button
 									size="sm"
 									variant="secondary"

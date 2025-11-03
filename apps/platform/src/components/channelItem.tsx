@@ -8,7 +8,7 @@ interface ChannelItemProps {
 
 export const ChannelItem = ({ emoji, title, to }: ChannelItemProps) => {
 	const content = (
-		<div className="flex gap-3 items-center text-sm text-foreground/80 hover:text-foreground w-fit cursor-pointer transition duration-150">
+		<div className="flex w-fit cursor-pointer items-center gap-3 text-foreground/80 text-sm transition duration-150 hover:text-foreground">
 			<div>{emoji}</div>
 			<div>{title}</div>
 		</div>

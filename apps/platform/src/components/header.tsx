@@ -9,7 +9,7 @@ export const Header = ({ label }: HeaderProps) => {
 
 	if (label === "Back") {
 		return (
-			<div className="sticky top-0 z-10 bg-background h-14 flex flex-col justify-center px-4 border-b border-border font-medium text-sm">
+			<div className="sticky top-0 z-10 flex h-14 flex-col justify-center border-border border-b bg-background px-4 font-medium text-sm">
 				<button
 					type="button"
 					onClick={() => router.history.back()}
@@ -22,7 +22,7 @@ export const Header = ({ label }: HeaderProps) => {
 	}
 
 	return (
-		<div className="sticky top-0 z-10 bg-background h-14 flex flex-col justify-center px-4 border-b border-border font-medium text-sm">
+		<div className="sticky top-0 z-10 flex h-14 flex-col justify-center border-border border-b bg-background px-4 font-medium text-sm">
 			{label}
 		</div>
 	);

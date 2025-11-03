@@ -19,9 +19,9 @@ export const ArticleView = ({
 	onDelete,
 }: ArticleViewProps) => {
 	return (
-		<div className="max-w-4xl mx-auto space-y-6">
+		<div className="mx-auto max-w-4xl space-y-6">
 			{/* Header Actions */}
-			<div className="flex justify-between items-center">
+			<div className="flex items-center justify-between">
 				<Link to="/articles">
 					<Button size="sm">
 						<ArrowLeft size={16} className="mr-2" />
@@ -42,12 +42,12 @@ export const ArticleView = ({
 			{/* Article Header */}
 			<div className="space-y-4">
 				<div className="flex items-center gap-2">
-					<span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+					<span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-800 text-sm">
 						Article
 					</span>
 				</div>
 
-				<h1 className="text-4xl font-bold">{article.title}</h1>
+				<h1 className="font-bold text-4xl">{article.title}</h1>
 
 				{/* Article Meta */}
 				<div className="flex flex-wrap items-center gap-6 text-sm">
@@ -75,7 +75,7 @@ export const ArticleView = ({
 			{/* Article Content */}
 			<div className="prose prose-invert prose-lg max-w-none">
 				<div className="border-t pt-8">
-					<div className="prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:italic prose-img:rounded-lg prose-img:shadow-md">
+					<div className="prose-pre:overflow-x-auto prose-code:rounded prose-img:rounded-lg prose-pre:rounded-lg prose-blockquote:border-l-4 prose-pre:p-4 prose-code:px-1 prose-code:py-0.5 prose-blockquote:pl-4 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-blockquote:italic prose-img:shadow-md">
 						<ReactMarkdown
 							remarkPlugins={[remarkGfm]}
 							rehypePlugins={[rehypeHighlight]}
@@ -88,7 +88,7 @@ export const ArticleView = ({
 
 			{/* Article Footer */}
 			<div className="border-t pt-6">
-				<div className="flex justify-between items-center">
+				<div className="flex items-center justify-between">
 					<div className="text-sm">Article ID: {article.id}</div>
 					<div className="flex gap-2">
 						{onEdit && (

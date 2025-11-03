@@ -98,7 +98,7 @@ export const PostForm = () => {
 	};
 
 	return (
-		<div className="border-b border-border p-4 space-y-4 relative">
+		<div className="relative space-y-4 border-border border-b p-4">
 			<textarea
 				ref={textareaRef}
 				value={content}
@@ -106,7 +106,7 @@ export const PostForm = () => {
 				onKeyDown={handleKeyDown}
 				rows={4}
 				placeholder="Write your post here"
-				className="w-full block resize-none focus-within:outline-none"
+				className="block w-full resize-none focus-within:outline-none"
 			></textarea>
 
 			{showMentions && !isLoading && (
@@ -124,9 +124,9 @@ export const PostForm = () => {
 					{files.map((file, index) => (
 						<div
 							key={`file-${file.name}`}
-							className="relative bg-muted rounded-lg p-2 flex items-center gap-2"
+							className="relative flex items-center gap-2 rounded-lg bg-muted p-2"
 						>
-							<span className="text-sm text-muted-foreground truncate max-w-[200px]">
+							<span className="max-w-[200px] truncate text-muted-foreground text-sm">
 								{file.name}
 							</span>
 							<button
@@ -141,8 +141,8 @@ export const PostForm = () => {
 				</div>
 			)}
 
-			<div className="flex justify-between items-center">
-				<div className="flex gap-4 items-center">
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-4">
 					<input
 						ref={fileInputRef}
 						type="file"
@@ -185,7 +185,7 @@ export const PostForm = () => {
 						<DropdownMenu.Content
 							sideOffset={10}
 							align="start"
-							className="z-50 rounded-lg overflow-hidden bg-background-secondary border border-border min-w-[120px] shadow-2xl text-xs font-medium"
+							className="z-50 min-w-[120px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 						>
 							{!isChannelsLoading &&
 								channels.map((channel) => (
@@ -198,7 +198,7 @@ export const PostForm = () => {
 												search: { channel: channel.slug },
 											});
 										}}
-										className="flex items-center gap-2 p-3 hover:bg-primary focus-within:outline-none"
+										className="flex items-center gap-2 p-3 focus-within:outline-none hover:bg-primary"
 									>
 										<span>{channel.emoji}</span>
 										<span>{channel.name}</span>

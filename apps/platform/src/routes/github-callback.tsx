@@ -43,9 +43,9 @@ function RouteComponent() {
 	}, [handleCallback, navigate]);
 
 	return (
-		<div className="flex items-center justify-center min-h-screen">
-			<div className="text-center space-y-4">
-				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+		<div className="flex min-h-screen items-center justify-center">
+			<div className="space-y-4 text-center">
+				<div className="mx-auto h-12 w-12 animate-spin rounded-full border-primary border-b-2"></div>
 				<p className="text-foreground/70">Completing GitHub login...</p>
 			</div>
 		</div>

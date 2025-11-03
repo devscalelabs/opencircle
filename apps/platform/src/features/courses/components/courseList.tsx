@@ -15,7 +15,7 @@ export const CourseList = () => {
 				return (
 					<main
 						key={course.id}
-						className="p-4 border-b border-border space-y-4"
+						className="space-y-4 border-border border-b p-4"
 					>
 						<div
 							onClick={() => navigate({ to: `/courses/${course.id}` })}
@@ -26,18 +26,18 @@ export const CourseList = () => {
 									<img
 										src={course.thumbnail_url}
 										alt={course.title}
-										className="w-full h-48 object-cover rounded-lg"
+										className="h-48 w-full rounded-lg object-cover"
 									/>
 								)}
-								<h3 className="text-lg font-medium text-foreground">
+								<h3 className="font-medium text-foreground text-lg">
 									{course.title}
 								</h3>
 								{course.description && (
-									<p className="text-sm text-foreground/70 line-clamp-2">
+									<p className="line-clamp-2 text-foreground/70 text-sm">
 										{course.description}
 									</p>
 								)}
-								<div className="flex items-center gap-4 text-xs text-foreground/50">
+								<div className="flex items-center gap-4 text-foreground/50 text-xs">
 									<span className="capitalize">Status: {course.status}</span>
 									{course.price !== undefined && (
 										<span>
@@ -48,7 +48,7 @@ export const CourseList = () => {
 								</div>
 							</div>
 						</div>
-						<section className="flex gap-2 items-center mt-4">
+						<section className="mt-4 flex items-center gap-2">
 							<Avatar
 								initials={initials}
 								image_url={course.instructor.avatar_url || ""}

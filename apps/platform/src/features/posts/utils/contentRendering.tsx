@@ -13,7 +13,7 @@ export const renderContent = (content: string) => {
 					key={key}
 					to="/$username"
 					params={{ username: part.username }}
-					className="text-indigo-400 font-medium hover:underline"
+					className="font-medium text-indigo-400 hover:underline"
 					onClick={(e) => e.stopPropagation()}
 				>
 					{part.text}

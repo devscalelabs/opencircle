@@ -52,8 +52,8 @@ export const ArticleEditor = ({
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			<div className="flex justify-between items-center">
-				<h1 className="text-3xl font-bold">
+			<div className="flex items-center justify-between">
+				<h1 className="font-bold text-3xl">
 					{isEdit ? "Edit Article" : "Create New Article"}
 				</h1>
 				<div className="flex gap-2">
@@ -72,10 +72,10 @@ export const ArticleEditor = ({
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-				<div className="lg:col-span-2 space-y-6">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+				<div className="space-y-6 lg:col-span-2">
 					<div>
-						<label htmlFor="title" className="block text-sm font-medium mb-2">
+						<label htmlFor="title" className="mb-2 block font-medium text-sm">
 							Title *
 						</label>
 						<Input
@@ -87,8 +87,8 @@ export const ArticleEditor = ({
 					</div>
 
 					<div>
-						<div className="flex justify-between items-center mb-2">
-							<label htmlFor="content" className="block text-sm font-medium">
+						<div className="mb-2 flex items-center justify-between">
+							<label htmlFor="content" className="block font-medium text-sm">
 								Content *
 							</label>
 							<Button
@@ -105,7 +105,7 @@ export const ArticleEditor = ({
 							</Button>
 						</div>
 						{showPreview ? (
-							<div className="border border-border rounded-lg p-4 min-h-[400px] prose prose-invert max-w-none">
+							<div className="prose prose-invert min-h-[400px] max-w-none rounded-lg border border-border p-4">
 								<MDEditor.Markdown source={content} />
 							</div>
 						) : (

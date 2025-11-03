@@ -21,7 +21,7 @@ export const MediaGallery = ({ media }: MediaGalleryProps) => {
 					<img
 						src={showedMediaUrl || ""}
 						alt="Media"
-						className="w-full h-full object-contain rounded-lg"
+						className="h-full w-full rounded-lg object-contain"
 					/>
 				</DialogContent>
 			</Dialog>

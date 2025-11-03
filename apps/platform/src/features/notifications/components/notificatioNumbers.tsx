@@ -15,14 +15,14 @@ export const NotificationNumbers = () => {
 			.length > 99
 	) {
 		return (
-			<div className="ml-1 bg-primary size-5 flex items-center justify-center rounded-md text-[9px] font-medium">
+			<div className="ml-1 flex size-5 items-center justify-center rounded-md bg-primary font-medium text-[9px]">
 				99+
 			</div>
 		);
 	}
 
 	return (
-		<div className="ml-1 bg-primary size-5 flex items-center justify-center rounded-md text-[9px] font-medium">
+		<div className="ml-1 flex size-5 items-center justify-center rounded-md bg-primary font-medium text-[9px]">
 			{
 				notifications.filter((notification) => notification.is_read === false)
 					.length

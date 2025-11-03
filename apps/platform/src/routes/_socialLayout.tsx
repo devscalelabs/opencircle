@@ -9,14 +9,14 @@ export const Route = createFileRoute("/_socialLayout")({
 
 function RouteComponent() {
 	return (
-		<main className="relative flex w-full md:w-[1150px] m-auto min-h-screen">
-			<aside className="hidden md:block w-58 border-r border-border">
+		<main className="relative m-auto flex min-h-screen w-full md:w-[1150px]">
+			<aside className="hidden w-58 border-border border-r md:block">
 				<LeftSidebar />
 			</aside>
-			<main className="w-full md:flex-1 pb-16 md:pb-0">
+			<main className="w-full pb-16 md:flex-1 md:pb-0">
 				<Outlet />
 			</main>
-			<aside className="hidden md:block w-80 border-x border-border">
+			<aside className="hidden w-80 border-border border-x md:block">
 				<RightSidebar />
 			</aside>
 			<MobileBottomNav />

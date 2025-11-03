@@ -29,8 +29,8 @@ function RouteComponent() {
 	return (
 		<main>
 			<Header label="Back" />
-			<div className="prose prose-invert prose-headings:font-medium max-w-none p-4">
-				<div className="prose prose-invert prose-headings:text-xl prose-headings:text-foreground prose-headings:font-medium prose-p:text-sm prose-p:leading-relaxed prose-p:text-foreground/70">
+			<div className="prose prose-invert max-w-none p-4 prose-headings:font-medium">
+				<div className="prose prose-invert prose-headings:font-medium prose-headings:text-foreground prose-headings:text-xl prose-p:text-foreground/70 prose-p:text-sm prose-p:leading-relaxed">
 					<h3 className="text-xl">{article?.title}</h3>
 					<MDEditor.Markdown
 						source={article?.content}
@@ -39,7 +39,7 @@ function RouteComponent() {
 				</div>
 				{article && (
 					<>
-						<section className="flex gap-4 items-center mt-6 pt-4 border-t border-border">
+						<section className="mt-6 flex items-center gap-4 border-border border-t pt-4">
 							<Button
 								size="sm"
 								variant="secondary"

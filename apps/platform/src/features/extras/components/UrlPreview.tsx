@@ -30,29 +30,29 @@ export const UrlPreview = ({ content }: UrlPreviewProps) => {
 							href={match.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex gap-3 p-3 bg-background-secondary rounded-lg group hover:bg-background-secondary/80 transition-colors"
+							className="group flex gap-3 rounded-lg bg-background-secondary p-3 transition-colors hover:bg-background-secondary/80"
 						>
 							{preview.image_url && (
-								<div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden">
+								<div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md">
 									<img
 										src={preview.image_url}
 										alt={preview.title || "Preview"}
-										className="w-full h-full object-cover"
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							)}
-							<div className="flex-1 min-w-0">
+							<div className="min-w-0 flex-1">
 								{preview.title && (
-									<h3 className="font-bold text-foreground text-sm line-clamp-2 group-hover:underline">
+									<h3 className="line-clamp-2 font-bold text-foreground text-sm group-hover:underline">
 										{preview.title}
 									</h3>
 								)}
 								{preview.description && (
-									<p className="text-foreground/70 text-xs line-clamp-2 mt-1">
+									<p className="mt-1 line-clamp-2 text-foreground/70 text-xs">
 										{preview.description}
 									</p>
 								)}
-								<p className="text-blue-400 text-xs truncate mt-2">
+								<p className="mt-2 truncate text-blue-400 text-xs">
 									{match.url}
 								</p>
 							</div>
@@ -67,7 +67,7 @@ export const UrlPreview = ({ content }: UrlPreviewProps) => {
 						href={match.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="block group relative overflow-hidden rounded-lg"
+						className="group relative block overflow-hidden rounded-lg"
 					>
 						{preview.image_url ? (
 							<>
@@ -75,37 +75,37 @@ export const UrlPreview = ({ content }: UrlPreviewProps) => {
 									<img
 										src={preview.image_url}
 										alt={preview.title || "Preview"}
-										className="w-full h-full object-cover"
+										className="h-full w-full object-cover"
 									/>
 									<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-40% to-transparent" />
 								</div>
-								<div className="relative p-4 pt-32 min-h-[240px] flex flex-col justify-end">
+								<div className="relative flex min-h-[240px] flex-col justify-end p-4 pt-32">
 									{preview.title && (
-										<h3 className="font-bold text-white text-lg line-clamp-2 group-hover:underline">
+										<h3 className="line-clamp-2 font-bold text-lg text-white group-hover:underline">
 											{preview.title}
 										</h3>
 									)}
 									{preview.description && (
-										<p className="text-white/90 text-sm line-clamp-3">
+										<p className="line-clamp-3 text-sm text-white/90">
 											{preview.description}
 										</p>
 									)}
-									<p className="text-white/70 text-xs truncate">{match.url}</p>
+									<p className="truncate text-white/70 text-xs">{match.url}</p>
 								</div>
 							</>
 						) : (
-							<div className="p-4 bg-background-secondary">
+							<div className="bg-background-secondary p-4">
 								{preview.title && (
-									<h3 className="font-bold text-foreground text-lg mb-2 group-hover:underline">
+									<h3 className="mb-2 font-bold text-foreground text-lg group-hover:underline">
 										{preview.title}
 									</h3>
 								)}
 								{preview.description && (
-									<p className="text-foreground/70 text-sm mb-3">
+									<p className="mb-3 text-foreground/70 text-sm">
 										{preview.description}
 									</p>
 								)}
-								<p className="text-blue-400 text-xs truncate">{match.url}</p>
+								<p className="truncate text-blue-400 text-xs">{match.url}</p>
 							</div>
 						)}
 					</a>

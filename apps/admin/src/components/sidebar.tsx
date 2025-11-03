@@ -20,7 +20,7 @@ const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 	return (
 		<Link
 			to={to}
-			className="flex text-sm items-center cursor-pointer hover:bg-primary rounded-lg p-2 transition duration-150"
+			className="flex cursor-pointer items-center rounded-lg p-2 text-sm transition duration-150 hover:bg-primary"
 		>
 			{icon}
 			<span className="ml-3">{label}</span>
@@ -30,9 +30,9 @@ const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 
 export const Sidebar = () => {
 	return (
-		<aside className="sticky top-0 h-screen w-72 border-r border-border p-6 space-y-6">
-			<section className="flex gap-2 ml-2">
-				<div className="w-6 h-6 bg-foreground text-background rounded-lg flex justify-center items-center">
+		<aside className="sticky top-0 h-screen w-72 space-y-6 border-border border-r p-6">
+			<section className="ml-2 flex gap-2">
+				<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
 					<Zap size={12} fill="currentColor" />
 				</div>
 				<h2 className="font-medium">Opencircle</h2>

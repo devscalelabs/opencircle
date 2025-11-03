@@ -90,7 +90,7 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 							onClick={() => {
 								console.log("Edit channel:", channel);
 							}}
-							className="p-1 hover:bg-gray-100 rounded"
+							className="rounded p-1 hover:bg-gray-100"
 							title="Edit"
 						>
 							<Edit size={16} />
@@ -100,7 +100,7 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 							onClick={() => {
 								console.log("Delete channel:", channel);
 							}}
-							className="p-1 hover:bg-red-100 rounded text-red-600"
+							className="rounded p-1 text-red-600 hover:bg-red-100"
 							title="Delete"
 						>
 							<Trash2 size={16} />
@@ -154,7 +154,7 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 						table.getRowModel().rows.map((row) => (
 							<tr
 								key={row.id}
-								className="border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+								className="border-border border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
 							>
 								{row.getVisibleCells().map((cell) => (
 									<td key={cell.id} className="p-4 align-middle">

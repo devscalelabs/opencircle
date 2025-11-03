@@ -48,9 +48,9 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 							{post.reactions.summary.map((reaction) => (
 								<div
 									key={reaction.emoji}
-									className={`flex items-center gap-2 px-2 py-1 rounded-full text-sm cursor-pointer ${
+									className={`flex cursor-pointer items-center gap-2 rounded-full px-2 py-1 text-sm ${
 										reaction.me
-											? "bg-primary/20 border border-primary/30"
+											? "border border-primary/30 bg-primary/20"
 											: "bg-background-secondary hover:bg-background-tertiary"
 									}`}
 									onClick={() => {
@@ -90,33 +90,33 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 					</HoverCard.Trigger>
 					<HoverCard.Portal>
 						<HoverCard.Content
-							className="z-[999999] w-[280px] rounded-md bg-background p-3 border border-border shadow-2xl shadow-black"
+							className="z-[999999] w-[280px] rounded-md border border-border bg-background p-3 shadow-2xl shadow-black"
 							sideOffset={5}
 						>
 							<div className="flex flex-col gap-2">
-								<div className="text-xs font-semibold text-muted-foreground mb-1">
+								<div className="mb-1 font-semibold text-muted-foreground text-xs">
 									{totalReactions}{" "}
 									{totalReactions === 1 ? "reaction" : "reactions"}
 								</div>
 
 								{loading ? (
-									<div className="text-xs text-muted-foreground">
+									<div className="text-muted-foreground text-xs">
 										Loading...
 									</div>
 								) : (
-									<div className="flex flex-col gap-1 max-h-[250px] overflow-y-auto">
+									<div className="flex max-h-[250px] flex-col gap-1 overflow-y-auto">
 										{reactionDetails.map((reactionGroup) =>
 											reactionGroup.users.map((reaction_user) => (
 												<div
 													key={`${reaction_user.user_id}-${reactionGroup.emoji}`}
 													className="flex items-center justify-between gap-2 py-1"
 												>
-													<div className="flex-1 min-w-0">
-														<div className="text-xs font-medium truncate">
+													<div className="min-w-0 flex-1">
+														<div className="truncate font-medium text-xs">
 															{reaction_user.user.name}
 														</div>
 													</div>
-													<span className="text-sm flex-shrink-0">
+													<span className="flex-shrink-0 text-sm">
 														{reactionGroup.emoji}
 													</span>
 												</div>

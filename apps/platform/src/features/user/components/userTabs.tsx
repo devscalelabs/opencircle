@@ -14,10 +14,10 @@ export const UserTabs = ({ posts }: UserTabsProps) => {
 
 	return (
 		<main>
-			<section className="justify-center p-4 flex gap-8 border-y border-border">
+			<section className="flex justify-center gap-8 border-border border-y p-4">
 				<div
 					onClick={() => setActiveTab("posts")}
-					className={`hover:text-primary/50 cursor-pointer transition duration-75 ${
+					className={`cursor-pointer transition duration-75 hover:text-primary/50 ${
 						activeTab === "posts" ? "text-primary" : ""
 					}`}
 				>
@@ -25,7 +25,7 @@ export const UserTabs = ({ posts }: UserTabsProps) => {
 				</div>
 				<div
 					onClick={() => setActiveTab("replies")}
-					className={`hover:text-primary/50 cursor-pointer transition duration-75 ${
+					className={`cursor-pointer transition duration-75 hover:text-primary/50 ${
 						activeTab === "replies" ? "text-primary" : ""
 					}`}
 				>
