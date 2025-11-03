@@ -194,7 +194,7 @@ def get_all_nested_posts_by_parent_id(
     FROM reply_tree rt
     LEFT JOIN "user" u ON rt.user_id = u.id
     LEFT JOIN media m ON rt.id = m.post_id
-    ORDER BY rt.parent_created_at DESC, rt.depth ASC, rt.is_pinned DESC, rt.created_at DESC;
+    ORDER BY rt.is_pinned DESC, rt.parent_created_at DESC, rt.depth ASC, rt.created_at DESC;
     """
     result = db.exec(text(sql).bindparams(parent_id=parent_id))
 
