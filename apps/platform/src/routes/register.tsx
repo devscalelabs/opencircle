@@ -58,6 +58,7 @@ function RouteComponent() {
 		inviteCode,
 		setInviteCode,
 		register,
+		validationErrors,
 	} = useRegister();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
 
@@ -83,8 +84,16 @@ function RouteComponent() {
 								id={usernameId}
 								placeholder="Username"
 								value={username}
-								onChange={(v) => setUsername(v.target.value)}
+								onChange={(v) =>
+									setUsername(v.target.value.toLowerCase().replace(/\s/g, ""))
+								}
+								className={validationErrors.username ? "border-red-500" : ""}
 							/>
+							{validationErrors.username && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.username}
+								</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -92,7 +101,11 @@ function RouteComponent() {
 								placeholder="Fullname"
 								value={name}
 								onChange={(v) => setName(v.target.value)}
+								className={validationErrors.name ? "border-red-500" : ""}
 							/>
+							{validationErrors.name && (
+								<p className="text-red-500 text-xs">{validationErrors.name}</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -101,7 +114,11 @@ function RouteComponent() {
 								type="email"
 								value={email}
 								onChange={(v) => setEmail(v.target.value)}
+								className={validationErrors.email ? "border-red-500" : ""}
 							/>
+							{validationErrors.email && (
+								<p className="text-red-500 text-xs">{validationErrors.email}</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -110,7 +127,13 @@ function RouteComponent() {
 								type="password"
 								value={password}
 								onChange={(v) => setPassword(v.target.value)}
+								className={validationErrors.password ? "border-red-500" : ""}
 							/>
+							{validationErrors.password && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.password}
+								</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -118,7 +141,13 @@ function RouteComponent() {
 								placeholder="Enter invite code (Optional)"
 								value={inviteCode}
 								onChange={(v) => setInviteCode(v.target.value)}
+								className={validationErrors.inviteCode ? "border-red-500" : ""}
 							/>
+							{validationErrors.inviteCode && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.inviteCode}
+								</p>
+							)}
 						</section>
 						<Button
 							radius="xl"

@@ -43,7 +43,14 @@ function RouteComponent() {
 	const usernameId = useId();
 	const passwordId = useId();
 
-	const { username, setUsername, password, setPassword, login } = useLogin();
+	const {
+		username,
+		setUsername,
+		password,
+		setPassword,
+		login,
+		validationErrors,
+	} = useLogin();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
 
 	return (
@@ -68,8 +75,16 @@ function RouteComponent() {
 								id={usernameId}
 								placeholder="Username"
 								value={username}
-								onChange={(v) => setUsername(v.target.value)}
+								onChange={(v) =>
+									setUsername(v.target.value.toLowerCase().replace(/\s/g, ""))
+								}
+								className={validationErrors.username ? "border-red-500" : ""}
 							/>
+							{validationErrors.username && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.username}
+								</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -78,7 +93,13 @@ function RouteComponent() {
 								type="password"
 								value={password}
 								onChange={(v) => setPassword(v.target.value)}
+								className={validationErrors.password ? "border-red-500" : ""}
 							/>
+							{validationErrors.password && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.password}
+								</p>
+							)}
 						</section>
 						<Button radius="xl" className="mt-2 w-full" onClick={() => login()}>
 							Login
