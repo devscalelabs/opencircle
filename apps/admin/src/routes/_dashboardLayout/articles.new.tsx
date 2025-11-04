@@ -1,4 +1,5 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { METADATA } from "../../constants/metadata";
 import { ArticleEditor } from "../../features/articles/components/ArticleEditor";
 import { useArticleSubmission } from "../../features/articles/hooks/useArticleSubmission";
 import type {
@@ -8,6 +9,23 @@ import type {
 import { useAccount } from "../../features/auth/hooks/useAccount";
 
 export const Route = createFileRoute("/_dashboardLayout/articles/new")({
+	head: () => ({
+		meta: [
+			{
+				title: "Create Article - OpenCircle Admin",
+			},
+			{
+				name: "description",
+				content: "Create a new article on OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

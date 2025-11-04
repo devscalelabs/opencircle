@@ -1,5 +1,6 @@
 import type { InviteCodeUpdate } from "@opencircle/core";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { METADATA } from "../../../constants/metadata";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { CreateInviteCode } from "../../../features/inviteCode/components/CreateInviteCode";
 import { useInviteCode } from "../../../features/inviteCode/hooks/useInviteCode";
@@ -7,6 +8,23 @@ import { useInviteCodeSubmission } from "../../../features/inviteCode/hooks/useI
 
 export const Route = createFileRoute("/_dashboardLayout/invite-codes/edit/$id")(
 	{
+		head: () => ({
+			meta: [
+				{
+					title: "Edit Invite Code - OpenCircle Admin",
+				},
+				{
+					name: "description",
+					content: "Edit an invite code on OpenCircle",
+				},
+			],
+			links: [
+				{
+					rel: "icon",
+					href: METADATA.favicon,
+				},
+			],
+		}),
 		component: RouteComponent,
 	},
 );

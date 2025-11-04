@@ -1,9 +1,27 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { METADATA } from "../../constants/metadata";
 import { ArticleView } from "../../features/articles/components/ArticleView";
 import { useArticle } from "../../features/articles/hooks/useArticle";
 import { useArticleSubmission } from "../../features/articles/hooks/useArticleSubmission";
 
 export const Route = createFileRoute("/_dashboardLayout/articles/$id")({
+	head: () => ({
+		meta: [
+			{
+				title: "Article View - OpenCircle Admin",
+			},
+			{
+				name: "description",
+				content: "View article details on OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

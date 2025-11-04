@@ -1,10 +1,28 @@
 import { Button } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { METADATA } from "../../../constants/metadata";
 import { InviteCodeList } from "../../../features/inviteCode/components/InviteCodeList";
 import { useInviteCodeSubmission } from "../../../features/inviteCode/hooks/useInviteCodeSubmission";
 import { useInviteCodes } from "../../../features/inviteCode/hooks/useInviteCodes";
 
 export const Route = createFileRoute("/_dashboardLayout/invite-codes/")({
+	head: () => ({
+		meta: [
+			{
+				title: "Invite Codes - OpenCircle Admin",
+			},
+			{
+				name: "description",
+				content: "Manage invite codes on OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

@@ -2,9 +2,39 @@ import { Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
+import { METADATA } from "../constants/metadata";
 import { useLogin } from "../features/auth/hooks/useLogin";
 
 export const Route = createFileRoute("/")({
+	head: () => ({
+		meta: [
+			{
+				title: "Admin Login - OpenCircle",
+			},
+			{
+				name: "description",
+				content: "Sign in to OpenCircle Admin Dashboard",
+			},
+			{
+				property: "og:title",
+				content: "Admin Login - OpenCircle",
+			},
+			{
+				property: "og:description",
+				content: "Sign in to OpenCircle Admin Dashboard",
+			},
+			{
+				property: "og:image",
+				content: METADATA.ogImage,
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

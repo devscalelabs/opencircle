@@ -1,9 +1,27 @@
 import { Button } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { METADATA } from "../../../constants/metadata";
 import { CourseTable } from "../../../features/course/components/courseTable";
 import { useCourses } from "../../../features/course/hooks/useCourses";
 
 export const Route = createFileRoute("/_dashboardLayout/courses/")({
+	head: () => ({
+		meta: [
+			{
+				title: "Courses - OpenCircle Admin",
+			},
+			{
+				name: "description",
+				content: "Manage courses on OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

@@ -1,5 +1,6 @@
 import type { CourseCreate, CourseUpdate } from "@opencircle/core";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { METADATA } from "../../../constants/metadata";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { CourseEditor } from "../../../features/course/components/courseEditor";
 import { useCourseSubmission } from "../../../features/course/hooks/useCourseSubmission";
@@ -7,6 +8,23 @@ import { useCourseSubmission } from "../../../features/course/hooks/useCourseSub
 type CourseFormData = Omit<CourseCreate, "instructor_id">;
 
 export const Route = createFileRoute("/_dashboardLayout/courses/new")({
+	head: () => ({
+		meta: [
+			{
+				title: "Create Course - OpenCircle Admin",
+			},
+			{
+				name: "description",
+				content: "Create a new course on OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 
