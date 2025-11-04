@@ -1,8 +1,9 @@
 import type { AppSettingsUpdate } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
-import { Save, Settings, Upload } from "lucide-react";
+import { Save, Settings, Upload, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import toast from "react-hot-toast";
+import { api } from "../../../utils/api";
 import { useAppSettings } from "../hooks/useAppSettings";
 import type { AppSettingsFormData } from "../utils/types";
 
@@ -18,12 +19,13 @@ export function AppSettings() {
 		app_logo_url: "",
 		enable_sign_up: true,
 	});
+	const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
 	// Generate unique IDs for form elements
 	const appNameId = useId();
-	const appLogoId = useId();
 	const logoUploadId = useId();
 	const enableSignUpId = useId();
+	const appLogoId = useId();
 
 	useEffect(() => {
 		if (appSettings) {
@@ -49,7 +51,7 @@ export function AppSettings() {
 		try {
 			const updateData: AppSettingsUpdate = {
 				app_name: formData.app_name,
-				app_logo_url: formData.app_logo_url || undefined,
+				app_logo_url: formData.app_logo_url || null,
 				enable_sign_up: formData.enable_sign_up,
 			};
 
@@ -66,16 +68,26 @@ export function AppSettings() {
 		}
 	};
 
-	const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleLogoUpload = async (
+		event: React.ChangeEvent<HTMLInputElement>,
+	) => {
 		const file = event.target.files?.[0];
 		if (file) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const result = e.target?.result as string;
-				handleInputChange("app_logo_url", result);
-			};
-			reader.readAsDataURL(file);
+			setIsUploadingLogo(true);
+			try {
+				const response = await api.appSettings.uploadLogo(file);
+				handleInputChange("app_logo_url", response.app_logo_url || "");
+				toast.success("Logo uploaded successfully");
+			} catch {
+				toast.error("Failed to upload logo");
+			} finally {
+				setIsUploadingLogo(false);
+			}
 		}
+	};
+
+	const handleDeleteLogo = () => {
+		handleInputChange("app_logo_url", "");
 	};
 
 	if (isAppSettingsLoading) {
@@ -128,21 +140,19 @@ export function AppSettings() {
 							Application Logo
 						</label>
 						<div className="flex gap-2">
-							<Input
-								id={appLogoId}
-								value={formData.app_logo_url}
-								onChange={(e) =>
-									handleInputChange("app_logo_url", e.target.value)
-								}
-								placeholder="Enter logo URL or upload a file"
-							/>
 							<Button
 								type="button"
 								variant="secondary"
 								size="md"
 								onClick={() => document.getElementById(logoUploadId)?.click()}
+								disabled={isUploadingLogo}
 							>
-								<Upload className="h-4 w-4" />
+								{isUploadingLogo ? (
+									<div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+								) : (
+									<Upload className="h-4 w-4" />
+								)}
+								{isUploadingLogo ? "Uploading..." : "Upload Logo"}
 							</Button>
 						</div>
 						<input
@@ -153,12 +163,15 @@ export function AppSettings() {
 							className="hidden"
 						/>
 						{formData.app_logo_url && (
-							<div className="mt-2">
+							<div className="mt-2 flex items-center gap-3">
 								<img
 									src={formData.app_logo_url}
 									alt="Logo preview"
 									className="h-16 w-16 rounded border object-contain"
 								/>
+								<Button type="button" size="sm" onClick={handleDeleteLogo}>
+									<X className="h-4 w-4" />
+								</Button>
 							</div>
 						)}
 					</div>

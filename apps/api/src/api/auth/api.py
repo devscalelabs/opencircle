@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session
 
 from src.core.settings import settings
@@ -35,6 +36,16 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         return {"message": "User registered successfully", "user_id": user.id}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e.orig)
+        if "email" in error_msg.lower():
+            raise HTTPException(status_code=409, detail="Email already registered")
+        elif "username" in error_msg.lower():
+            raise HTTPException(status_code=409, detail="Username already registered")
+        raise HTTPException(
+            status_code=409, detail="Registration failed: duplicate entry"
+        )
 
 
 @router.post("/login")

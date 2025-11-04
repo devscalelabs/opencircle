@@ -1,7 +1,7 @@
 import type { Post, ReactionsByEmoji } from "@opencircle/core";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import { Smile } from "lucide-react";
-import { DropdownMenu, HoverCard } from "radix-ui";
+import { DropdownMenu, HoverCard, ScrollArea } from "radix-ui";
 import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import { useReactionSubmission } from "../../reactions/hooks/useReactionSubmission";
@@ -90,41 +90,45 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 					</HoverCard.Trigger>
 					<HoverCard.Portal>
 						<HoverCard.Content
-							className="z-[999999] w-[280px] rounded-md border border-border bg-background p-3 shadow-2xl shadow-black"
+							className="z-[999999] w-[280px] rounded-md border border-border bg-background shadow-2xl shadow-black"
 							sideOffset={5}
 						>
-							<div className="flex flex-col gap-2">
-								<div className="mb-1 font-semibold text-muted-foreground text-xs">
-									{totalReactions}{" "}
-									{totalReactions === 1 ? "reaction" : "reactions"}
-								</div>
+							<ScrollArea.Root className="max-h-[225px]">
+								<ScrollArea.Viewport className="p-4">
+									<div className="flex flex-col gap-2">
+										<div className="mb-1 font-semibold text-muted-foreground text-xs">
+											{totalReactions}{" "}
+											{totalReactions === 1 ? "reaction" : "reactions"}
+										</div>
 
-								{loading ? (
-									<div className="text-muted-foreground text-xs">
-										Loading...
-									</div>
-								) : (
-									<div className="flex max-h-[250px] flex-col gap-1 overflow-y-auto">
-										{reactionDetails.map((reactionGroup) =>
-											reactionGroup.users.map((reaction_user) => (
-												<div
-													key={`${reaction_user.user_id}-${reactionGroup.emoji}`}
-													className="flex items-center justify-between gap-2 py-1"
-												>
-													<div className="min-w-0 flex-1">
-														<div className="truncate font-medium text-xs">
-															{reaction_user.user.name}
+										{loading ? (
+											<div className="text-muted-foreground text-xs">
+												Loading...
+											</div>
+										) : (
+											<div className="flex max-h-[250px] flex-col gap-1 overflow-y-auto">
+												{reactionDetails.map((reactionGroup) =>
+													reactionGroup.users.map((reaction_user) => (
+														<div
+															key={`${reaction_user.user_id}-${reactionGroup.emoji}`}
+															className="flex items-center justify-between gap-2 py-1"
+														>
+															<div className="min-w-0 flex-1">
+																<div className="truncate font-medium text-xs">
+																	{reaction_user.user.name}
+																</div>
+															</div>
+															<span className="flex-shrink-0 text-sm">
+																{reactionGroup.emoji}
+															</span>
 														</div>
-													</div>
-													<span className="flex-shrink-0 text-sm">
-														{reactionGroup.emoji}
-													</span>
-												</div>
-											)),
+													)),
+												)}
+											</div>
 										)}
 									</div>
-								)}
-							</div>
+								</ScrollArea.Viewport>
+							</ScrollArea.Root>
 							<HoverCard.Arrow className="fill-background" />
 						</HoverCard.Content>
 					</HoverCard.Portal>

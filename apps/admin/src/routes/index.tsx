@@ -1,7 +1,6 @@
 import { Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
-import { useId } from "react";
 import { METADATA } from "../constants/metadata";
 import { useLogin } from "../features/auth/hooks/useLogin";
 
@@ -39,9 +38,6 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
-	const usernameId = useId();
-	const passwordId = useId();
-
 	const { username, setUsername, password, setPassword, login } = useLogin();
 
 	return (
@@ -61,28 +57,14 @@ function RouteComponent() {
 				<div className="space-y-6 rounded-xl border border-border p-8 shadow-2xl">
 					<section className="space-y-3">
 						<section className="space-y-2">
-							<label
-								htmlFor={usernameId}
-								className="ml-1 block text-foreground/70 text-sm"
-							>
-								Username
-							</label>
 							<Input
-								id={usernameId}
 								placeholder="Username"
 								value={username}
 								onChange={(v) => setUsername(v.target.value)}
 							/>
 						</section>
 						<section className="space-y-2">
-							<label
-								htmlFor={passwordId}
-								className="ml-1 block text-foreground/70 text-sm"
-							>
-								Password
-							</label>
 							<Input
-								id={passwordId}
 								placeholder="Password"
 								type="password"
 								value={password}

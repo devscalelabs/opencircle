@@ -1,4 +1,5 @@
 import type { Channel } from "@opencircle/core";
+import { Button } from "@opencircle/ui";
 import {
 	type ColumnDef,
 	flexRender,
@@ -56,18 +57,20 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 		{
 			accessorKey: "slug",
 			header: "Slug",
-			cell: ({ row }) => row.getValue("slug"),
+			cell: ({ row }) => <div className="text-sm">{row.getValue("slug")}</div>,
 		},
 		{
 			accessorKey: "description",
 			header: "Description",
-			cell: ({ row }) => row.getValue("description") || "-",
+			cell: ({ row }) => (
+				<div className="text-sm">{row.getValue("description") || "-"}</div>
+			),
 		},
 		{
 			accessorKey: "type",
 			header: "Type",
 			cell: ({ row }) => (
-				<div className="capitalize">{row.getValue("type")}</div>
+				<div className="text-sm capitalize">{row.getValue("type")}</div>
 			),
 		},
 		{
@@ -75,7 +78,7 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 			header: "Created",
 			cell: ({ row }) => {
 				const date = new Date(row.getValue("created_at"));
-				return date.toLocaleDateString();
+				return <div className="text-sm">{date.toLocaleDateString()}</div>;
 			},
 		},
 		{
@@ -85,26 +88,25 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 				const channel = row.original;
 				return (
 					<div className="flex items-center gap-2">
-						<button
-							type="button"
+						<Button
+							size="sm"
 							onClick={() => {
 								console.log("Edit channel:", channel);
 							}}
-							className="rounded p-1 hover:bg-gray-100"
-							title="Edit"
 						>
-							<Edit size={16} />
-						</button>
-						<button
-							type="button"
+							<Edit size={14} />
+							Edit
+						</Button>
+						<Button
+							size="sm"
+							variant="secondary"
 							onClick={() => {
 								console.log("Delete channel:", channel);
 							}}
-							className="rounded p-1 text-red-600 hover:bg-red-100"
-							title="Delete"
 						>
-							<Trash2 size={16} />
-						</button>
+							<Trash2 size={14} />
+							Delete
+						</Button>
 					</div>
 				);
 			},

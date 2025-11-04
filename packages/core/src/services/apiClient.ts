@@ -13,6 +13,9 @@ export class ApiClient {
 	}
 
 	async post<T>(url: string, data?: any): Promise<T> {
+		if (data instanceof FormData) {
+			return this.client.post(url, { body: data }).json<T>();
+		}
 		return this.client.post(url, { json: data }).json<T>();
 	}
 

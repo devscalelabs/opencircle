@@ -15,6 +15,6 @@ export interface AppSettingsCreate {
 
 export interface AppSettingsUpdate {
 	app_name?: string;
-	app_logo_url?: string;
+	app_logo_url: string | null;
 	enable_sign_up?: boolean;
 }

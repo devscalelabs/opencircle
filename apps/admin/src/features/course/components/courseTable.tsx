@@ -94,14 +94,18 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			header: "Instructor",
 			cell: ({ row }) => {
 				const instructor = row.getValue("instructor") as Course["instructor"];
-				return instructor?.name || instructor?.username || "-";
+				return (
+					<div className="text-sm">
+						{instructor?.name || instructor?.username || "-"}
+					</div>
+				);
 			},
 		},
 		{
 			accessorKey: "status",
 			header: "Status",
 			cell: ({ row }) => (
-				<div className="capitalize">
+				<div className="text-sm capitalize">
 					<span
 						className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-medium text-xs ${
 							row.getValue("status") === "published"
@@ -121,7 +125,11 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			header: "Price",
 			cell: ({ row }) => {
 				const price = row.getValue("price") as number;
-				return price !== null && price !== undefined ? `$${price}` : "Free";
+				return (
+					<div className="text-sm">
+						{price !== null && price !== undefined ? `$${price}` : "Free"}
+					</div>
+				);
 			},
 		},
 		{
@@ -129,7 +137,9 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			header: "Sections",
 			cell: ({ row }) => {
 				const sections = row.getValue("sections") as Course["sections"];
-				return sections?.length || 0;
+				return (
+					<div className="text-center text-sm">{sections?.length || 0}</div>
+				);
 			},
 		},
 		{
@@ -139,7 +149,9 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 				const enrollments = row.getValue(
 					"enrollments",
 				) as Course["enrollments"];
-				return enrollments?.length || 0;
+				return (
+					<div className="text-center text-sm">{enrollments?.length || 0}</div>
+				);
 			},
 		},
 		{
@@ -147,7 +159,7 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			header: "Created",
 			cell: ({ row }) => {
 				const date = new Date(row.getValue("created_at"));
-				return date.toLocaleDateString();
+				return <div className="text-sm">{date.toLocaleDateString()}</div>;
 			},
 		},
 		{
@@ -155,24 +167,23 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			header: "Actions",
 			cell: ({ row }) => (
 				<div className="flex items-center gap-2">
-					<button
-						type="button"
+					<Button
+						size="sm"
 						onClick={() => {
 							router.navigate({ to: `/courses/edit/${row.original.id}` });
 						}}
-						className="rounded p-1 hover:bg-gray-100"
-						title="Edit"
 					>
-						<Edit size={16} />
-					</button>
-					<button
-						type="button"
+						<Edit size={14} />
+						Edit
+					</Button>
+					<Button
+						size="sm"
+						variant="secondary"
 						onClick={() => handleDeleteClick(row.original)}
-						className="rounded p-1 text-red-600 hover:bg-red-100"
-						title="Delete"
 					>
-						<Trash size={16} />
-					</button>
+						<Trash size={14} />
+						Delete
+					</Button>
 				</div>
 			),
 			enableSorting: false,

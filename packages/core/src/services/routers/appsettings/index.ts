@@ -18,6 +18,12 @@ export class AppSettingsRouter extends BaseRouter {
 		return this.client.put<AppSettings>("appsettings/", data);
 	}
 
+	async uploadLogo(file: File): Promise<AppSettings> {
+		const formData = new FormData();
+		formData.append("file", file);
+		return this.client.post<AppSettings>("appsettings/upload-logo", formData);
+	}
+
 	async getSettingsCount(): Promise<number> {
 		return this.client.get<number>("appsettings/count");
 	}

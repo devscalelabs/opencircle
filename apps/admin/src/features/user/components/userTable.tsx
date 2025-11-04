@@ -1,4 +1,5 @@
 import type { User } from "@opencircle/core";
+import { Button } from "@opencircle/ui";
 import {
 	type ColumnDef,
 	flexRender,
@@ -49,7 +50,9 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 				const name = row.original.name;
 				return (
 					<div>
-						{name && <div className="text-muted-foreground">{name}</div>}
+						{name && (
+							<div className="text-muted-foreground text-sm">{name}</div>
+						)}
 						<div className="font-medium text-foreground/50 text-xs">
 							{username}
 						</div>
@@ -60,14 +63,20 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 		{
 			accessorKey: "email",
 			header: "Email",
-			cell: ({ row }) => row.getValue("email") as string,
+			cell: ({ row }) => (
+				<div className="text-sm">{row.getValue("email") as string}</div>
+			),
 		},
 		{
 			accessorKey: "is_active",
 			header: "Active",
 			cell: ({ row }) => (
-				<div className="text-center">
-					{(row.getValue("is_active") as boolean) ? "✓" : "✗"}
+				<div className="text-sm">
+					{(row.getValue("is_active") as boolean) ? (
+						<span>Active</span>
+					) : (
+						<span>Inactive</span>
+					)}
 				</div>
 			),
 		},
@@ -75,7 +84,9 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 			accessorKey: "role",
 			header: "Role",
 			cell: ({ row }) => (
-				<div className="capitalize">{row.getValue("role") as string}</div>
+				<div className="text-sm capitalize">
+					{row.getValue("role") as string}
+				</div>
 			),
 		},
 		{
@@ -83,7 +94,7 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 			header: "Created",
 			cell: ({ row }) => {
 				const date = new Date(row.getValue("created_at") as string);
-				return date.toLocaleDateString();
+				return <div className="text-sm">{date.toLocaleDateString()}</div>;
 			},
 		},
 		{
@@ -93,26 +104,25 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 				const user = row.original;
 				return (
 					<div className="flex items-center gap-2">
-						<button
-							type="button"
+						<Button
+							size="sm"
 							onClick={() => {
 								console.log("View details for:", user);
 							}}
-							className="rounded p-1 hover:bg-gray-100"
-							title="View Details"
 						>
-							<Eye size={16} />
-						</button>
-						<button
-							type="button"
+							<Eye size={14} />
+							View Details
+						</Button>
+						<Button
+							size="sm"
+							variant="secondary"
 							onClick={() => {
 								console.log("Ban user:", user);
 							}}
-							className="rounded p-1 text-red-600 hover:bg-red-100"
-							title="Ban"
 						>
-							<Trash2 size={16} />
-						</button>
+							<Trash2 size={14} />
+							Ban
+						</Button>
 					</div>
 				);
 			},

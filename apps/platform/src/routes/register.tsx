@@ -1,5 +1,5 @@
 import { Button, Input } from "@opencircle/ui";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
 import { METADATA } from "../constants/metadata";
@@ -58,6 +58,7 @@ function RouteComponent() {
 		inviteCode,
 		setInviteCode,
 		register,
+		validationErrors,
 	} = useRegister();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
 
@@ -83,8 +84,16 @@ function RouteComponent() {
 								id={usernameId}
 								placeholder="Username"
 								value={username}
-								onChange={(v) => setUsername(v.target.value)}
+								onChange={(v) =>
+									setUsername(v.target.value.toLowerCase().replace(/\s/g, ""))
+								}
+								className={validationErrors.username ? "border-red-500" : ""}
 							/>
+							{validationErrors.username && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.username}
+								</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -92,7 +101,11 @@ function RouteComponent() {
 								placeholder="Fullname"
 								value={name}
 								onChange={(v) => setName(v.target.value)}
+								className={validationErrors.name ? "border-red-500" : ""}
 							/>
+							{validationErrors.name && (
+								<p className="text-red-500 text-xs">{validationErrors.name}</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -101,7 +114,11 @@ function RouteComponent() {
 								type="email"
 								value={email}
 								onChange={(v) => setEmail(v.target.value)}
+								className={validationErrors.email ? "border-red-500" : ""}
 							/>
+							{validationErrors.email && (
+								<p className="text-red-500 text-xs">{validationErrors.email}</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -110,7 +127,13 @@ function RouteComponent() {
 								type="password"
 								value={password}
 								onChange={(v) => setPassword(v.target.value)}
+								className={validationErrors.password ? "border-red-500" : ""}
 							/>
+							{validationErrors.password && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.password}
+								</p>
+							)}
 						</section>
 						<section className="space-y-2">
 							<Input
@@ -118,7 +141,13 @@ function RouteComponent() {
 								placeholder="Enter invite code (Optional)"
 								value={inviteCode}
 								onChange={(v) => setInviteCode(v.target.value)}
+								className={validationErrors.inviteCode ? "border-red-500" : ""}
 							/>
+							{validationErrors.inviteCode && (
+								<p className="text-red-500 text-xs">
+									{validationErrors.inviteCode}
+								</p>
+							)}
 						</section>
 						<Button
 							radius="xl"
@@ -139,6 +168,14 @@ function RouteComponent() {
 						>
 							{isCallbackLoading ? "Loading..." : "Continue with Github"}
 						</Button>
+					</section>
+					<section className="px-4 text-center">
+						<p className="text-sm">
+							Have an account?{" "}
+							<Link to="/login" className="font-medium text-primary">
+								Login
+							</Link>
+						</p>
 					</section>
 				</div>
 				<div className="text-balance rounded-lg border border-border bg-linear-210 from-primary to-transparent p-4 text-center font-medium text-xs tracking-tight">
