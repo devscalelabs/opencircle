@@ -1,3 +1,4 @@
+import { Button } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -35,7 +36,11 @@ export const ArticleList = ({
 			header: "Author",
 			cell: ({ row }) => {
 				const user = row.getValue("user") as Article["user"];
-				return user?.name || user?.username || "Unknown";
+				return (
+					<div className="text-sm">
+						{user?.name || user?.username || "Unknown"}
+					</div>
+				);
 			},
 		},
 		{
@@ -43,11 +48,15 @@ export const ArticleList = ({
 			header: "Created",
 			cell: ({ row }) => {
 				const dateValue = row.getValue("created_at") as string;
-				if (!dateValue) return "N/A";
+				if (!dateValue) return <div className="text-sm">N/A</div>;
 				const date = new Date(dateValue);
-				return Number.isNaN(date.getTime())
-					? "Invalid date"
-					: format(date, "MMM dd, yyyy");
+				return (
+					<div className="text-sm">
+						{Number.isNaN(date.getTime())
+							? "Invalid date"
+							: format(date, "MMM dd, yyyy")}
+					</div>
+				);
 			},
 		},
 		{
@@ -55,11 +64,15 @@ export const ArticleList = ({
 			header: "Updated",
 			cell: ({ row }) => {
 				const dateValue = row.getValue("updated_at") as string;
-				if (!dateValue) return "N/A";
+				if (!dateValue) return <div className="text-sm">N/A</div>;
 				const date = new Date(dateValue);
-				return Number.isNaN(date.getTime())
-					? "Invalid date"
-					: format(date, "MMM dd, yyyy");
+				return (
+					<div className="text-sm">
+						{Number.isNaN(date.getTime())
+							? "Invalid date"
+							: format(date, "MMM dd, yyyy")}
+					</div>
+				);
 			},
 		},
 		{
@@ -69,31 +82,32 @@ export const ArticleList = ({
 				const article = row.original;
 				return (
 					<div className="flex items-center gap-2">
-						<Link
-							to="/articles/$id"
-							params={{ id: article.id }}
-							className="rounded p-1 hover:bg-gray-100"
-							title="View"
-						>
-							<Eye size={16} />
+						<Link to="/articles/$id" params={{ id: article.id }}>
+							<Button
+								size="sm"
+								onClick={() => {
+									console.log("View article:", article);
+								}}
+							>
+								<Eye size={14} />
+								View
+							</Button>
 						</Link>
-						<Link
-							to="/articles/edit/$id"
-							params={{ id: article.id }}
-							className="rounded p-1 hover:bg-gray-100"
-							title="Edit"
-						>
-							<Edit size={16} />
+						<Link to="/articles/edit/$id" params={{ id: article.id }}>
+							<Button size="sm">
+								<Edit size={14} />
+								Edit
+							</Button>
 						</Link>
 						{onDelete && (
-							<button
-								type="button"
+							<Button
+								size="sm"
+								variant="secondary"
 								onClick={() => onDelete(article.id)}
-								className="rounded p-1 text-red-600 hover:bg-red-100"
-								title="Delete"
 							>
-								<Trash2 size={16} />
-							</button>
+								<Trash2 size={14} />
+								Delete
+							</Button>
 						)}
 					</div>
 				);

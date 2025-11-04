@@ -1,4 +1,5 @@
 import type { Resource } from "@opencircle/core";
+import { Button } from "@opencircle/ui";
 import {
 	type ColumnDef,
 	flexRender,
@@ -30,7 +31,7 @@ export const ResourcesList = ({
 						href={url}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="flex items-center gap-2 text-primary hover:underline"
+						className="flex items-center gap-2 text-primary text-sm hover:underline"
 					>
 						<span className="max-w-xs truncate">{url}</span>
 						<ExternalLink size={14} className="flex-shrink-0" />
@@ -44,7 +45,7 @@ export const ResourcesList = ({
 			cell: ({ row }) => {
 				const description = row.getValue("description") as string | null;
 				return (
-					<div className="max-w-xs truncate text-muted-foreground">
+					<div className="max-w-xs truncate text-muted-foreground text-sm">
 						{description || "-"}
 					</div>
 				);
@@ -56,7 +57,7 @@ export const ResourcesList = ({
 			cell: ({ row }) => {
 				const channel = row.getValue("channel") as Resource["channel"];
 				return (
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 text-sm">
 						<span>{channel.emoji}</span>
 						<span className="font-medium">{channel.name}</span>
 					</div>
@@ -68,7 +69,11 @@ export const ResourcesList = ({
 			header: "Creator",
 			cell: ({ row }) => {
 				const user = row.getValue("user") as Resource["user"];
-				return user?.name || user?.username || "Unknown";
+				return (
+					<div className="text-sm">
+						{user?.name || user?.username || "Unknown"}
+					</div>
+				);
 			},
 		},
 		{
@@ -76,11 +81,15 @@ export const ResourcesList = ({
 			header: "Created",
 			cell: ({ row }) => {
 				const dateValue = row.getValue("created_at") as string;
-				if (!dateValue) return "N/A";
+				if (!dateValue) return <div className="text-sm">N/A</div>;
 				const date = new Date(dateValue);
-				return Number.isNaN(date.getTime())
-					? "Invalid date"
-					: format(date, "MMM dd, yyyy");
+				return (
+					<div className="text-sm">
+						{Number.isNaN(date.getTime())
+							? "Invalid date"
+							: format(date, "MMM dd, yyyy")}
+					</div>
+				);
 			},
 		},
 		{
@@ -91,14 +100,14 @@ export const ResourcesList = ({
 				return (
 					<div className="flex items-center gap-2">
 						{onDelete && (
-							<button
-								type="button"
+							<Button
+								size="sm"
+								variant="secondary"
 								onClick={() => onDelete(resource.id)}
-								className="rounded p-1 text-red-600 hover:bg-red-100"
-								title="Delete"
 							>
-								<Trash2 size={16} />
-							</button>
+								<Trash2 size={14} />
+								Delete
+							</Button>
 						)}
 					</div>
 				);

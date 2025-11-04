@@ -1,4 +1,5 @@
 import type { InviteCode } from "@opencircle/core";
+import { Button } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -38,7 +39,11 @@ export const InviteCodeList = ({
 			header: "Max Uses",
 			cell: ({ row }) => {
 				const maxUses = row.getValue("max_uses") as number;
-				return maxUses === 0 ? "Unlimited" : maxUses.toString();
+				return (
+					<div className="text-sm">
+						{maxUses === 0 ? "Unlimited" : maxUses.toString()}
+					</div>
+				);
 			},
 		},
 		{
@@ -50,7 +55,7 @@ export const InviteCodeList = ({
 				const remaining =
 					maxUses === 0 ? "∞" : (maxUses - usedCount).toString();
 				return (
-					<div className="text-center">
+					<div className="text-center text-sm">
 						{usedCount} / {remaining}
 					</div>
 				);
@@ -68,7 +73,7 @@ export const InviteCodeList = ({
 				};
 				return (
 					<div
-						className={`capitalize ${statusColors[status as keyof typeof statusColors]}`}
+						className={`text-sm capitalize ${statusColors[status as keyof typeof statusColors]}`}
 					>
 						{status}
 					</div>
@@ -80,11 +85,15 @@ export const InviteCodeList = ({
 			header: "Expires",
 			cell: ({ row }) => {
 				const expiresAt = row.getValue("expires_at") as string;
-				if (!expiresAt) return "Never";
+				if (!expiresAt) return <div className="text-sm">Never</div>;
 				const date = new Date(expiresAt);
-				return Number.isNaN(date.getTime())
-					? "Invalid date"
-					: format(date, "MMM dd, yyyy");
+				return (
+					<div className="text-sm">
+						{Number.isNaN(date.getTime())
+							? "Invalid date"
+							: format(date, "MMM dd, yyyy")}
+					</div>
+				);
 			},
 		},
 		{
@@ -93,9 +102,11 @@ export const InviteCodeList = ({
 			cell: ({ row }) => {
 				const channelId = row.getValue("auto_join_channel_id") as string;
 				return channelId ? (
-					<div className="max-w-xs truncate font-mono text-xs">{channelId}</div>
+					<div className="max-w-xs truncate font-mono text-sm text-xs">
+						{channelId}
+					</div>
 				) : (
-					<div className="text-gray-500">None</div>
+					<div className="text-gray-500 text-sm">None</div>
 				);
 			},
 		},
@@ -104,11 +115,15 @@ export const InviteCodeList = ({
 			header: "Created",
 			cell: ({ row }) => {
 				const dateValue = row.getValue("created_at") as string;
-				if (!dateValue) return "N/A";
+				if (!dateValue) return <div className="text-sm">N/A</div>;
 				const date = new Date(dateValue);
-				return Number.isNaN(date.getTime())
-					? "Invalid date"
-					: format(date, "MMM dd, yyyy");
+				return (
+					<div className="text-sm">
+						{Number.isNaN(date.getTime())
+							? "Invalid date"
+							: format(date, "MMM dd, yyyy")}
+					</div>
+				);
 			},
 		},
 		{
@@ -118,35 +133,34 @@ export const InviteCodeList = ({
 				const inviteCode = row.original;
 				return (
 					<div className="flex items-center gap-2">
-						<button
-							type="button"
+						<Button
+							size="sm"
 							onClick={() => {
 								router.navigate({ to: `/invite-codes/edit/${inviteCode.id}` });
 							}}
-							className="rounded p-1 hover:bg-gray-100"
-							title="Edit"
 						>
-							<Edit size={16} />
-						</button>
+							<Edit size={14} />
+							Edit
+						</Button>
 						{inviteCode.status === "active" && onDeactivate && (
-							<button
-								type="button"
+							<Button
+								size="sm"
+								variant="secondary"
 								onClick={() => onDeactivate(inviteCode.id)}
-								className="rounded p-1 text-yellow-600 hover:bg-yellow-100"
-								title="Deactivate"
 							>
-								<Ban size={16} />
-							</button>
+								<Ban size={14} />
+								Deactivate
+							</Button>
 						)}
 						{onDelete && (
-							<button
-								type="button"
+							<Button
+								size="sm"
+								variant="secondary"
 								onClick={() => onDelete(inviteCode.id)}
-								className="rounded p-1 text-red-600 hover:bg-red-100"
-								title="Delete"
 							>
-								<Trash2 size={16} />
-							</button>
+								<Trash2 size={14} />
+								Delete
+							</Button>
 						)}
 					</div>
 				);
