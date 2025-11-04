@@ -58,8 +58,13 @@ def test_create_reaction():
     mock_db = MagicMock()
     mock_user = create_mock_user()
     mock_reaction = create_mock_reaction()
+    mock_post = MagicMock()
+    mock_post.id = "post123"
+    mock_post.user_id = "post_owner_id"
     
-    with patch("src.api.reaction.api.create_reaction", return_value=mock_reaction):
+    with patch("src.api.reaction.api.create_reaction", return_value=mock_reaction), \
+         patch("src.api.reaction.api.get_post", return_value=mock_post), \
+         patch("src.api.reaction.api.create_notification_task") as mock_notify:
         app.dependency_overrides[get_db] = lambda: mock_db
         app.dependency_overrides[get_current_user] = lambda: mock_user
         
@@ -70,6 +75,7 @@ def test_create_reaction():
         
         app.dependency_overrides.clear()
         assert response.status_code == 200
+        mock_notify.delay.assert_called_once()
 
 
 def test_delete_reaction():

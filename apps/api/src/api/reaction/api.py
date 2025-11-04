@@ -4,6 +4,8 @@ from sqlmodel import Session
 from src.api.account.api import get_current_user
 from src.database.engine import get_session
 from src.database.models import User
+from src.modules.notifications.notification_tasks import create_notification_task
+from src.modules.post.post_methods import get_post
 from src.modules.reaction.reaction_methods import create_reaction, get_reactions_by_post
 
 from .serializer import (
@@ -27,6 +29,19 @@ def create_reaction_endpoint(
     created_reaction = create_reaction(db, reaction_data)
     if created_reaction is None:
         return {"message": "Reaction removed"}
+
+    # Create notification for post owner when reaction is created
+    post = get_post(db, created_reaction.post_id)
+    if post and post.user_id != current_user.id:
+        create_notification_task.delay(
+            recipient_id=post.user_id,
+            sender_id=current_user.id,
+            notification_type="like",
+            data={
+                "post_id": post.id,
+                "emoji": created_reaction.emoji,
+            },
+        )
 
     # Manually construct response to avoid circular reference with post.reactions
     return {
