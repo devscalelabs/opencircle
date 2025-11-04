@@ -25,7 +25,7 @@ export const MediaGallery = ({ media }: MediaGalleryProps) => {
 					/>
 				</DialogContent>
 			</Dialog>
-			<section className="grid grid-cols-3 gap-2">
+			<section className="grid grid-cols-2 gap-2">
 				{media.map((mediaItem) => (
 					<button
 						key={mediaItem.id}

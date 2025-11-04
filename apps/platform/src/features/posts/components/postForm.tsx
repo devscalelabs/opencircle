@@ -2,7 +2,7 @@ import { Button } from "@opencircle/ui";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { ChevronDown, Hash, Image, Smile, X } from "lucide-react";
+import { ChevronDown, Hash, Image, Smile } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import { useChannels } from "../../channels/hooks/useChannels";
 import { MentionList } from "../../mention/components/MentionList";
 import { usePostMention } from "../hooks/usePostMention";
 import { usePostSubmission } from "../hooks/usePostSubmission";
+import { PostFormMediaPreview } from "./postFormMediaPreview";
 
 // Define the search schema for type safety
 const searchSchema = z.object({
@@ -25,6 +26,7 @@ const PostFormRoute = createFileRoute("/_socialLayout/")({
 export const PostForm = () => {
 	const [content, setContent] = useState("");
 	const [files, setFiles] = useState<File[]>([]);
+	const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 	const [selectedChannel, setSelectedChannel] = useState<string>("");
 	const { createPost, isSubmitting } = usePostSubmission();
 	const { account } = useAccount();
@@ -83,19 +85,68 @@ export const PostForm = () => {
 			files,
 			channelId: selectedChannel || undefined,
 		});
+		for (const url of previewUrls) {
+			URL.revokeObjectURL(url);
+		}
 		setContent("");
 		setFiles([]);
+		setPreviewUrls([]);
 		setSelectedChannel("");
 	};
 
 	const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFiles = Array.from(e.target.files || []);
-		setFiles((prev) => [...prev, ...selectedFiles]);
+		const remainingSlots = 4 - files.length;
+		const filesToAdd = selectedFiles.slice(0, remainingSlots);
+
+		const newPreviewUrls = filesToAdd.map((file) => URL.createObjectURL(file));
+		setFiles((prev) => [...prev, ...filesToAdd]);
+		setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+
+		// Reset input value to allow selecting the same file again
+		e.target.value = "";
 	};
 
 	const removeFile = (index: number) => {
+		URL.revokeObjectURL(previewUrls[index]);
 		setFiles((prev) => prev.filter((_, i) => i !== index));
+		setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
 	};
+
+	const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+		const items = e.clipboardData?.items;
+		if (!items) return;
+
+		const imageFiles: File[] = [];
+		for (const item of Array.from(items)) {
+			if (item.type.startsWith("image/")) {
+				const file = item.getAsFile();
+				if (file) {
+					imageFiles.push(file);
+				}
+			}
+		}
+
+		if (imageFiles.length > 0) {
+			const remainingSlots = 4 - files.length;
+			const filesToAdd = imageFiles.slice(0, remainingSlots);
+
+			const newPreviewUrls = filesToAdd.map((file) =>
+				URL.createObjectURL(file),
+			);
+			setFiles((prev) => [...prev, ...filesToAdd]);
+			setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+		}
+	};
+
+	// Cleanup preview URLs on unmount
+	useEffect(() => {
+		return () => {
+			for (const url of previewUrls) {
+				URL.revokeObjectURL(url);
+			}
+		};
+	}, [previewUrls]);
 
 	return (
 		<div className="relative space-y-4 border-border border-b p-4">
@@ -104,6 +155,7 @@ export const PostForm = () => {
 				value={content}
 				onChange={handleContentChange}
 				onKeyDown={handleKeyDown}
+				onPaste={handlePaste}
 				rows={4}
 				placeholder="Write your post here"
 				className="block w-full resize-none focus-within:outline-none"
@@ -119,27 +171,11 @@ export const PostForm = () => {
 				/>
 			)}
 
-			{files.length > 0 && (
-				<div className="flex flex-wrap gap-2">
-					{files.map((file, index) => (
-						<div
-							key={`file-${file.name}`}
-							className="relative flex items-center gap-2 rounded-lg bg-muted p-2"
-						>
-							<span className="max-w-[200px] truncate text-muted-foreground text-sm">
-								{file.name}
-							</span>
-							<button
-								type="button"
-								onClick={() => removeFile(index)}
-								className="text-muted-foreground hover:text-foreground"
-							>
-								<X size={16} />
-							</button>
-						</div>
-					))}
-				</div>
-			)}
+			<PostFormMediaPreview
+				files={files}
+				previewUrls={previewUrls}
+				onRemoveFile={removeFile}
+			/>
 
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-4">
@@ -149,12 +185,13 @@ export const PostForm = () => {
 						multiple
 						onChange={handleFileSelect}
 						className="hidden"
-						accept="image/*,video/*"
+						accept="image/*"
 					/>
 					<button
 						type="button"
 						onClick={() => fileInputRef.current?.click()}
-						className="text-muted-foreground hover:text-foreground"
+						disabled={files.length >= 4}
+						className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						<Image strokeWidth={1.5} size={18} />
 					</button>
