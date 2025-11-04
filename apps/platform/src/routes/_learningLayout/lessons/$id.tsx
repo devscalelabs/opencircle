@@ -1,12 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import MDEditor from "@uiw/react-md-editor";
 import { ArrowLeft, Zap } from "lucide-react";
+import { METADATA } from "../../../constants/metadata";
 import { CourseSidebar } from "../../../features/courses/components/courseSidebar";
 import { useCourse } from "../../../features/courses/hooks/useCourse";
 import { useCheckEnrollment } from "../../../features/enrollment/hooks/useCheckEnrollment";
 import { useLesson } from "../../../features/lessons/hooks/useLesson";
 
 export const Route = createFileRoute("/_learningLayout/lessons/$id")({
+	head: () => ({
+		meta: [
+			{
+				title: "Lesson - OpenCircle",
+			},
+			{
+				name: "description",
+				content: "Learn from this lesson on OpenCircle",
+			},
+			{
+				property: "og:title",
+				content: "Lesson - OpenCircle",
+			},
+			{
+				property: "og:description",
+				content: "Learn from this lesson on OpenCircle",
+			},
+			{
+				property: "og:image",
+				content: METADATA.ogImage,
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

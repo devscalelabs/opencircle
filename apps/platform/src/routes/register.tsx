@@ -2,10 +2,40 @@ import { Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
+import { METADATA } from "../constants/metadata";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
 import { useRegister } from "../features/auth/hooks/useRegister";
 
 export const Route = createFileRoute("/register")({
+	head: () => ({
+		meta: [
+			{
+				title: "Register - OpenCircle",
+			},
+			{
+				name: "description",
+				content: "Create an account and join the OpenCircle community",
+			},
+			{
+				property: "og:title",
+				content: "Register - OpenCircle",
+			},
+			{
+				property: "og:description",
+				content: "Create an account and join the OpenCircle community",
+			},
+			{
+				property: "og:image",
+				content: METADATA.ogImage,
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

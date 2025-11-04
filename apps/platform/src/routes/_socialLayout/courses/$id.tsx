@@ -1,12 +1,47 @@
 import { Avatar } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "../../../components/header";
+import { METADATA } from "../../../constants/metadata";
 import { useCourse } from "../../../features/courses/hooks/useCourse";
 import { useCheckEnrollment } from "../../../features/enrollment/hooks/useCheckEnrollment";
 import { useEnrollCourse } from "../../../features/enrollment/hooks/useEnrollCourse";
 import { getInitials } from "../../../utils/common";
 
 export const Route = createFileRoute("/_socialLayout/courses/$id")({
+	head: (): {
+		meta: Array<Record<string, any>>;
+		links: Array<Record<string, any>>;
+	} => {
+		return {
+			meta: [
+				{
+					title: "Course - OpenCircle",
+				},
+				{
+					name: "description",
+					content: "Check out this course on OpenCircle",
+				},
+				{
+					property: "og:title",
+					content: "Course - OpenCircle",
+				},
+				{
+					property: "og:description",
+					content: "Check out this course on OpenCircle",
+				},
+				{
+					property: "og:image",
+					content: METADATA.ogImage,
+				},
+			],
+			links: [
+				{
+					rel: "icon",
+					href: METADATA.favicon,
+				},
+			],
+		};
+	},
 	component: RouteComponent,
 });
 

@@ -2,12 +2,48 @@ import { Avatar } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { useId } from "react";
 import { Header } from "../../components/header";
+import { METADATA } from "../../constants/metadata";
 import { usePosts } from "../../features/posts/hooks/usePosts";
 import { UserTabs } from "../../features/user/components/userTabs";
 import { useUser } from "../../features/user/hooks/useUser";
 import { getInitials } from "../../utils/common";
 
 export const Route = createFileRoute("/_socialLayout/$username")({
+	head: (): {
+		meta: Array<Record<string, any>>;
+		links: Array<Record<string, any>>;
+	} => {
+		const username = Route.useParams().username;
+		return {
+			meta: [
+				{
+					title: `${username} - OpenCircle`,
+				},
+				{
+					name: "description",
+					content: `View ${username}'s profile on OpenCircle`,
+				},
+				{
+					property: "og:title",
+					content: `${username} - OpenCircle`,
+				},
+				{
+					property: "og:description",
+					content: `View ${username}'s profile on OpenCircle`,
+				},
+				{
+					property: "og:image",
+					content: METADATA.ogImage,
+				},
+			],
+			links: [
+				{
+					rel: "icon",
+					href: METADATA.favicon,
+				},
+			],
+		};
+	},
 	component: UserDetail,
 });
 

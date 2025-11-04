@@ -4,6 +4,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { Header } from "../../../components/header";
+import { METADATA } from "../../../constants/metadata";
 import { useArticle } from "../../../features/articles/hooks/useArticle";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { PostCardReactions } from "../../../features/posts/components/postCardReactions";
@@ -12,6 +13,40 @@ import { ReplyForm } from "../../../features/posts/components/replyForm";
 import { usePosts } from "../../../features/posts/hooks/usePosts";
 
 export const Route = createFileRoute("/_socialLayout/articles/$id")({
+	head: (): {
+		meta: Array<Record<string, any>>;
+		links: Array<Record<string, any>>;
+	} => {
+		return {
+			meta: [
+				{
+					title: "Article - OpenCircle",
+				},
+				{
+					name: "description",
+					content: "Read this amazing article on OpenCircle",
+				},
+				{
+					property: "og:title",
+					content: "Article - OpenCircle",
+				},
+				{
+					property: "og:description",
+					content: "Read this amazing article on OpenCircle",
+				},
+				{
+					property: "og:image",
+					content: METADATA.ogImage,
+				},
+			],
+			links: [
+				{
+					rel: "icon",
+					href: METADATA.favicon,
+				},
+			],
+		};
+	},
 	component: RouteComponent,
 });
 
