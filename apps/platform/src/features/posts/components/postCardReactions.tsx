@@ -94,7 +94,7 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 							sideOffset={5}
 						>
 							<ScrollArea.Root className="max-h-[225px]">
-								<ScrollArea.Viewport className="p-4">
+								<ScrollArea.Viewport className="w-full p-4">
 									<div className="flex flex-col gap-2">
 										<div className="mb-1 font-semibold text-muted-foreground text-xs">
 											{totalReactions}{" "}
