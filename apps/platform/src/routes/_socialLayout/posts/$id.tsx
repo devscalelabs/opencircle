@@ -5,6 +5,7 @@ import moment from "moment";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
 import { Header } from "../../../components/header";
+import { METADATA } from "../../../constants/metadata";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { UrlPreview } from "../../../features/extras/components/UrlPreview";
 import { MediaGallery } from "../../../features/media/components/media";
@@ -18,6 +19,40 @@ import { renderContent } from "../../../features/posts/utils/contentRendering";
 import { getInitials } from "../../../utils/common";
 
 export const Route = createFileRoute("/_socialLayout/posts/$id")({
+	head: (): {
+		meta: Array<Record<string, any>>;
+		links: Array<Record<string, any>>;
+	} => {
+		return {
+			meta: [
+				{
+					title: `Post - OpenCircle`,
+				},
+				{
+					name: "description",
+					content: "Check out this post on OpenCircle",
+				},
+				{
+					property: "og:title",
+					content: `Post - OpenCircle`,
+				},
+				{
+					property: "og:description",
+					content: "Check out this post on OpenCircle",
+				},
+				{
+					property: "og:image",
+					content: METADATA.ogImage,
+				},
+			],
+			links: [
+				{
+					rel: "icon",
+					href: METADATA.favicon,
+				},
+			],
+		};
+	},
 	component: PostDetail,
 });
 

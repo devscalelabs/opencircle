@@ -1,9 +1,27 @@
 import { Avatar, Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "../../components/header";
+import { METADATA } from "../../constants/metadata";
 import { useEditProfile } from "../../features/user/hooks/useEditProfile";
 
 export const Route = createFileRoute("/_socialLayout/edit-profile")({
+	head: () => ({
+		meta: [
+			{
+				title: "Edit Profile - OpenCircle",
+			},
+			{
+				name: "description",
+				content: "Update your OpenCircle profile information",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: EditProfile,
 });
 

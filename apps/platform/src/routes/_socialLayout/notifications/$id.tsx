@@ -1,8 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "../../../components/header";
+import { METADATA } from "../../../constants/metadata";
 import { useNotifications } from "../../../features/notifications/hooks/useNotifications";
 
 export const Route = createFileRoute("/_socialLayout/notifications/$id")({
+	head: () => ({
+		meta: [
+			{
+				title: "Notification - OpenCircle",
+			},
+			{
+				name: "description",
+				content: "View this notification on OpenCircle",
+			},
+			{
+				property: "og:title",
+				content: "Notification - OpenCircle",
+			},
+			{
+				property: "og:description",
+				content: "View this notification on OpenCircle",
+			},
+			{
+				property: "og:image",
+				content: METADATA.ogImage,
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: NotificationDetail,
 });
 

@@ -1,9 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
+import { METADATA } from "../constants/metadata";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
 
 export const Route = createFileRoute("/github-callback")({
+	head: () => ({
+		meta: [
+			{
+				title: "GitHub Callback - OpenCircle",
+			},
+		],
+		links: [
+			{
+				rel: "icon",
+				href: METADATA.favicon,
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 function RouteComponent() {
