@@ -9,6 +9,7 @@ import { z } from "zod";
 import { useAccount } from "../../auth/hooks/useAccount";
 import { useChannels } from "../../channels/hooks/useChannels";
 import { MentionList } from "../../mention/components/MentionList";
+import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
 import { usePostMention } from "../hooks/usePostMention";
 import { usePostSubmission } from "../hooks/usePostSubmission";
 import { PostFormMediaPreview } from "./postFormMediaPreview";
@@ -75,6 +76,8 @@ export const PostForm = () => {
 		handleMentionSelect,
 		handleKeyDown,
 	} = usePostMention(content, setContent);
+
+	useAutoResizeTextarea(textareaRef, 7);
 
 	const handleSubmit = () => {
 		if ((!content.trim() && files.length === 0) || !account?.id) return;

@@ -5,6 +5,7 @@ import { DropdownMenu } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "../../auth/hooks/useAccount";
 import { MentionList } from "../../mention/components/MentionList";
+import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
 import { usePost } from "../hooks/usePost";
 import { usePostMention } from "../hooks/usePostMention";
 import { useReplySubmission } from "../hooks/useReplySubmission";
@@ -38,6 +39,8 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 		setSelectedIndex,
 		setCursorPosition,
 	} = usePostMention(content, setContent);
+
+	useAutoResizeTextarea(textareaRef, 7);
 
 	useEffect(() => {
 		if (parentPost) {

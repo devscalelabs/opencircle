@@ -19,4 +19,22 @@
         height: 100%;
         margin-bottom: 1px;
     }
+
+    textarea {
+        scrollbar-width: thin;
+        scrollbar-color: oklch(0.3 0 0) transparent;
+    }
+
+    textarea::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    textarea::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+        background-color: oklch(0.3 0 0);
+        border-radius: 3px;
+    }
 }
