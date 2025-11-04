@@ -1,5 +1,5 @@
 import { Button, Input } from "@opencircle/ui";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
 import { METADATA } from "../constants/metadata";
@@ -139,6 +139,14 @@ function RouteComponent() {
 						>
 							{isCallbackLoading ? "Loading..." : "Continue with Github"}
 						</Button>
+					</section>
+					<section className="px-4 text-center">
+						<p className="text-sm">
+							Have an account?{" "}
+							<Link to="/login" className="font-medium text-primary">
+								Login
+							</Link>
+						</p>
 					</section>
 				</div>
 				<div className="text-balance rounded-lg border border-border bg-linear-210 from-primary to-transparent p-4 text-center font-medium text-xs tracking-tight">
