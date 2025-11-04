@@ -64,6 +64,11 @@ export const Route = createRootRouteWithContext<{
 	},
 });
 
+/**
+ * Root layout component for the application that injects head elements, renders the matched child route, and mounts global UI utilities.
+ *
+ * @returns A JSX element containing head content, the route `Outlet`, a configured `Toaster` for toast messages, the React Query devtools, and the TanStack Router devtools.
+ */
 function RootComponent() {
 	return (
 		<>
