@@ -41,6 +41,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 	const handleViewPost = () => {
 		const postId = notification.data?.post_id as string;
 		if (postId) {
+			handleMarkAsRead();
 			navigate({ to: "/posts/$id", params: { id: postId } });
 		}
 	};
