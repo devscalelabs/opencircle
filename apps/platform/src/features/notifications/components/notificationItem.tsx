@@ -38,8 +38,6 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 		}
 	};
 
-	console.log(notification);
-
 	const handleViewPost = () => {
 		const postId = notification.data?.post_id as string;
 		if (postId) {
