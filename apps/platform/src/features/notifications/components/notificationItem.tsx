@@ -71,7 +71,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 					</p>
 				</div>
 				<div className="flex items-start gap-2">
-					{hasPostId && !isContentNotification && (
+					{hasPostId && (
 						<Button
 							variant="secondary"
 							size="sm"

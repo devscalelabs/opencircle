@@ -178,12 +178,14 @@ def get_all_nested_posts_by_parent_id(
     # 5. Order by parent creation time first, then by reply creation time to maintain hierarchy
     sql = """
     WITH RECURSIVE reply_tree AS (
-        SELECT p.id, p.parent_id, p.created_at, p.is_pinned, p.updated_at, p.content, p.type, p.user_id, p.channel_id, 0 as depth,
+        -- Base case: Get direct replies to the parent post
+        SELECT p.id, p.parent_id, p.created_at, p.is_pinned, p.updated_at, p.content, p.type, p.user_id, p.channel_id, 1 as depth,
                CAST((CASE WHEN p.is_pinned THEN 1 ELSE 0 END) AS TEXT) || '/' ||
                CAST(2147483647 - EXTRACT(EPOCH FROM p.created_at) AS TEXT) as sort_path
         FROM post p
         WHERE p.parent_id = :parent_id
         UNION ALL
+        -- Recursive case: Get replies to any reply in the tree
         SELECT p.id, p.parent_id, p.created_at, p.is_pinned, p.updated_at, p.content, p.type, p.user_id, p.channel_id, rt.depth + 1,
                rt.sort_path || '/' || CAST(EXTRACT(EPOCH FROM p.created_at) AS TEXT)
         FROM post p

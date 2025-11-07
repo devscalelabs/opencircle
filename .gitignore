@@ -19,3 +19,5 @@ wheels/
 
 # Environment variables
 .env
+
+opencircle_dump.sql
