@@ -64,15 +64,15 @@ function RouteComponent() {
 	return (
 		<>
 			<Header label="Back" />
+			{course.thumbnail_url && (
+				<img
+					src={course.thumbnail_url}
+					alt={course.title}
+					className="h-48 w-full border-border border-b object-cover"
+				/>
+			)}
 			<main className="space-y-6 p-4">
 				<div className="space-y-4">
-					{course.thumbnail_url && (
-						<img
-							src={course.thumbnail_url}
-							alt={course.title}
-							className="h-48 w-full rounded-lg object-cover"
-						/>
-					)}
 					<div className="space-y-2">
 						<h1 className="font-bold text-2xl text-foreground">
 							{course.title}
@@ -88,27 +88,10 @@ function RouteComponent() {
 							<span>{course.sections?.length || 0} sections</span>
 							<span>{course.enrollments?.length || 0} enrolled</span>
 						</div>
-
-						<div className="mt-4">
-							{isEnrolled ? (
-								<div className="rounded-lg bg-green-100 px-4 py-2 text-center font-medium text-green-800">
-									✓ Enrolled
-								</div>
-							) : (
-								<button
-									type="button"
-									onClick={handleEnroll}
-									disabled={isEnrolling || isEnrollmentLoading}
-									className="w-full rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-								>
-									{isEnrolling ? "Enrolling..." : "Enroll Now"}
-								</button>
-							)}
-						</div>
 					</div>
 				</div>
 
-				<section className="flex items-center gap-2 rounded-lg bg-background/50 p-4">
+				<section className="flex items-center gap-2 rounded-lg bg-background/50">
 					<Avatar
 						initials={initials}
 						image_url={course.instructor.avatar_url || ""}
@@ -127,6 +110,23 @@ function RouteComponent() {
 					</Link>
 				</section>
 
+				<div className="mt-4">
+					{isEnrolled ? (
+						<div className="rounded-md border border-border bg-background-secondary p-2 text-center">
+							Enrolled
+						</div>
+					) : (
+						<button
+							type="button"
+							onClick={handleEnroll}
+							disabled={isEnrolling || isEnrollmentLoading}
+							className="w-full rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+						>
+							{isEnrolling ? "Enrolling..." : "Enroll Now"}
+						</button>
+					)}
+				</div>
+
 				{course.sections && course.sections.length > 0 && (
 					<div className="space-y-4">
 						<h2 className="font-semibold text-foreground text-lg">
@@ -134,10 +134,7 @@ function RouteComponent() {
 						</h2>
 						<div className="space-y-4">
 							{course.sections.map((section) => (
-								<div
-									key={section.id}
-									className="space-y-3 rounded-lg border border-border bg-background/50 p-4"
-								>
+								<div key={section.id} className="space-y-3">
 									<h3 className="font-medium text-foreground">
 										{section.title}
 									</h3>
