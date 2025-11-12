@@ -36,7 +36,9 @@ export const Sidebar = () => {
 				<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
 					<Zap size={12} fill="currentColor" />
 				</div>
-				<h2 className="font-medium">Opencircle</h2>
+				<Link to="/dashboard">
+					<h2 className="font-medium">Opencircle</h2>
+				</Link>
 			</section>
 			<section>
 				<Input placeholder="Search" />
