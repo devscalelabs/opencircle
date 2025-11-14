@@ -16,6 +16,15 @@ def test_register(monkeypatch):
     mock_db = MagicMock()
     mock_user = MagicMock()
     mock_user.id = "user123"
+    
+    # Mock app settings to allow registration
+    mock_app_settings = MagicMock()
+    mock_app_settings.enable_sign_up = True
+    
+    monkeypatch.setattr(
+        "src.modules.appsettings.appsettings_methods.get_active_app_settings",
+        lambda *args, **kwargs: mock_app_settings
+    )
     monkeypatch.setattr(
         "src.api.auth.api.register_user", lambda *args, **kwargs: mock_user
     )
@@ -33,6 +42,33 @@ def test_register(monkeypatch):
     )
     assert response.status_code == 200
     assert "user_id" in response.json()
+
+
+def test_register_disabled(monkeypatch):
+    mock_db = MagicMock()
+    
+    # Mock app settings to disable registration
+    mock_app_settings = MagicMock()
+    mock_app_settings.enable_sign_up = False
+    
+    monkeypatch.setattr(
+        "src.modules.appsettings.appsettings_methods.get_active_app_settings",
+        lambda *args, **kwargs: mock_app_settings
+    )
+    app.dependency_overrides[
+        app.dependency_overrides.get("get_db", lambda: mock_db)
+    ] = lambda: mock_db
+
+    response = client.post(
+        "/api/register",
+        json={
+            "username": "testuser",
+            "email": "test@example.com",
+            "password": "password",
+        },
+    )
+    assert response.status_code == 403
+    assert "disabled" in response.json()["detail"].lower()
 
 
 def test_login(monkeypatch):
