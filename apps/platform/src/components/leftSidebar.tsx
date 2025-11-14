@@ -24,9 +24,6 @@ export const LeftSidebar = () => {
 								<Zap size={12} fill="currentColor" />
 							</div>
 							<h2 className="font-medium">Opencircle</h2>
-							<div className="-ml-1 rounded-lg bg-foreground px-1 py-0.5 font-medium text-[10px] text-background tracking-tight">
-								alpha
-							</div>
 						</section>
 					)}
 				</Link>

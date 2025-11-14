@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
 import { METADATA } from "../constants/metadata";
+import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
 import { useRegister } from "../features/auth/hooks/useRegister";
 
@@ -61,6 +62,9 @@ function RouteComponent() {
 		validationErrors,
 	} = useRegister();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
+	const { appSettings, isAppSettingsLoading } = useAppSettings();
+
+	const isRegistrationEnabled = appSettings?.enable_sign_up ?? true;
 
 	return (
 		<main className="m-auto max-w-sm">
@@ -77,6 +81,16 @@ function RouteComponent() {
 						<p className="text-foreground/50">Create your account</p>
 					</div>
 				</section>
+				{!isRegistrationEnabled && !isAppSettingsLoading && (
+					<div className="rounded-xl border border-yellow-500/50 bg-yellow-500/10 p-6 text-center">
+						<p className="font-medium text-yellow-600 dark:text-yellow-400">
+							Registration is currently disabled
+						</p>
+						<p className="mt-2 text-balance text-foreground/70 text-sm">
+							Please contact the administrator for more information.
+						</p>
+					</div>
+				)}
 				<div className="space-y-6 rounded-xl border border-border p-8 shadow-2xl">
 					<section className="space-y-3">
 						<section className="space-y-2">
@@ -88,6 +102,7 @@ function RouteComponent() {
 									setUsername(v.target.value.toLowerCase().replace(/\s/g, ""))
 								}
 								className={validationErrors.username ? "border-red-500" : ""}
+								disabled={!isRegistrationEnabled}
 							/>
 							{validationErrors.username && (
 								<p className="text-red-500 text-xs">
@@ -102,6 +117,7 @@ function RouteComponent() {
 								value={name}
 								onChange={(v) => setName(v.target.value)}
 								className={validationErrors.name ? "border-red-500" : ""}
+								disabled={!isRegistrationEnabled}
 							/>
 							{validationErrors.name && (
 								<p className="text-red-500 text-xs">{validationErrors.name}</p>
@@ -115,6 +131,7 @@ function RouteComponent() {
 								value={email}
 								onChange={(v) => setEmail(v.target.value)}
 								className={validationErrors.email ? "border-red-500" : ""}
+								disabled={!isRegistrationEnabled}
 							/>
 							{validationErrors.email && (
 								<p className="text-red-500 text-xs">{validationErrors.email}</p>
@@ -128,6 +145,7 @@ function RouteComponent() {
 								value={password}
 								onChange={(v) => setPassword(v.target.value)}
 								className={validationErrors.password ? "border-red-500" : ""}
+								disabled={!isRegistrationEnabled}
 							/>
 							{validationErrors.password && (
 								<p className="text-red-500 text-xs">
@@ -142,6 +160,7 @@ function RouteComponent() {
 								value={inviteCode}
 								onChange={(v) => setInviteCode(v.target.value)}
 								className={validationErrors.inviteCode ? "border-red-500" : ""}
+								disabled={!isRegistrationEnabled}
 							/>
 							{validationErrors.inviteCode && (
 								<p className="text-red-500 text-xs">
@@ -153,6 +172,7 @@ function RouteComponent() {
 							radius="xl"
 							className="mt-2 w-full"
 							onClick={() => register()}
+							disabled={!isRegistrationEnabled}
 						>
 							Register
 						</Button>
@@ -164,7 +184,7 @@ function RouteComponent() {
 							variant="secondary"
 							className="w-full"
 							onClick={loginWithGitHub}
-							disabled={isCallbackLoading}
+							disabled={isCallbackLoading || !isRegistrationEnabled}
 						>
 							{isCallbackLoading ? "Loading..." : "Continue with Github"}
 						</Button>

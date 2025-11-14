@@ -5,6 +5,7 @@ from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.engine import get_session as get_db
+from src.modules.appsettings import appsettings_methods
 from src.modules.auth.auth_methods import (
     create_access_token,
     login_user,
@@ -35,6 +36,14 @@ router = APIRouter()
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
+    # Check if registration is enabled
+    app_settings = appsettings_methods.get_active_app_settings(db)
+    if app_settings and not app_settings.enable_sign_up:
+        raise HTTPException(
+            status_code=403,
+            detail="Registration is currently disabled. Please contact the administrator.",
+        )
+
     try:
         user = register_user(
             db,
