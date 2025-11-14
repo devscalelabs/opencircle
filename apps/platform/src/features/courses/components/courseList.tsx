@@ -26,9 +26,16 @@ export const CourseList = () => {
 							)}
 							<section className="space-y-2 rounded-b border-border border-t bg-black/50 p-4">
 								<div className="space-y-2">
-									<h3 className="font-medium text-foreground text-lg">
-										{course.title}
-									</h3>
+									<div className="flex items-center gap-2">
+										<h3 className="font-medium text-foreground text-lg">
+											{course.title}
+										</h3>
+										{course.is_featured && (
+											<span className="rounded bg-primary px-2 py-0.5 font-medium text-white text-xs">
+												Featured
+											</span>
+										)}
+									</div>
 									{course.description && (
 										<p className="line-clamp-2 text-foreground/70 text-sm">
 											{course.description}

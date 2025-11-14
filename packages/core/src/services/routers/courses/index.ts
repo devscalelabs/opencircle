@@ -31,6 +31,17 @@ export class CoursesRouter extends BaseRouter {
 		return this.client.get<Course[]>(`courses/?${params.toString()}`);
 	}
 
+	async getFeaturedCourses(
+		skip: number = 0,
+		limit: number = 100,
+	): Promise<Course[]> {
+		const params = new URLSearchParams({
+			skip: skip.toString(),
+			limit: limit.toString(),
+		});
+		return this.client.get<Course[]>(`courses/featured/?${params.toString()}`);
+	}
+
 	async getCourseById(courseId: string): Promise<Course> {
 		return this.client.get<Course>(`courses/${courseId}`);
 	}

@@ -23,6 +23,7 @@ export const useCourseSubmission = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["courses"] });
 			queryClient.invalidateQueries({ queryKey: ["course"] });
+			queryClient.invalidateQueries({ queryKey: ["featured-course"] });
 		},
 	});
 

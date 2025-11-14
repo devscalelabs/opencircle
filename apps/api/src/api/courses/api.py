@@ -25,6 +25,7 @@ from src.modules.courses.courses_methods import (
     get_all_sections,
     get_course,
     get_enrollment,
+    get_featured_courses,
     get_lesson,
     get_section,
     update_course,
@@ -93,6 +94,15 @@ def get_all_courses_endpoint(
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
     return get_all_courses(db, skip, limit, instructor_id, status, current_user)
+
+
+@router.get("/courses/featured/", response_model=List[CourseResponse])
+def get_featured_courses_endpoint(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    return get_featured_courses(db, skip, limit)
 
 
 @router.put("/courses/{course_id}", response_model=CourseResponse)

@@ -34,6 +34,7 @@ export interface Course {
 	status: CourseStatus;
 	instructor_id: string;
 	price?: number;
+	is_featured: boolean;
 	instructor: User;
 	sections: Section[];
 	enrollments: EnrolledCourse[];
@@ -48,6 +49,7 @@ export interface CourseCreate {
 	status?: CourseStatus;
 	instructor_id: string;
 	price?: number;
+	is_featured?: boolean;
 }
 
 export interface CourseUpdate {
@@ -57,6 +59,7 @@ export interface CourseUpdate {
 	status?: CourseStatus;
 	instructor_id?: string;
 	price?: number;
+	is_featured?: boolean;
 }
 
 export interface Section {

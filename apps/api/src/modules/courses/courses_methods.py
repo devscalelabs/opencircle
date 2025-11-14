@@ -104,6 +104,24 @@ def get_all_courses(
     return list(db.exec(statement).all())
 
 
+def get_featured_courses(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+) -> List[Course]:
+    """Get featured courses that are published."""
+    statement = (
+        select(Course)
+        .where(Course.is_featured)
+        .where(Course.status == CourseStatus.PUBLISHED)
+        .order_by(desc(Course.created_at))
+        .offset(skip)
+        .limit(limit)
+    )
+
+    return list(db.exec(statement).all())
+
+
 # Section methods
 def create_section(db: Session, section_data: dict) -> Section:
     """Create a new section."""

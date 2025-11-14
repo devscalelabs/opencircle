@@ -16,6 +16,7 @@ class CourseCreate(BaseModel):
     status: CourseStatus = CourseStatus.DRAFT
     instructor_id: str
     price: Optional[float] = None
+    is_featured: bool = False
 
 
 class CourseUpdate(BaseModel):
@@ -25,6 +26,7 @@ class CourseUpdate(BaseModel):
     status: Optional[CourseStatus] = None
     instructor_id: Optional[str] = None
     price: Optional[float] = None
+    is_featured: Optional[bool] = None
 
 
 class CourseResponse(BaseModel):
@@ -35,6 +37,7 @@ class CourseResponse(BaseModel):
     status: CourseStatus
     instructor_id: str
     price: Optional[float] = None
+    is_featured: bool
     instructor: Optional[UserResponse] = None
     sections: List["SectionResponse"] = Field(default=[])
     enrollments: List["CourseEnrollmentResponse"] = Field(default=[])
@@ -149,6 +152,7 @@ class CourseMinimalResponse(BaseModel):
     status: CourseStatus
     instructor_id: str
     price: Optional[float] = None
+    is_featured: bool
     created_at: datetime
     updated_at: datetime
 

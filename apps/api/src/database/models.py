@@ -336,6 +336,7 @@ class Course(BaseModel, table=True):
     status: CourseStatus = Field(default=CourseStatus.DRAFT)
     instructor_id: str = Field(foreign_key="user.id")
     price: float | None = Field(default=None)
+    is_featured: bool = Field(default=False)
     instructor: "User" = Relationship(sa_relationship=relationship("User"))
     sections: List["Section"] = Relationship(
         sa_relationship=relationship(

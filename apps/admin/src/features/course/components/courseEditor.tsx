@@ -29,6 +29,7 @@ export const CourseEditor = ({
 	const [thumbnailUrl, setThumbnailUrl] = useState(course?.thumbnail_url || "");
 	const [status, setStatus] = useState<CourseStatus>(course?.status || "draft");
 	const [price, setPrice] = useState(course?.price?.toString() || "");
+	const [isFeatured, setIsFeatured] = useState(course?.is_featured || false);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -44,6 +45,7 @@ export const CourseEditor = ({
 				thumbnail_url: thumbnailUrl.trim() || undefined,
 				status,
 				price: price ? parseFloat(price) : undefined,
+				is_featured: isFeatured,
 			};
 			onSave(updateData);
 		} else {
@@ -54,6 +56,7 @@ export const CourseEditor = ({
 				status,
 				instructor_id: "", // Will be set in the route component
 				price: price ? parseFloat(price) : undefined,
+				is_featured: isFeatured,
 			};
 			onSave(createData);
 		}
@@ -121,6 +124,21 @@ export const CourseEditor = ({
 								onChange={(e) => setThumbnailUrl(e.target.value)}
 								placeholder="Enter thumbnail URL..."
 							/>
+						</div>
+
+						<div>
+							<label className="flex items-center gap-2">
+								<input
+									type="checkbox"
+									checked={isFeatured}
+									onChange={(e) => setIsFeatured(e.target.checked)}
+									className="h-4 w-4 rounded border-border text-primary focus:ring-2 focus:ring-primary"
+								/>
+								<span className="font-medium text-sm">Featured Course</span>
+							</label>
+							<p className="mt-1 text-muted-foreground text-xs">
+								Show this course in the featured section
+							</p>
 						</div>
 
 						<div className="grid grid-cols-2 gap-4">
@@ -224,17 +242,24 @@ export const CourseEditor = ({
 									</p>
 								)}
 								<div className="flex items-center justify-between pt-2">
-									<span
-										className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-medium text-xs ${
-											status === "published"
-												? "bg-green-100 text-green-800"
-												: status === "draft"
-													? "bg-yellow-100 text-yellow-800"
-													: "bg-gray-100 text-gray-800"
-										}`}
-									>
-										{status}
-									</span>
+									<div className="flex items-center gap-2">
+										<span
+											className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-medium text-xs ${
+												status === "published"
+													? "bg-green-100 text-green-800"
+													: status === "draft"
+														? "bg-yellow-100 text-yellow-800"
+														: "bg-gray-100 text-gray-800"
+											}`}
+										>
+											{status}
+										</span>
+										{isFeatured && (
+											<span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 font-medium text-blue-800 text-xs">
+												⭐ Featured
+											</span>
+										)}
+									</div>
 									<span className="font-medium">
 										{price ? `$${price}` : "Free"}
 									</span>
