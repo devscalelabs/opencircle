@@ -1,0 +1,33 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "---Quick Start---",
+    "quick-start",
+    "deployment/docker",
+    "deployment/cloudflare",
+    "---Platform---",
+    "platform/profile",
+    "platform/creating-content",
+    "platform/timeline",
+    "platform/courses",
+    "platform/articles",
+    "platform/channels",
+    "platform/notifications",
+    "platform/interactions",
+    "---Admin---",
+    "admin/dashboard",
+    "admin/users",
+    "admin/content-management",
+    "admin/courses-management",
+    "admin/channels-management",
+    "admin/invite-codes",
+    "admin/settings",
+    "admin/broadcasting",
+    "---Resources---",
+    "resources/faq",
+    "resources/troubleshooting",
+    "resources/community-guidelines",
+    "resources/api-reference"
+  ]
+}

@@ -1,0 +1,502 @@
+---
+title: API Reference
+description: Developer API documentation for OpenCircle
+icon: Code
+---
+
+# API Reference
+
+OpenCircle provides a RESTful API for developers to integrate with the platform programmatically.
+
+## API Overview
+
+### Base URL
+
+The API is typically available at:
+```
+https://your-instance.com/api/v1
+```
+
+Replace `your-instance.com` with your actual OpenCircle instance domain.
+
+### Authentication
+
+OpenCircle uses token-based authentication. Include your access token in the Authorization header:
+
+```bash
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+### Getting an Access Token
+
+Obtain an access token by logging in through the API:
+
+```bash
+POST /api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "user": {
+    "id": "user-id",
+    "username": "your_username",
+    "email": "your@email.com"
+  }
+}
+```
+
+## API Endpoints
+
+### Authentication
+
+#### Login
+```bash
+POST /api/v1/auth/login
+```
+
+#### Register
+```bash
+POST /api/v1/auth/register
+```
+
+#### Logout
+```bash
+POST /api/v1/auth/logout
+```
+
+### Users
+
+#### Get Current User
+```bash
+GET /api/v1/users/me
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Get User by Username
+```bash
+GET /api/v1/users/{username}
+```
+
+#### Update User Profile
+```bash
+PATCH /api/v1/users/me
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "bio": "Updated bio"
+}
+```
+
+### Posts
+
+#### Get Posts
+```bash
+GET /api/v1/posts
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+**Query Parameters:**
+- `limit` - Number of posts (default: 20)
+- `offset` - Pagination offset
+- `channel_id` - Filter by channel
+
+#### Create Post
+```bash
+POST /api/v1/posts
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "content": "Post content",
+  "channel_id": "channel-id" // optional
+}
+```
+
+#### Get Single Post
+```bash
+GET /api/v1/posts/{post_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Update Post
+```bash
+PATCH /api/v1/posts/{post_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "content": "Updated content"
+}
+```
+
+#### Delete Post
+```bash
+DELETE /api/v1/posts/{post_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+### Reactions
+
+#### Add Reaction
+```bash
+POST /api/v1/posts/{post_id}/reactions
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "emoji": "👍"
+}
+```
+
+#### Remove Reaction
+```bash
+DELETE /api/v1/posts/{post_id}/reactions/{emoji}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+### Comments
+
+#### Get Comments
+```bash
+GET /api/v1/posts/{post_id}/comments
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Create Comment
+```bash
+POST /api/v1/posts/{post_id}/comments
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "content": "Comment content"
+}
+```
+
+### Channels
+
+#### Get Channels
+```bash
+GET /api/v1/channels
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Get Channel Details
+```bash
+GET /api/v1/channels/{channel_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Join Channel
+```bash
+POST /api/v1/channels/{channel_id}/join
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Leave Channel
+```bash
+POST /api/v1/channels/{channel_id}/leave
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+### Courses
+
+#### Get Courses
+```bash
+GET /api/v1/courses
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Get Course Details
+```bash
+GET /api/v1/courses/{course_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Enroll in Course
+```bash
+POST /api/v1/courses/{course_id}/enroll
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Get Course Lessons
+```bash
+GET /api/v1/courses/{course_id}/lessons
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+### Articles
+
+#### Get Articles
+```bash
+GET /api/v1/articles
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+**Query Parameters:**
+- `limit` - Number of articles
+- `offset` - Pagination offset
+
+#### Get Article
+```bash
+GET /api/v1/articles/{article_id}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Create Article (if permitted)
+```bash
+POST /api/v1/articles
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Article Title",
+  "content": "Article content in markdown",
+  "cover_image": "image-url" // optional
+}
+```
+
+### Notifications
+
+#### Get Notifications
+```bash
+GET /api/v1/notifications
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Mark Notification as Read
+```bash
+PATCH /api/v1/notifications/{notification_id}/read
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+#### Mark All as Read
+```bash
+POST /api/v1/notifications/read-all
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+## Response Format
+
+### Success Response
+
+```json
+{
+  "data": {
+    // Response data
+  },
+  "message": "Success message" // optional
+}
+```
+
+### Error Response
+
+```json
+{
+  "detail": "Error message",
+  "status_code": 400
+}
+```
+
+## Status Codes
+
+- `200` - Success
+- `201` - Created
+- `204` - No Content
+- `400` - Bad Request
+- `401` - Unauthorized
+- `403` - Forbidden
+- `404` - Not Found
+- `422` - Validation Error
+- `500` - Internal Server Error
+
+## Rate Limiting
+
+API requests may be rate-limited. Check response headers:
+
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+X-RateLimit-Reset: 1640000000
+```
+
+## Pagination
+
+List endpoints support pagination:
+
+```bash
+GET /api/v1/posts?limit=20&offset=0
+```
+
+**Response includes:**
+```json
+{
+  "data": [...],
+  "total": 100,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+## File Uploads
+
+Upload files using multipart/form-data:
+
+```bash
+POST /api/v1/media/upload
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: multipart/form-data
+
+file: [binary data]
+```
+
+## Webhooks
+
+Configure webhooks for events (if supported):
+
+**Events:**
+- `post.created`
+- `comment.created`
+- `user.registered`
+- `course.enrolled`
+
+## API Documentation
+
+For complete, interactive API documentation, visit:
+```
+https://your-instance.com/docs
+```
+
+This provides a Swagger/OpenAPI interface for testing endpoints.
+
+## SDK and Libraries
+
+### Official SDKs
+
+Check the [GitHub repository](https://github.com/devscalelabs/opencircle) for official SDKs.
+
+### Community Libraries
+
+Community-contributed libraries may be available. Check the community channels.
+
+## Best Practices
+
+### Authentication
+
+- Store tokens securely
+- Refresh tokens before expiry
+- Don't share tokens
+- Use HTTPS only
+
+### API Usage
+
+- Respect rate limits
+- Cache responses when possible
+- Handle errors gracefully
+- Use pagination for large datasets
+- Include proper headers
+
+### Error Handling
+
+```javascript
+try {
+  const response = await fetch('/api/v1/posts', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  return data;
+} catch (error) {
+  console.error('API Error:', error);
+}
+```
+
+## Examples
+
+### JavaScript/TypeScript
+
+```typescript
+// Get posts
+async function getPosts() {
+  const response = await fetch('https://your-instance.com/api/v1/posts', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+  return await response.json();
+}
+
+// Create post
+async function createPost(content: string) {
+  const response = await fetch('https://your-instance.com/api/v1/posts', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ content })
+  });
+  return await response.json();
+}
+```
+
+### Python
+
+```python
+import requests
+
+# Get posts
+def get_posts(access_token):
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = requests.get(
+        'https://your-instance.com/api/v1/posts',
+        headers=headers
+    )
+    return response.json()
+
+# Create post
+def create_post(access_token, content):
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    data = {'content': content}
+    response = requests.post(
+        'https://your-instance.com/api/v1/posts',
+        headers=headers,
+        json=data
+    )
+    return response.json()
+```
+
+## Support
+
+For API support:
+- Check the [FAQ](/docs/resources/faq)
+- Review [Troubleshooting](/docs/resources/troubleshooting)
+- Ask in developer channels
+- Report issues on [GitHub](https://github.com/devscalelabs/opencircle/issues)
+
+## API Versioning
+
+The API uses versioning in the URL (`/api/v1/`). Breaking changes will result in a new version.
+
+**Note:** This is a general API reference. Specific endpoints and features may vary based on your OpenCircle instance configuration. Always refer to your instance's `/docs` endpoint for the most accurate API documentation.

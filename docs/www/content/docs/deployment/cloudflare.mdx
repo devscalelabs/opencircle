@@ -1,0 +1,581 @@
+---
+title: Deploy to Cloudflare Pages
+description: Deploy frontend apps to Cloudflare Pages
+icon: Cloud
+---
+
+# Deploy to Cloudflare Pages
+
+Deploy the OpenCircle frontend applications (Platform and Admin) to Cloudflare Pages for global CDN distribution.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- **Cloudflare Account** - Free or paid account
+- **GitHub Account** - Repository access
+- **Node.js 20+** - For local builds
+- **pnpm** - Package manager
+- **API Deployed** - Backend API must be running
+
+## Deployment Options
+
+You can deploy to Cloudflare Pages in two ways:
+
+1. **GitHub Actions (Recommended)** - Automated CI/CD
+2. **Manual Deployment** - Using Wrangler CLI
+
+## Option 1: GitHub Actions (Automated)
+
+### 1. Fork the Repository
+
+Fork the OpenCircle repository to your GitHub account:
+
+```bash
+# Or clone and push to your own repository
+git clone https://github.com/devscalelabs/opencircle.git
+cd opencircle
+git remote set-url origin https://github.com/YOUR_USERNAME/opencircle.git
+git push -u origin main
+```
+
+### 2. Get Cloudflare Credentials
+
+#### Get API Token
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Navigate to **My Profile** → **API Tokens**
+3. Click **Create Token**
+4. Use the **Edit Cloudflare Workers** template
+5. Set permissions:
+   - Account → Cloudflare Pages → Edit
+6. Click **Continue to summary** → **Create Token**
+7. Copy the token (you won't see it again)
+
+#### Get Account ID
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Select any domain or go to **Workers & Pages**
+3. Copy your **Account ID** from the right sidebar
+
+### 3. Configure GitHub Secrets
+
+Add secrets to your GitHub repository:
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Add the following secrets:
+
+| Secret Name | Description | Example |
+|------------|-------------|---------|
+| `CLOUDFLARE_API_TOKEN` | Your Cloudflare API token | `abc123...` |
+| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID | `1234567890abcdef` |
+| `VITE_API_URL` | Your API backend URL | `https://api.yourdomain.com` |
+| `PAT_TOKEN` | GitHub Personal Access Token (for Docker) | `ghp_...` |
+
+**To create GitHub PAT:**
+1. Go to GitHub **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+2. Click **Generate new token (classic)**
+3. Select scopes: `write:packages`, `read:packages`
+4. Generate and copy the token
+
+### 4. Update Workflow Configuration
+
+The repository includes a GitHub Actions workflow at `.github/workflows/ci.yml`. You may need to customize it:
+
+```yaml
+name: Deploy to Cloudflare Pages & API
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_all:
+        description: "Deploy all projects regardless of changes"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  # ... (check-affected and test-api jobs)
+
+  deploy-admin:
+    runs-on: ubuntu-latest
+    needs: check-affected
+    if: |
+      (github.ref == 'refs/heads/main' && needs.check-affected.outputs.admin == 'true') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_all == 'true')
+    name: Deploy Admin to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build UI Package
+        run: pnpm --filter @opencircle/ui build
+
+      - name: Build Admin
+        run: pnpm --filter admin build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: circle-admin  # Change this to your project name
+          directory: apps/admin/dist
+
+  deploy-platform:
+    runs-on: ubuntu-latest
+    needs: check-affected
+    if: |
+      (github.ref == 'refs/heads/main' && needs.check-affected.outputs.platform == 'true') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_all == 'true')
+    name: Deploy Platform to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build UI Package
+        run: pnpm --filter @opencircle/ui build
+
+      - name: Build Platform
+        run: pnpm --filter platform build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: devscale-circle  # Change this to your project name
+          directory: apps/platform/dist
+```
+
+### 5. Customize Project Names
+
+Update the `projectName` fields in the workflow:
+
+- **Admin**: Change `circle-admin` to your desired project name
+- **Platform**: Change `devscale-circle` to your desired project name
+
+### 6. Trigger Deployment
+
+Push to the main branch or manually trigger:
+
+**Push to main:**
+```bash
+git add .
+git commit -m "Configure deployment"
+git push origin main
+```
+
+**Manual trigger:**
+1. Go to **Actions** tab in GitHub
+2. Select **Deploy to Cloudflare Pages & API**
+3. Click **Run workflow**
+4. Check **Deploy all projects**
+5. Click **Run workflow**
+
+### 7. Monitor Deployment
+
+1. Go to **Actions** tab in your GitHub repository
+2. Click on the running workflow
+3. Monitor the deployment progress
+4. Check for any errors
+
+### 8. Access Your Deployments
+
+After successful deployment:
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Navigate to **Workers & Pages**
+3. Find your projects (e.g., `circle-admin`, `devscale-circle`)
+4. Click to view deployment details
+5. Your apps will be available at:
+   - Admin: `https://circle-admin.pages.dev`
+   - Platform: `https://devscale-circle.pages.dev`
+
+## Option 2: Manual Deployment with Wrangler
+
+### 1. Install Wrangler
+
+Install Cloudflare's Wrangler CLI:
+
+```bash
+npm install -g wrangler
+```
+
+### 2. Login to Cloudflare
+
+Authenticate with Cloudflare:
+
+```bash
+wrangler login
+```
+
+This will open a browser window for authentication.
+
+### 3. Build the Applications
+
+Build both frontend apps:
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build UI package
+pnpm --filter @opencircle/ui build
+
+# Build Admin
+VITE_API_URL=https://api.yourdomain.com pnpm --filter admin build
+
+# Build Platform
+VITE_API_URL=https://api.yourdomain.com pnpm --filter platform build
+```
+
+### 4. Deploy Admin
+
+Deploy the admin application:
+
+```bash
+wrangler pages deploy apps/admin/dist --project-name=circle-admin
+```
+
+### 5. Deploy Platform
+
+Deploy the platform application:
+
+```bash
+wrangler pages deploy apps/platform/dist --project-name=devscale-circle
+```
+
+### 6. Configure Environment Variables
+
+Set environment variables in Cloudflare:
+
+```bash
+# For Admin
+wrangler pages secret put VITE_API_URL --project-name=circle-admin
+# Enter your API URL when prompted
+
+# For Platform
+wrangler pages secret put VITE_API_URL --project-name=devscale-circle
+# Enter your API URL when prompted
+```
+
+## Custom Domain Setup
+
+### 1. Add Custom Domain
+
+1. Go to your Cloudflare Pages project
+2. Click **Custom domains**
+3. Click **Set up a custom domain**
+4. Enter your domain (e.g., `app.yourdomain.com`)
+5. Follow the DNS configuration instructions
+
+### 2. Configure DNS
+
+Add a CNAME record in your Cloudflare DNS:
+
+```
+Type: CNAME
+Name: app (or admin)
+Target: your-project.pages.dev
+Proxy status: Proxied (orange cloud)
+```
+
+### 3. SSL/TLS
+
+Cloudflare automatically provisions SSL certificates for custom domains.
+
+Ensure SSL/TLS mode is set to **Full** or **Full (strict)**:
+1. Go to **SSL/TLS** in Cloudflare dashboard
+2. Select **Full** or **Full (strict)**
+
+## Environment Variables
+
+### Required Variables
+
+Set these in Cloudflare Pages settings:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API URL | `https://api.yourdomain.com` |
+
+### Optional Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_GITHUB_CLIENT_ID` | GitHub OAuth Client ID | `abc123...` |
+| `VITE_ANALYTICS_ID` | Analytics tracking ID | `G-XXXXXXXXXX` |
+
+### Setting Variables in Cloudflare
+
+1. Go to your Pages project
+2. Click **Settings** → **Environment variables**
+3. Add variables for **Production** and **Preview**
+4. Click **Save**
+
+## Build Configuration
+
+### Build Settings
+
+Cloudflare Pages will use these settings:
+
+**Admin:**
+- Build command: `pnpm --filter @opencircle/ui build && pnpm --filter admin build`
+- Build output directory: `apps/admin/dist`
+- Root directory: `/`
+
+**Platform:**
+- Build command: `pnpm --filter @opencircle/ui build && pnpm --filter platform build`
+- Build output directory: `apps/platform/dist`
+- Root directory: `/`
+
+### Build Environment
+
+- Node.js version: `20`
+- Package manager: `pnpm`
+
+## Preview Deployments
+
+Cloudflare Pages automatically creates preview deployments for:
+
+- Pull requests
+- Non-production branches
+
+Preview URLs format:
+```
+https://abc123.your-project.pages.dev
+```
+
+## Deployment Strategies
+
+### Production Deployment
+
+Only `main` branch deploys to production:
+
+```yaml
+if: github.ref == 'refs/heads/main'
+```
+
+### Preview Deployments
+
+Pull requests create preview deployments:
+
+```yaml
+if: github.event_name == 'pull_request'
+```
+
+### Manual Deployments
+
+Trigger deployments manually via GitHub Actions:
+
+1. Go to **Actions** tab
+2. Select workflow
+3. Click **Run workflow**
+4. Select branch
+5. Run
+
+## Rollback Deployments
+
+### Via Cloudflare Dashboard
+
+1. Go to your Pages project
+2. Click **Deployments**
+3. Find the deployment you want to rollback to
+4. Click **...** → **Rollback to this deployment**
+
+### Via Git
+
+Revert to a previous commit:
+
+```bash
+git revert HEAD
+git push origin main
+```
+
+## Monitoring and Analytics
+
+### Cloudflare Analytics
+
+View analytics in Cloudflare Dashboard:
+
+1. Go to your Pages project
+2. Click **Analytics**
+3. View:
+   - Requests
+   - Bandwidth
+   - Unique visitors
+   - Page views
+
+### Build Logs
+
+View build logs:
+
+1. Go to **Deployments**
+2. Click on a deployment
+3. View **Build logs**
+
+## Troubleshooting
+
+### Build Failures
+
+**Check build logs:**
+1. Go to failed deployment
+2. View build logs
+3. Look for errors
+
+**Common issues:**
+- Missing dependencies
+- Environment variables not set
+- Build command incorrect
+- Node version mismatch
+
+### Deployment Not Updating
+
+**Solutions:**
+1. Clear Cloudflare cache
+2. Trigger manual deployment
+3. Check if changes are in main branch
+4. Verify workflow is running
+
+### Environment Variables Not Working
+
+**Solutions:**
+1. Verify variables are set in Cloudflare
+2. Rebuild the application
+3. Check variable names (must start with `VITE_`)
+4. Ensure variables are set for correct environment
+
+### CORS Errors
+
+**Solutions:**
+1. Verify API URL is correct
+2. Check API CORS configuration
+3. Ensure API allows your domain
+4. Add domain to API's allowed origins
+
+## Performance Optimization
+
+### Caching
+
+Cloudflare automatically caches static assets.
+
+Configure cache rules:
+1. Go to **Caching** → **Configuration**
+2. Set cache rules
+3. Purge cache when needed
+
+### Compression
+
+Cloudflare automatically compresses responses with:
+- Gzip
+- Brotli
+
+### CDN
+
+Cloudflare's global CDN ensures:
+- Fast load times worldwide
+- DDoS protection
+- SSL/TLS encryption
+
+## Security
+
+### Headers
+
+Configure security headers in `_headers` file:
+
+```
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+```
+
+### Access Control
+
+Restrict access to preview deployments:
+
+1. Go to **Settings** → **Access**
+2. Enable **Cloudflare Access**
+3. Configure access policies
+
+## Cost Considerations
+
+### Free Tier
+
+Cloudflare Pages Free tier includes:
+- Unlimited requests
+- Unlimited bandwidth
+- 500 builds per month
+- 1 build at a time
+
+### Paid Plans
+
+For higher limits, upgrade to:
+- **Pro**: $20/month
+- **Business**: $200/month
+
+## Next Steps
+
+<Cards>
+  <Card
+    title="Deploy Backend with Docker"
+    description="Deploy the API backend"
+    href="/docs/deployment/docker"
+  />
+  <Card
+    title="Admin Guide"
+    description="Configure your instance"
+    href="/docs/admin"
+  />
+  <Card
+    title="Platform Settings"
+    description="Customize settings"
+    href="/docs/admin/settings"
+  />
+</Cards>
+
+## Support
+
+Need help with deployment?
+
+- Check [Troubleshooting](/docs/resources/troubleshooting)
+- Review [FAQ](/docs/resources/faq)
+- Ask in community channels
+- Report issues on [GitHub](https://github.com/devscalelabs/opencircle/issues)

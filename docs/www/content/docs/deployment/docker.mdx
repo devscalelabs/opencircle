@@ -1,0 +1,494 @@
+---
+title: Deploy with Docker
+description: Deploy OpenCircle using Docker Compose
+icon: Container
+---
+
+# Deploy with Docker Compose
+
+Deploy the complete OpenCircle stack using Docker Compose for production or development environments.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- **Docker** - Version 20.10 or higher
+- **Docker Compose** - Version 2.0 or higher
+- **Git** - To clone the repository
+- **Domain name** - (Optional) For production deployment
+- **Cloudflare R2** - Account for media storage
+
+### Installing Docker
+
+If you don't have Docker installed:
+
+**Ubuntu/Debian:**
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+```
+
+**macOS:**
+```bash
+brew install --cask docker
+```
+
+**Windows:**
+Download Docker Desktop from [docker.com](https://www.docker.com/products/docker-desktop)
+
+## Quick Deployment
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/devscalelabs/opencircle.git
+cd opencircle
+```
+
+### 2. Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file with your configuration:
+
+```bash
+# Database Configuration
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_DB=opencircle
+
+# API Configuration
+SECRET_KEY=your_secret_key_here_min_32_chars
+ENVIRONMENT=production
+
+# Cloudflare R2 Storage
+R2_ACCOUNT_ID=your_r2_account_id
+R2_ACCESS_KEY_ID=your_r2_access_key
+R2_SECRET_ACCESS_KEY=your_r2_secret_key
+R2_BUCKET_NAME=your_bucket_name
+R2_PUBLIC_URL=https://your-bucket.r2.dev
+
+# Optional: GitHub OAuth
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_REDIRECT_URI=http://localhost:8000/api/v1/auth/github/callback
+
+# Frontend URLs (for CORS)
+FRONTEND_URL=http://localhost:3000
+ADMIN_URL=http://localhost:4000
+```
+
+### 3. Pull Docker Images
+
+Pull the latest API image from GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/devscalelabs/opencircle-api:latest
+```
+
+### 4. Start the Services
+
+Start all services using Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+This will start:
+- **PostgreSQL** - Database (port 5432)
+- **Redis** - Cache and task queue (port 6379)
+- **API** - Backend API (port 8000)
+- **Celery** - Background task worker
+- **Migration** - Database migration (runs once)
+
+### 5. Verify Deployment
+
+Check that all services are running:
+
+```bash
+docker compose ps
+```
+
+You should see all services with status "Up" or "Exit 0" (for migration).
+
+Test the API:
+
+```bash
+curl http://localhost:8000/health
+```
+
+You should receive a successful health check response.
+
+## Docker Compose Services
+
+### Service Overview
+
+The `docker-compose.yml` file defines the following services:
+
+#### PostgreSQL Database
+```yaml
+postgres:
+  image: postgres:15-alpine
+  ports:
+    - "5432:5432"
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+```
+
+- Stores all application data
+- Persistent volume for data retention
+- Health checks ensure availability
+
+#### Redis Cache
+```yaml
+redis:
+  image: redis:7-alpine
+  ports:
+    - "6379:6379"
+  volumes:
+    - redis_data:/data
+```
+
+- Caching layer for performance
+- Task queue for Celery
+- Persistent volume for data
+
+#### API Service
+```yaml
+api:
+  image: ghcr.io/devscalelabs/opencircle-api:latest
+  ports:
+    - "8000:8000"
+  depends_on:
+    - postgres
+    - redis
+    - migrate
+```
+
+- FastAPI backend application
+- Serves REST API endpoints
+- Depends on database and cache
+
+#### Celery Worker
+```yaml
+celery:
+  image: ghcr.io/devscalelabs/opencircle-api:latest
+  command: uv run celery -A src.core.celery_app worker --loglevel=info
+  depends_on:
+    - postgres
+    - redis
+```
+
+- Processes background tasks
+- Handles async operations
+- Email sending, media processing, etc.
+
+#### Migration Service
+```yaml
+migrate:
+  image: ghcr.io/devscalelabs/opencircle-api:latest
+  command: sh -c "uv run alembic upgrade head"
+  restart: "no"
+```
+
+- Runs database migrations
+- Executes once on startup
+- Updates database schema
+
+## Managing the Deployment
+
+### View Logs
+
+View logs for all services:
+```bash
+docker compose logs -f
+```
+
+View logs for specific service:
+```bash
+docker compose logs -f api
+docker compose logs -f celery
+docker compose logs -f postgres
+```
+
+### Stop Services
+
+Stop all services:
+```bash
+docker compose down
+```
+
+Stop and remove volumes (⚠️ deletes all data):
+```bash
+docker compose down -v
+```
+
+### Restart Services
+
+Restart all services:
+```bash
+docker compose restart
+```
+
+Restart specific service:
+```bash
+docker compose restart api
+```
+
+### Update to Latest Version
+
+Pull the latest images and restart:
+```bash
+docker compose pull
+docker compose up -d
+```
+
+### Scale Services
+
+Scale Celery workers (if needed):
+```bash
+docker compose up -d --scale celery=3
+```
+
+## Database Management
+
+### Access PostgreSQL
+
+Connect to the database:
+```bash
+docker compose exec postgres psql -U postgres -d opencircle
+```
+
+### Backup Database
+
+Create a backup:
+```bash
+docker compose exec postgres pg_dump -U postgres opencircle > backup.sql
+```
+
+### Restore Database
+
+Restore from backup:
+```bash
+docker compose exec -T postgres psql -U postgres opencircle < backup.sql
+```
+
+### Run Migrations Manually
+
+If you need to run migrations manually:
+```bash
+docker compose run --rm migrate
+```
+
+## Production Deployment
+
+### Security Considerations
+
+For production deployments:
+
+1. **Use Strong Passwords**
+   - Generate secure passwords for database
+   - Use long, random secret keys
+
+2. **Configure Firewall**
+   - Only expose necessary ports (8000)
+   - Block direct database access (5432, 6379)
+
+3. **Use HTTPS**
+   - Set up reverse proxy (Nginx, Caddy)
+   - Configure SSL certificates
+   - Enable HTTPS-only mode
+
+4. **Environment Variables**
+   - Never commit `.env` file
+   - Use secrets management
+   - Rotate credentials regularly
+
+### Reverse Proxy Setup
+
+Example Nginx configuration:
+
+```nginx
+server {
+    listen 80;
+    server_name api.yourdomain.com;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### SSL with Let's Encrypt
+
+Install Certbot and get SSL certificate:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d api.yourdomain.com
+```
+
+### Resource Limits
+
+Add resource limits to `docker-compose.yml`:
+
+```yaml
+api:
+  deploy:
+    resources:
+      limits:
+        cpus: '2'
+        memory: 2G
+      reservations:
+        cpus: '1'
+        memory: 1G
+```
+
+## Monitoring
+
+### Health Checks
+
+The API includes a health check endpoint:
+```bash
+curl http://localhost:8000/health
+```
+
+### Container Health
+
+Check container health status:
+```bash
+docker compose ps
+```
+
+### Resource Usage
+
+Monitor resource usage:
+```bash
+docker stats
+```
+
+## Troubleshooting
+
+### Services Won't Start
+
+Check logs for errors:
+```bash
+docker compose logs
+```
+
+Common issues:
+- Port already in use
+- Insufficient permissions
+- Missing environment variables
+
+### Database Connection Errors
+
+Verify PostgreSQL is running:
+```bash
+docker compose ps postgres
+```
+
+Check database logs:
+```bash
+docker compose logs postgres
+```
+
+### Migration Failures
+
+Run migrations manually:
+```bash
+docker compose run --rm migrate
+```
+
+Check migration logs:
+```bash
+docker compose logs migrate
+```
+
+### API Not Responding
+
+Check API logs:
+```bash
+docker compose logs api
+```
+
+Verify API is healthy:
+```bash
+curl http://localhost:8000/health
+```
+
+Restart API service:
+```bash
+docker compose restart api
+```
+
+## Advanced Configuration
+
+### Custom Docker Compose
+
+Create `docker-compose.override.yml` for custom configuration:
+
+```yaml
+services:
+  api:
+    environment:
+      - CUSTOM_VAR=value
+    ports:
+      - "8080:8000"
+```
+
+### Development Mode
+
+For development, use `docker-compose.dev.yaml`:
+
+```bash
+docker compose -f docker-compose.dev.yaml up
+```
+
+### Multiple Environments
+
+Use different env files:
+
+```bash
+docker compose --env-file .env.production up -d
+```
+
+## Next Steps
+
+After deploying the backend:
+
+<Cards>
+  <Card
+    title="Deploy Frontend to Cloudflare"
+    description="Deploy admin and platform apps"
+    href="/docs/deployment/cloudflare"
+  />
+  <Card
+    title="Admin Guide"
+    description="Configure your instance"
+    href="/docs/admin"
+  />
+  <Card
+    title="Platform Settings"
+    description="Customize platform settings"
+    href="/docs/admin/settings"
+  />
+</Cards>
+
+## Support
+
+Need help with deployment?
+
+- Check [Troubleshooting](/docs/resources/troubleshooting)
+- Review [FAQ](/docs/resources/faq)
+- Ask in community channels
+- Report issues on [GitHub](https://github.com/devscalelabs/opencircle/issues)
