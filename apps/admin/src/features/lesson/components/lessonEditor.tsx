@@ -22,7 +22,6 @@ export const LessonEditor = ({
 	const [title, setTitle] = useState(lesson?.title || "");
 	const [content, setContent] = useState(lesson?.content || "");
 	const [videoUrl, setVideoUrl] = useState(lesson?.video_url || "");
-	const [order, setOrder] = useState(lesson?.order?.toString() || "0");
 	const [type, setType] = useState<LessonType>(lesson?.type || "text");
 	const [showPreview, setShowPreview] = useState(false);
 
@@ -38,7 +37,6 @@ export const LessonEditor = ({
 				title: title.trim(),
 				content: content.trim() || undefined,
 				video_url: videoUrl.trim() || undefined,
-				order: parseInt(order, 10) || 0,
 				type,
 			};
 			await onSave(updateData);
@@ -47,7 +45,7 @@ export const LessonEditor = ({
 				title: title.trim(),
 				content: content.trim() || undefined,
 				video_url: videoUrl.trim() || undefined,
-				order: parseInt(order, 10) || 0,
+				order: 0,
 				type,
 				section_id: "", // Will be set by the parent component
 			};
@@ -156,20 +154,7 @@ export const LessonEditor = ({
 				</div>
 
 				<div className="space-y-6">
-					{!isEdit && (
-						<div>
-							<label htmlFor="order" className="mb-2 block font-medium text-sm">
-								Order
-							</label>
-							<Input
-								type="number"
-								value={order}
-								onChange={(e) => setOrder(e.target.value)}
-								placeholder="0"
-								min="0"
-							/>
-						</div>
-					)}
+					{/* Sidebar content can be added here */}
 				</div>
 			</div>
 		</form>

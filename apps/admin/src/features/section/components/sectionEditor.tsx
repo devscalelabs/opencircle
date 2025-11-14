@@ -1,3 +1,18 @@
+import {
+	closestCenter,
+	DndContext,
+	type DragEndEvent,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
+import {
+	arrayMove,
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import type {
 	LessonCreate,
 	LessonUpdate,
@@ -5,11 +20,11 @@ import type {
 	SectionUpdate,
 } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
-import { useRouter } from "@tanstack/react-router";
-import { Edit2, GripVertical, Plus, Save, Trash2, X } from "lucide-react";
+import { GripVertical, Plus, Save, X } from "lucide-react";
 import { useState } from "react";
 import { useLessons } from "../../../features/lesson/hooks/useLessons";
 import { LessonEditor } from "../../lesson/components/lessonEditor";
+import { LessonListItem } from "../../lesson/components/lessonListItem";
 
 interface SectionEditorProps {
 	section?: Partial<SectionCreate> & { id?: string };
@@ -31,19 +46,33 @@ export const SectionEditor = ({
 }: SectionEditorProps) => {
 	const [title, setTitle] = useState(section?.title || "");
 	const [description, setDescription] = useState(section?.description || "");
-	const [order, setOrder] = useState(section?.order?.toString() || "0");
 	const [isExpanded, setIsExpanded] = useState(!isEdit);
 	const [showLessonForm, setShowLessonForm] = useState(false);
-	const router = useRouter();
+	const [optimisticLessons, setOptimisticLessons] = useState<typeof lessons>(
+		[],
+	);
 
 	const {
 		lessons,
 		isLessonsLoading,
 		createLesson,
 		deleteLesson,
+		reorderLessons,
 		isCreatingLesson,
 		isDeletingLesson,
+		isReorderingLessons,
 	} = useLessons(section?.id || "");
+
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	);
+
+	// Use optimistic lessons if available, otherwise use actual lessons
+	const displayLessons =
+		optimisticLessons.length > 0 ? optimisticLessons : lessons;
 
 	const handleSubmit = async () => {
 		if (!title.trim()) {
@@ -55,14 +84,13 @@ export const SectionEditor = ({
 				const updateData: SectionUpdate = {
 					title: title.trim(),
 					description: description.trim() || undefined,
-					order: parseInt(order, 10) || 0,
 				};
 				await onSave(updateData);
 			} else {
 				const createData: SectionCreate = {
 					title: title.trim(),
 					description: description.trim() || undefined,
-					order: parseInt(order, 10) || 0,
+					order: 0,
 					course_id: courseId,
 				};
 				await onSave(createData);
@@ -89,6 +117,41 @@ export const SectionEditor = ({
 
 	const handleDeleteLesson = async (lessonId: string) => {
 		await deleteLesson(lessonId);
+	};
+
+	const handleDragEnd = async (event: DragEndEvent) => {
+		const { active, over } = event;
+
+		if (!over || active.id === over.id) {
+			return;
+		}
+
+		const oldIndex = lessons.findIndex((l) => l.id === active.id);
+		const newIndex = lessons.findIndex((l) => l.id === over.id);
+
+		if (oldIndex === -1 || newIndex === -1) {
+			return;
+		}
+
+		// Optimistically update the UI immediately
+		const reorderedLessons = arrayMove(lessons, oldIndex, newIndex);
+		setOptimisticLessons(reorderedLessons);
+
+		// Update order values
+		const updates = reorderedLessons.map((lesson, index) => ({
+			id: lesson.id,
+			order: index,
+		}));
+
+		try {
+			await reorderLessons(updates);
+			// Clear optimistic state on success - real data will come from query
+			setOptimisticLessons([]);
+		} catch (error) {
+			console.error("Failed to reorder lessons:", error);
+			// Revert optimistic update on error
+			setOptimisticLessons([]);
+		}
 	};
 
 	if (isEdit) {
@@ -118,31 +181,16 @@ export const SectionEditor = ({
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						<div>
-							<label htmlFor="title" className="mb-2 block font-medium text-sm">
-								Title *
-							</label>
-							<Input
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-								placeholder="Enter section title..."
-								required
-							/>
-						</div>
-
-						<div>
-							<label htmlFor="order" className="mb-2 block font-medium text-sm">
-								Order
-							</label>
-							<Input
-								type="number"
-								value={order}
-								onChange={(e) => setOrder(e.target.value)}
-								placeholder="0"
-								min="0"
-							/>
-						</div>
+					<div>
+						<label htmlFor="title" className="mb-2 block font-medium text-sm">
+							Title *
+						</label>
+						<Input
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
+							placeholder="Enter section title..."
+							required
+						/>
 					</div>
 
 					<div>
@@ -190,49 +238,41 @@ export const SectionEditor = ({
 							<div className="py-4 text-center text-muted-foreground">
 								Loading lessons...
 							</div>
-						) : lessons.length === 0 ? (
+						) : displayLessons.length === 0 ? (
 							<div className="rounded-lg border-2 border-border border-dashed py-8 text-center text-muted-foreground">
 								No lessons yet. Click "Add Lesson" to create your first lesson.
 							</div>
 						) : (
-							<div className="space-y-2">
-								{lessons.map((lesson) => (
-									<div
-										key={lesson.id}
-										className="flex items-center justify-between rounded-lg border border-border bg-background p-3"
-									>
-										<div className="flex items-center gap-3">
-											<GripVertical className="h-4 w-4 cursor-move text-muted-foreground" />
-											<div>
-												<h5 className="font-medium">{lesson.title}</h5>
-												<p className="text-muted-foreground text-sm capitalize">
-													{lesson.type}
-												</p>
-											</div>
-										</div>
-										<div className="flex gap-2">
-											<Button
-												type="button"
-												size="sm"
-												onClick={() =>
-													router.navigate({
-														to: `/courses/lessons/${lesson.id}/edit`,
-													})
-												}
-											>
-												<Edit2 size={14} />
-											</Button>
-											<Button
-												type="button"
-												size="sm"
-												onClick={() => handleDeleteLesson(lesson.id)}
-												disabled={isDeletingLesson}
-											>
-												<Trash2 size={14} />
-											</Button>
+							<div className="relative">
+								{isReorderingLessons && (
+									<div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/80 backdrop-blur-sm">
+										<div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 shadow-lg">
+											<div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+											<span className="text-sm">Reordering lessons...</span>
 										</div>
 									</div>
-								))}
+								)}
+								<DndContext
+									sensors={sensors}
+									collisionDetection={closestCenter}
+									onDragEnd={handleDragEnd}
+								>
+									<SortableContext
+										items={displayLessons.map((l) => l.id)}
+										strategy={verticalListSortingStrategy}
+									>
+										<div className="space-y-2">
+											{displayLessons.map((lesson) => (
+												<LessonListItem
+													key={lesson.id}
+													lesson={lesson}
+													onDelete={handleDeleteLesson}
+													isDeleting={isDeletingLesson}
+												/>
+											))}
+										</div>
+									</SortableContext>
+								</DndContext>
 							</div>
 						)}
 					</div>
@@ -286,37 +326,16 @@ export const SectionEditor = ({
 			{isExpanded && (
 				<div className="border-border border-t p-4">
 					<div className="space-y-4">
-						<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-							<div>
-								<label
-									htmlFor="title"
-									className="mb-2 block font-medium text-sm"
-								>
-									Title *
-								</label>
-								<Input
-									value={title}
-									onChange={(e) => setTitle(e.target.value)}
-									placeholder="Enter section title..."
-									required
-								/>
-							</div>
-
-							<div>
-								<label
-									htmlFor="order"
-									className="mb-2 block font-medium text-sm"
-								>
-									Order
-								</label>
-								<Input
-									type="number"
-									value={order}
-									onChange={(e) => setOrder(e.target.value)}
-									placeholder="0"
-									min="0"
-								/>
-							</div>
+						<div>
+							<label htmlFor="title" className="mb-2 block font-medium text-sm">
+								Title *
+							</label>
+							<Input
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								placeholder="Enter section title..."
+								required
+							/>
 						</div>
 
 						<div>

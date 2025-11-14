@@ -175,7 +175,7 @@ function RouteComponent() {
 														<div className="space-y-1 rounded-md bg-background/30 p-3 opacity-60">
 															<div className="flex items-center gap-2">
 																<span className="font-medium text-foreground text-sm">
-																	{lesson.order}. {lesson.title}
+																	{lesson.order + 1}. {lesson.title}
 																</span>
 																<span className="rounded-full bg-primary/10 px-2 py-1 text-primary text-xs capitalize">
 																	{lesson.type}
