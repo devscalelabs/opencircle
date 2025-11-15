@@ -5,6 +5,9 @@ import type {
 	GitHubAuthUrlResponse,
 	GitHubLoginRequest,
 	GitHubLoginResponse,
+	GoogleAuthUrlResponse,
+	GoogleLoginRequest,
+	GoogleLoginResponse,
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
@@ -43,5 +46,13 @@ export class AuthRouter extends BaseRouter {
 			"confirm-reset-password",
 			data,
 		);
+	}
+
+	async googleLogin(): Promise<GoogleAuthUrlResponse> {
+		return this.client.get<GoogleAuthUrlResponse>("google/login");
+	}
+
+	async googleCallback(data: GoogleLoginRequest): Promise<GoogleLoginResponse> {
+		return this.client.post<GoogleLoginResponse>("google/callback", data);
 	}
 }

@@ -5,6 +5,7 @@ import { useId } from "react";
 import { METADATA } from "../constants/metadata";
 import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
+import { useGoogleAuth } from "../features/auth/hooks/useGoogleAuth";
 import { useRegister } from "../features/auth/hooks/useRegister";
 
 export const Route = createFileRoute("/register")({
@@ -62,6 +63,8 @@ function RouteComponent() {
 		validationErrors,
 	} = useRegister();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
+	const { loginWithGoogle, isCallbackLoading: isGoogleCallbackLoading } =
+		useGoogleAuth();
 	const { appSettings, isAppSettingsLoading } = useAppSettings();
 
 	const isRegistrationEnabled = appSettings?.enable_sign_up ?? true;
@@ -187,6 +190,15 @@ function RouteComponent() {
 							disabled={isCallbackLoading || !isRegistrationEnabled}
 						>
 							{isCallbackLoading ? "Loading..." : "Continue with Github"}
+						</Button>
+						<Button
+							radius="xl"
+							variant="secondary"
+							className="w-full"
+							onClick={loginWithGoogle}
+							disabled={isGoogleCallbackLoading || !isRegistrationEnabled}
+						>
+							{isGoogleCallbackLoading ? "Loading..." : "Continue with Google"}
 						</Button>
 					</section>
 					<section className="px-4 text-center">

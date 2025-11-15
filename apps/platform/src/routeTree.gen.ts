@@ -13,6 +13,7 @@ import { Route as ResetPasswordConfirmRouteImport } from './routes/reset-passwor
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GoogleCallbackRouteImport } from './routes/google-callback'
 import { Route as GithubCallbackRouteImport } from './routes/github-callback'
 import { Route as SocialLayoutRouteImport } from './routes/_socialLayout'
 import { Route as LearningLayoutRouteImport } from './routes/_learningLayout'
@@ -47,6 +48,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GoogleCallbackRoute = GoogleCallbackRouteImport.update({
+  id: '/google-callback',
+  path: '/google-callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GithubCallbackRoute = GithubCallbackRouteImport.update({
@@ -129,6 +135,7 @@ const LearningLayoutLessonsIdRoute = LearningLayoutLessonsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/github-callback': typeof GithubCallbackRoute
+  '/google-callback': typeof GoogleCallbackRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/github-callback': typeof GithubCallbackRoute
+  '/google-callback': typeof GoogleCallbackRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/_learningLayout': typeof LearningLayoutRouteWithChildren
   '/_socialLayout': typeof SocialLayoutRouteWithChildren
   '/github-callback': typeof GithubCallbackRoute
+  '/google-callback': typeof GoogleCallbackRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/github-callback'
+    | '/google-callback'
     | '/login'
     | '/register'
     | '/reset-password'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/github-callback'
+    | '/google-callback'
     | '/login'
     | '/register'
     | '/reset-password'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/_learningLayout'
     | '/_socialLayout'
     | '/github-callback'
+    | '/google-callback'
     | '/login'
     | '/register'
     | '/reset-password'
@@ -253,6 +265,7 @@ export interface RootRouteChildren {
   LearningLayoutRoute: typeof LearningLayoutRouteWithChildren
   SocialLayoutRoute: typeof SocialLayoutRouteWithChildren
   GithubCallbackRoute: typeof GithubCallbackRoute
+  GoogleCallbackRoute: typeof GoogleCallbackRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/google-callback': {
+      id: '/google-callback'
+      path: '/google-callback'
+      fullPath: '/google-callback'
+      preLoaderRoute: typeof GoogleCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/github-callback': {
@@ -445,6 +465,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearningLayoutRoute: LearningLayoutRouteWithChildren,
   SocialLayoutRoute: SocialLayoutRouteWithChildren,
   GithubCallbackRoute: GithubCallbackRoute,
+  GoogleCallbackRoute: GoogleCallbackRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,

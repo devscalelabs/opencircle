@@ -25,6 +25,9 @@ from .serializer import (
     GitHubAuthUrlResponse,
     GitHubLoginRequest,
     GitHubLoginResponse,
+    GoogleAuthUrlResponse,
+    GoogleLoginRequest,
+    GoogleLoginResponse,
     LoginRequest,
     RegisterRequest,
     ResetPasswordRequest,
@@ -149,6 +152,79 @@ async def github_callback(
         logger.error(f"GitHub OAuth callback failed: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=400, detail=f"GitHub authentication failed: {str(e)}"
+        )
+
+
+@router.get("/google/login", response_model=GoogleAuthUrlResponse)
+async def google_login():
+    """Get Google authorization URL for OAuth login."""
+    from src.modules.auth.google_methods import (
+        generate_state_token,
+        get_google_authorization_url,
+    )
+
+    state = generate_state_token()
+    authorization_url = await get_google_authorization_url(state)
+    return GoogleAuthUrlResponse(
+        authorization_url=authorization_url,
+        state=state,
+    )
+
+
+@router.post("/google/callback", response_model=GoogleLoginResponse)
+async def google_callback(
+    request: GoogleLoginRequest,
+    db: Session = Depends(get_db),
+):
+    """Handle Google OAuth callback and complete login."""
+    try:
+        # Debug logging
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"Google callback received with code: {request.code[:10]}...")
+
+        # Check Google OAuth configuration
+        if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
+            logger.error("Google OAuth credentials not configured")
+            raise HTTPException(
+                status_code=500,
+                detail="Google OAuth not properly configured",
+            )
+
+        # Handle Google OAuth callback
+        from src.modules.auth.google_methods import handle_google_callback
+
+        user, token = await handle_google_callback(db, request.code)
+        if not user:
+            raise HTTPException(
+                status_code=403,
+                detail="Your account has been banned. Please contact support.",
+            )
+
+        from datetime import timedelta
+
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.username}, expires_delta=access_token_expires
+        )
+
+        return GoogleLoginResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=user.id,
+            username=user.username,
+            email=user.email,
+            name=user.name,
+            avatar_url=user.avatar_url,
+        )
+    except Exception as e:
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.error(f"Google OAuth callback failed: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=400, detail=f"Google authentication failed: {str(e)}"
         )
 
 

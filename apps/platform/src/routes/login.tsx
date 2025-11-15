@@ -4,6 +4,7 @@ import { Zap } from "lucide-react";
 import { useId } from "react";
 import { METADATA } from "../constants/metadata";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
+import { useGoogleAuth } from "../features/auth/hooks/useGoogleAuth";
 import { useLogin } from "../features/auth/hooks/useLogin";
 
 export const Route = createFileRoute("/login")({
@@ -52,6 +53,8 @@ function RouteComponent() {
 		validationErrors,
 	} = useLogin();
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
+	const { loginWithGoogle, isCallbackLoading: isGoogleCallbackLoading } =
+		useGoogleAuth();
 
 	return (
 		<main className="m-auto max-w-sm">
@@ -120,6 +123,15 @@ function RouteComponent() {
 							disabled={isCallbackLoading}
 						>
 							{isCallbackLoading ? "Loading..." : "Continue with Github"}
+						</Button>
+						<Button
+							radius="xl"
+							variant="secondary"
+							className="w-full"
+							onClick={loginWithGoogle}
+							disabled={isGoogleCallbackLoading}
+						>
+							{isGoogleCallbackLoading ? "Loading..." : "Continue with Google"}
 						</Button>
 						<section className="px-4 text-center">
 							<p className="text-sm">

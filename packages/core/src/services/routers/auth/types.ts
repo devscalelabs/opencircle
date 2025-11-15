@@ -124,3 +124,22 @@ export interface ConfirmResetPasswordRequest {
 export interface ConfirmResetPasswordResponse {
 	message: string;
 }
+
+export interface GoogleAuthUrlResponse {
+	authorization_url: string;
+	state: string;
+}
+
+export interface GoogleLoginRequest {
+	code: string;
+}
+
+export interface GoogleLoginResponse {
+	access_token: string;
+	token_type: string;
+	user_id: string;
+	username: string;
+	email: string;
+	name?: string;
+	avatar_url?: string;
+}

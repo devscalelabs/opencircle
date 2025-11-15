@@ -50,3 +50,22 @@ class ConfirmResetPasswordRequest(BaseModel):
 
 class ConfirmResetPasswordResponse(BaseModel):
     message: str
+
+
+class GoogleLoginRequest(BaseModel):
+    code: str
+
+
+class GoogleAuthUrlResponse(BaseModel):
+    authorization_url: str
+    state: str
+
+
+class GoogleLoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: str
+    username: str
+    email: str
+    name: Optional[str] = None
+    avatar_url: Optional[str] = None
