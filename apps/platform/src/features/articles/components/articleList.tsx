@@ -6,13 +6,14 @@ import { getInitials } from "../../../utils/common";
 import { PostCardReactions } from "../../posts/components/postCardReactions";
 import { PostCommentSummary } from "../../posts/components/postCommentSummary";
 import { useArticles } from "../hooks/useArticles";
+import { ArticleListSkeleton } from "./articleListSkeleton";
 
 export const ArticleList = () => {
 	const navigate = useNavigate();
 	const { articles, isLoading } = useArticles();
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <ArticleListSkeleton />;
 	}
 
 	return (

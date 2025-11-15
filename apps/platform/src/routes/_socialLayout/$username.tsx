@@ -4,6 +4,7 @@ import { useId } from "react";
 import { Header } from "../../components/header";
 import { METADATA } from "../../constants/metadata";
 import { usePosts } from "../../features/posts/hooks/usePosts";
+import { UserProfileSkeleton } from "../../features/user/components/userProfileSkeleton";
 import { UserTabs } from "../../features/user/components/userTabs";
 import { useUser } from "../../features/user/hooks/useUser";
 import { getInitials } from "../../utils/common";
@@ -50,7 +51,7 @@ function UserDetail() {
 	const gradientId = useId();
 
 	if (isUserLoading) {
-		return <div className="p-4">Loading user...</div>;
+		return <UserProfileSkeleton />;
 	}
 
 	if (!user) {

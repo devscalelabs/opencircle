@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNotifications } from "../hooks/useNotifications";
 import { NotificationItem } from "./notificationItem";
+import { NotificationListSkeleton } from "./notificationListSkeleton";
 
 interface NotificationListProps {
 	limit?: number;
@@ -40,11 +41,7 @@ export const NotificationList = ({ limit = 20 }: NotificationListProps) => {
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	if (isNotificationsLoading) {
-		return (
-			<div className="p-4">
-				<div>Loading notifications...</div>
-			</div>
-		);
+		return <NotificationListSkeleton />;
 	}
 
 	if (notifications.length === 0) {

@@ -1,11 +1,12 @@
 import { ChannelItem } from "../../../components/channelItem";
 import { useChannels } from "../hooks/useChannels";
+import { ChannelListSkeleton } from "./channelListSkeleton";
 
 export const ChannelList = () => {
 	const { channels, isChannelsLoading } = useChannels();
 
 	if (isChannelsLoading) {
-		return <div>Loading channels...</div>;
+		return <ChannelListSkeleton />;
 	}
 
 	return (

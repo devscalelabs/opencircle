@@ -2,6 +2,7 @@ import { Avatar } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "../../../components/header";
 import { METADATA } from "../../../constants/metadata";
+import { CourseDetailSkeleton } from "../../../features/courses/components/courseDetailSkeleton";
 import { useCourse } from "../../../features/courses/hooks/useCourse";
 import { useCheckEnrollment } from "../../../features/enrollment/hooks/useCheckEnrollment";
 import { useEnrollCourse } from "../../../features/enrollment/hooks/useEnrollCourse";
@@ -51,7 +52,9 @@ function RouteComponent() {
 	const { isEnrolled, isLoading: isEnrollmentLoading } = useCheckEnrollment(id);
 	const { enroll, isPending: isEnrolling } = useEnrollCourse();
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) {
+		return <CourseDetailSkeleton />;
+	}
 
 	if (!course) return <div>Course not found</div>;
 

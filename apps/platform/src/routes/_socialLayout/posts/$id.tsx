@@ -10,6 +10,7 @@ import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { UrlPreview } from "../../../features/extras/components/urlPreview";
 import { MediaGallery } from "../../../features/media/components/media";
 import { PostCardReactions } from "../../../features/posts/components/postCardReactions";
+import { PostDetailSkeleton } from "../../../features/posts/components/postDetailSkeleton";
 import { RepliesList } from "../../../features/posts/components/repliesList";
 import { ReplyForm } from "../../../features/posts/components/replyForm";
 import { usePost } from "../../../features/posts/hooks/usePost";
@@ -58,12 +59,16 @@ export const Route = createFileRoute("/_socialLayout/posts/$id")({
 
 function PostDetail() {
 	const { id } = Route.useParams();
-	const { post } = usePost(id);
+	const { post, isPostLoading } = usePost(id);
 	const { posts } = usePosts({ parentId: id });
 	const { account } = useAccount();
 	const { deletePost } = usePostDelete();
 	const [showReplyForm, setShowReplyForm] = useState(false);
 	const gradientId = useId();
+
+	if (isPostLoading) {
+		return <PostDetailSkeleton />;
+	}
 
 	if (!post) {
 		return <div>Post not found</div>;

@@ -5,6 +5,7 @@ import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { api } from "../../../utils/api";
 import { PostCard } from "../../posts/components/postCard";
 import { usePosts } from "../../posts/hooks/usePosts";
+import { PostsListSkeleton } from "./postsListSkeleton";
 
 export const PostsList = () => {
 	const {
@@ -72,7 +73,7 @@ export const PostsList = () => {
 	};
 
 	if (isPostLoading) {
-		return <div>Loading...</div>;
+		return <PostsListSkeleton />;
 	}
 
 	if (error) {

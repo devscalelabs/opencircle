@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { Header } from "../../../components/header";
 import { METADATA } from "../../../constants/metadata";
+import { ArticleDetailSkeleton } from "../../../features/articles/components/articleDetailSkeleton";
 import { useArticle } from "../../../features/articles/hooks/useArticle";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { PostCardReactions } from "../../../features/posts/components/postCardReactions";
@@ -59,7 +60,9 @@ function RouteComponent() {
 		parentId: id,
 	});
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) {
+		return <ArticleDetailSkeleton />;
+	}
 
 	return (
 		<main>

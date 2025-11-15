@@ -2,10 +2,15 @@ import { Avatar } from "@opencircle/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { getInitials } from "../../../utils/common";
 import { useCourses } from "../hooks/useCourses";
+import { CourseListSkeleton } from "./courseListSkeleton";
 
 export const CourseList = () => {
 	const navigate = useNavigate();
-	const { courses } = useCourses();
+	const { courses, isLoading } = useCourses();
+
+	if (isLoading) {
+		return <CourseListSkeleton />;
+	}
 
 	return (
 		<div>
