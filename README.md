@@ -1,5 +1,7 @@
 # OpenCircle
 
+![OpenCircle Platform](docs/screenshots/main.png)
+
 OpenCircle is an open-source social learning platform that combines online education with community interaction. Learn together, share knowledge, and build a vibrant learning community.
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
