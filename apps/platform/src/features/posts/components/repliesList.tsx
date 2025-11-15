@@ -1,7 +1,7 @@
 import type { Post } from "@opencircle/core";
 import { Avatar, Button } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, X } from "lucide-react";
 import moment from "moment";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
@@ -9,6 +9,7 @@ import { getInitials } from "../../../utils/common";
 import { useAccount } from "../../auth/hooks/useAccount";
 import { MediaGallery } from "../../media/components/media";
 import { usePostDelete } from "../hooks/usePostDelete";
+import { usePostUpdate } from "../hooks/usePostUpdate";
 import { renderContent } from "../utils/contentRendering";
 import { PostCardReactions } from "./postCardReactions";
 import { ReplyForm } from "./replyForm";
@@ -20,10 +21,34 @@ interface RepliesListProps {
 export function RepliesList({ posts }: RepliesListProps) {
 	const { account } = useAccount();
 	const { deletePost } = usePostDelete();
+	const { updatePost, isUpdating } = usePostUpdate();
 	const [showReplyForm, setShowReplyForm] = useState<Record<string, boolean>>(
 		{},
 	);
+	const [editingPostId, setEditingPostId] = useState<string | null>(null);
+	const [editContent, setEditContent] = useState<Record<string, string>>({});
 	const gradientId = useId();
+
+	const handleEditClick = (postId: string, content: string) => {
+		setEditingPostId(postId);
+		setEditContent((prev) => ({ ...prev, [postId]: content }));
+	};
+
+	const handleEditSubmit = (postId: string) => {
+		const content = editContent[postId];
+		if (!content?.trim()) return;
+		updatePost({ id: postId, content });
+		setEditingPostId(null);
+	};
+
+	const handleCancelEdit = (postId: string) => {
+		setEditingPostId(null);
+		setEditContent((prev) => {
+			const newContent = { ...prev };
+			delete newContent[postId];
+			return newContent;
+		});
+	};
 
 	const getDepth = (post: Post, currentDepth = 0): number => {
 		if (!post.parent_id) return currentDepth;
@@ -62,6 +87,12 @@ export function RepliesList({ posts }: RepliesListProps) {
 									align="end"
 									className="min-w-[80px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 								>
+									<DropdownMenu.Item
+										className="p-3 focus-within:outline-none hover:bg-primary"
+										onClick={() => handleEditClick(post.id, post.content)}
+									>
+										Edit
+									</DropdownMenu.Item>
 									<DropdownMenu.Item
 										className="p-3 focus-within:outline-none hover:bg-primary"
 										onClick={() => deletePost(post.id)}
@@ -119,29 +150,66 @@ export function RepliesList({ posts }: RepliesListProps) {
 							</Link>
 						</section>
 						<section className="ml-10 space-y-4">
-							<p className="whitespace-pre-line">
-								{renderContent(post.content)}
-							</p>
-							<MediaGallery media={post.medias} />
-							<div className="text-foreground/50 text-xs">
-								{moment.utc(post.created_at).fromNow()}
-							</div>
-							<section className="flex items-center gap-4">
-								<Button
-									size="sm"
-									variant="secondary"
-									onClick={() =>
-										setShowReplyForm((prev) => ({
-											...prev,
-											[post.id]: !prev[post.id],
-										}))
-									}
-									disabled={!account}
-								>
-									Reply
-								</Button>
-								<PostCardReactions post={post} />
-							</section>
+							{editingPostId === post.id ? (
+								<div className="space-y-4">
+									<textarea
+										value={editContent[post.id] || ""}
+										onChange={(e) =>
+											setEditContent((prev) => ({
+												...prev,
+												[post.id]: e.target.value,
+											}))
+										}
+										rows={4}
+										placeholder="Edit your reply"
+										className="block w-full resize-none rounded-lg border border-border bg-background p-3 focus-within:outline-none"
+									/>
+									<div className="flex items-center justify-end gap-2">
+										<button
+											type="button"
+											onClick={() => handleCancelEdit(post.id)}
+											className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm hover:bg-background-secondary"
+										>
+											<X size={16} />
+											Cancel
+										</button>
+										<Button
+											onClick={() => handleEditSubmit(post.id)}
+											disabled={!editContent[post.id]?.trim() || isUpdating}
+										>
+											{isUpdating ? "Updating..." : "Update"}
+										</Button>
+									</div>
+								</div>
+							) : (
+								<>
+									<p className="whitespace-pre-line">
+										{renderContent(post.content)}
+									</p>
+									<MediaGallery media={post.medias} />
+									<div className="text-foreground/50 text-xs">
+										{moment.utc(post.created_at).fromNow()}
+									</div>
+								</>
+							)}
+							{editingPostId !== post.id && (
+								<section className="flex items-center gap-4">
+									<Button
+										size="sm"
+										variant="secondary"
+										onClick={() =>
+											setShowReplyForm((prev) => ({
+												...prev,
+												[post.id]: !prev[post.id],
+											}))
+										}
+										disabled={!account}
+									>
+										Reply
+									</Button>
+									<PostCardReactions post={post} />
+								</section>
+							)}
 
 							{showReplyForm[post.id] && (
 								<ReplyForm

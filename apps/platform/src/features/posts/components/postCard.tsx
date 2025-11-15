@@ -1,15 +1,16 @@
 import type { Post } from "@opencircle/core";
-import { Avatar } from "@opencircle/ui";
+import { Avatar, Button } from "@opencircle/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { EllipsisVertical, MessageCircle, PinIcon } from "lucide-react";
+import { EllipsisVertical, MessageCircle, PinIcon, X } from "lucide-react";
 import moment from "moment";
 import { DropdownMenu } from "radix-ui";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { getInitials } from "../../../utils/common";
 import { useAccount } from "../../auth/hooks/useAccount";
 import { UrlPreview } from "../../extras/components/urlPreview";
 import { MediaGallery } from "../../media/components/media";
 import { usePostDelete } from "../hooks/usePostDelete";
+import { usePostUpdate } from "../hooks/usePostUpdate";
 import { renderContent } from "../utils/contentRendering";
 import { PostCardReactions } from "./postCardReactions";
 import { PostCommentSummary } from "./postCommentSummary";
@@ -22,9 +23,23 @@ export const PostCard = ({ post }: PostCardProps) => {
 	const initials = getInitials(post.user.username);
 	const { account } = useAccount();
 	const { deletePost } = usePostDelete();
+	const { updatePost, isUpdating } = usePostUpdate();
 	const gradientId = useId();
+	const [isEditing, setIsEditing] = useState(false);
+	const [editContent, setEditContent] = useState(post.content);
 
 	const navigate = useNavigate();
+
+	const handleEditSubmit = () => {
+		if (!editContent.trim()) return;
+		updatePost({ id: post.id, content: editContent });
+		setIsEditing(false);
+	};
+
+	const handleCancelEdit = () => {
+		setEditContent(post.content);
+		setIsEditing(false);
+	};
 
 	return (
 		<main className="relative max-w-2xl space-y-2 border-border border-b p-4">
@@ -42,6 +57,12 @@ export const PostCard = ({ post }: PostCardProps) => {
 							align="end"
 							className="min-w-[80px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 						>
+							<DropdownMenu.Item
+								className="p-3 focus-within:outline-none hover:bg-primary"
+								onClick={() => setIsEditing(true)}
+							>
+								Edit
+							</DropdownMenu.Item>
 							<DropdownMenu.Item
 								className="p-3 focus-within:outline-none hover:bg-primary"
 								onClick={() => deletePost(post.id)}
@@ -97,42 +118,78 @@ export const PostCard = ({ post }: PostCardProps) => {
 				</Link>
 			</section>
 			<section className="ml-10 space-y-4">
-				<div
-					className="block cursor-pointer"
-					onClick={() =>
-						navigate({ to: "/posts/$id", params: { id: post.id } })
-					}
-				>
-					<p className="whitespace-pre-line">{renderContent(post.content)}</p>
-					<UrlPreview content={post.content} />
-				</div>
-				<MediaGallery media={post.medias} />
-				<div className="-ml-1 mt-4 flex items-center gap-2">
-					{post.channel && (
-						<div className="flex w-fit rounded-full bg-background-secondary px-2 py-1 font-medium text-xs">
-							{post.channel.emoji} {post.channel.name}
+				{isEditing ? (
+					<div className="space-y-4">
+						<textarea
+							value={editContent}
+							onChange={(e) => setEditContent(e.target.value)}
+							rows={4}
+							placeholder="Edit your post"
+							className="block w-full resize-none rounded-lg border border-border bg-background p-3 focus-within:outline-none"
+						/>
+						<div className="flex items-center justify-end gap-2">
+							<button
+								type="button"
+								onClick={handleCancelEdit}
+								className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm hover:bg-background-secondary"
+							>
+								<X size={16} />
+								Cancel
+							</button>
+							<Button
+								onClick={handleEditSubmit}
+								disabled={!editContent.trim() || isUpdating}
+							>
+								{isUpdating ? "Updating..." : "Update"}
+							</Button>
 						</div>
-					)}
-					<div className="text-foreground/50 text-xs">
-						{moment.utc(post.created_at).fromNow()}
 					</div>
-				</div>
-				<section className="flex items-center gap-4">
-					<PostCardReactions post={post} />
-					<div className="flex items-center gap-2 text-sm">
-						<MessageCircle
-							size={18}
+				) : (
+					<>
+						<div
+							className="block cursor-pointer"
 							onClick={() =>
 								navigate({ to: "/posts/$id", params: { id: post.id } })
 							}
-							className="cursor-pointer"
-						/>
-						<div>{post.comment_count}</div>
-					</div>
-					{post.comment_summary?.names && (
-						<PostCommentSummary names={post.comment_summary.names} />
-					)}
-				</section>
+						>
+							<p className="whitespace-pre-line">
+								{renderContent(post.content)}
+							</p>
+							<UrlPreview content={post.content} />
+						</div>
+						<MediaGallery media={post.medias} />
+					</>
+				)}
+				{!isEditing && (
+					<>
+						<div className="-ml-1 mt-4 flex items-center gap-2">
+							{post.channel && (
+								<div className="flex w-fit rounded-full bg-background-secondary px-2 py-1 font-medium text-xs">
+									{post.channel.emoji} {post.channel.name}
+								</div>
+							)}
+							<div className="text-foreground/50 text-xs">
+								{moment.utc(post.created_at).fromNow()}
+							</div>
+						</div>
+						<section className="flex items-center gap-4">
+							<PostCardReactions post={post} />
+							<div className="flex items-center gap-2 text-sm">
+								<MessageCircle
+									size={18}
+									onClick={() =>
+										navigate({ to: "/posts/$id", params: { id: post.id } })
+									}
+									className="cursor-pointer"
+								/>
+								<div>{post.comment_count}</div>
+							</div>
+							{post.comment_summary?.names && (
+								<PostCommentSummary names={post.comment_summary.names} />
+							)}
+						</section>
+					</>
+				)}
 			</section>
 		</main>
 	);
