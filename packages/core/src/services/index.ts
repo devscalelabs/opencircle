@@ -1,10 +1,11 @@
-export { Api, createApi } from "./api";
-export { ApiClient } from "./apiClient";
+export { Api, createApi } from "../utils/api";
+export { ApiClient } from "../utils/apiClient";
 export { AppSettingsRouter } from "./routers/appsettings";
 export { ArticlesRouter } from "./routers/articles";
 export { AuthRouter } from "./routers/auth";
 export { ChannelsRouter } from "./routers/channels";
 export { MediaRouter } from "./routers/media";
 export { PostsRouter } from "./routers/posts";
+export { PresenceRouter } from "./routers/presence";
 export { ReactionsRouter } from "./routers/reactions";
 export { UsersRouter } from "./routers/users";

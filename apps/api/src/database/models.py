@@ -415,3 +415,16 @@ class AppSettings(BaseModel, table=True):
     app_name: str = Field(default="OpenCircle")
     app_logo_url: str | None = Field(default=None)
     enable_sign_up: bool = Field(default=True)
+
+
+class UserPresence(BaseModel, table=True):
+    __tablename__ = "user_presence"
+
+    user_id: str = Field(foreign_key="user.id", index=True)
+    connection_id: str = Field(index=True)  # WebSocket connection ID
+    connected_at: str = Field(index=True)  # ISO datetime when connected
+    disconnected_at: str | None = Field(
+        default=None, index=True
+    )  # ISO datetime when disconnected
+    duration_seconds: float | None = Field(default=None)  # Total connection duration
+    user: "User" = Relationship(sa_relationship=relationship("User"))

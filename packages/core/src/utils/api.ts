@@ -10,6 +10,7 @@ import { InviteCodesRouter } from "../services/routers/invite-codes";
 import { MediaRouter } from "../services/routers/media";
 import { NotificationsRouter } from "../services/routers/notifications";
 import { PostsRouter } from "../services/routers/posts";
+import { PresenceRouter } from "../services/routers/presence";
 import { ReactionsRouter } from "../services/routers/reactions";
 import { ResourcesRouter } from "../services/routers/resources";
 import { UsersRouter } from "../services/routers/users";
@@ -29,6 +30,7 @@ export class Api {
 	public inviteCodes: InviteCodesRouter;
 	public notifications: NotificationsRouter;
 	public resources: ResourcesRouter;
+	public presence: PresenceRouter;
 
 	constructor(baseUrl: string, hooks?: Hooks) {
 		this.users = new UsersRouter(baseUrl, hooks);
@@ -45,6 +47,7 @@ export class Api {
 		this.inviteCodes = new InviteCodesRouter(baseUrl, hooks);
 		this.notifications = new NotificationsRouter(baseUrl, hooks);
 		this.resources = new ResourcesRouter(baseUrl, hooks);
+		this.presence = new PresenceRouter(baseUrl, hooks);
 	}
 }
 
@@ -55,6 +58,8 @@ export function createApi(baseUrl: string, hooks?: Hooks): Api {
 
 // Export all types from the shared types file for convenience
 export type {
+	ActiveUser,
+	ActiveUsersResponse,
 	AppSettings,
 	AppSettingsCreate,
 	AppSettingsUpdate,
@@ -95,6 +100,8 @@ export type {
 	PostCreate,
 	PostType,
 	PostUpdate,
+	PresenceSession,
+	PresenceStats,
 	Reaction,
 	ReactionCreate,
 	RegisterRequest,
@@ -106,9 +113,12 @@ export type {
 	Section,
 	SectionCreate,
 	SectionUpdate,
+	TimeseriesDataPoint,
+	TimeseriesResponse,
 	UrlPreview,
 	User,
 	UserCreate,
+	UserPresenceResponse,
 	UserUpdate,
 	UserUpdateWithFile,
 } from "../services/types";

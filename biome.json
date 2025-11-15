@@ -35,6 +35,9 @@
 				"useKeyWithClickEvents": "off",
 				"noStaticElementInteractions": "off",
 				"noLabelWithoutControl": "off"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "off"
 			}
 		}
 	},
