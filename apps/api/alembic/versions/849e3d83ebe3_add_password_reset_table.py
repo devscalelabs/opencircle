@@ -37,9 +37,9 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_password_reset_code'), 'password_reset', ['code'], unique=True)
     op.create_index(op.f('ix_password_reset_email'), 'password_reset', ['email'], unique=False)
-    op.drop_table('poll_vote')
-    op.drop_table('poll_option')
-    op.drop_table('poll')
+    op.execute('DROP TABLE IF EXISTS poll_vote CASCADE')
+    op.execute('DROP TABLE IF EXISTS poll_option CASCADE')
+    op.execute('DROP TABLE IF EXISTS poll CASCADE')
     # ### end Alembic commands ###
 
 

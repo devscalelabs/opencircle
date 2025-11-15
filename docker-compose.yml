@@ -2,14 +2,12 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: opencircle-postgres
-    env_file:
-      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-opencircle}
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"  # Commented out for production - no external access
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -24,8 +22,8 @@ services:
   redis:
     image: redis:7-alpine
     container_name: opencircle-redis
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"  # Commented out for production - no external access
     volumes:
       - redis_data:/data
     healthcheck:
@@ -49,11 +47,13 @@ services:
       uv run alembic upgrade head &&
       echo '[SUCCESS] Schema migration completed.'
       "
-    env_file:
-      - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
+      - DB_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
       - ENVIRONMENT=production
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-opencircle}
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,12 +64,23 @@ services:
   api:
     image: ghcr.io/devscalelabs/opencircle-api:latest
     container_name: opencircle-api
-    env_file:
-      - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
+      - DB_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
       - REDIS_URL=redis://redis:6379
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
       - ENVIRONMENT=production
+      - R2_ENDPOINT_URL=${R2_ENDPOINT_URL}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_URL=${R2_PUBLIC_URL}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_REDIRECT_URI=${GITHUB_REDIRECT_URI}
+      - PLATFORM_URL=${PLATFORM_URL}
+      - RESEND_API_KEY=${RESEND_API_KEY}
     ports:
       - "8000:8000"
     depends_on:
@@ -92,12 +103,19 @@ services:
     image: ghcr.io/devscalelabs/opencircle-api:latest
     container_name: opencircle-celery
     command: uv run celery -A src.core.celery_app worker --loglevel=info
-    env_file:
-      - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
+      - DB_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencircle}
       - REDIS_URL=redis://redis:6379
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
       - ENVIRONMENT=production
+      - R2_ENDPOINT_URL=${R2_ENDPOINT_URL}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_PUBLIC_URL=${R2_PUBLIC_URL}
+      - RESEND_API_KEY=${RESEND_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
@@ -105,6 +123,24 @@ services:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
+    restart: unless-stopped
+    networks:
+      - opencircle-network
+
+  admin:
+    image: ghcr.io/devscalelabs/opencircle-admin:latest
+    container_name: opencircle-admin
+    ports:
+      - "3001:80"
+    restart: unless-stopped
+    networks:
+      - opencircle-network
+
+  platform:
+    image: ghcr.io/devscalelabs/opencircle-platform:latest
+    container_name: opencircle-platform
+    ports:
+      - "3000:80"
     restart: unless-stopped
     networks:
       - opencircle-network
