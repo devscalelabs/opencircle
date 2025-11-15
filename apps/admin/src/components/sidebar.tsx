@@ -1,6 +1,7 @@
 import { Input } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import {
+	Activity,
 	BookOpen,
 	FileText,
 	Hash,
@@ -44,6 +45,11 @@ export const Sidebar = () => {
 				<Input placeholder="Search" />
 			</section>
 			<nav className="space-y-2">
+				<MenuItem
+					icon={<Activity size={20} />}
+					label="Activity"
+					to="/activity"
+				/>
 				<MenuItem icon={<Users size={20} />} label="Users" to="/users" />
 				<MenuItem icon={<Hash size={20} />} label="Channels" to="/channels" />
 				<MenuItem

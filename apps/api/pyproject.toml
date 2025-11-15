@@ -28,6 +28,7 @@ dependencies = [
  "httpx-oauth>=0.15.0",
  "resend>=2.19.0",
  "loguru>=0.7.3",
+ "websockets>=12.0",
 ]
 
 [dependency-groups]
