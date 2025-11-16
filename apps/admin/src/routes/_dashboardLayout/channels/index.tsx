@@ -1,11 +1,11 @@
 import { Button } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { METADATA } from "../../constants/metadata";
-import { ChannelTable } from "../../features/channels/components/channelTable";
-import { CreateChannelDialog } from "../../features/channels/components/createChannelDialog";
-import { useChannels } from "../../features/channels/hooks/useChannels";
+import { METADATA } from "../../../constants/metadata";
+import { ChannelTable } from "../../../features/channels/components/channelTable";
+import { CreateChannelDialog } from "../../../features/channels/components/createChannelDialog";
+import { useChannels } from "../../../features/channels/hooks/useChannels";
 
-export const Route = createFileRoute("/_dashboardLayout/channels")({
+export const Route = createFileRoute("/_dashboardLayout/channels/")({
 	head: () => ({
 		meta: [
 			{
