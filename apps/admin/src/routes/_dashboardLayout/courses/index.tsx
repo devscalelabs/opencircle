@@ -27,6 +27,7 @@ export const Route = createFileRoute("/_dashboardLayout/courses/")({
 
 function RouteComponent() {
 	const { courses, isCoursesLoading } = useCourses();
+
 	return (
 		<main>
 			<div className="mb-4 flex items-center justify-between">

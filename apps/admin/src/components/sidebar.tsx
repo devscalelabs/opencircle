@@ -9,6 +9,7 @@ import {
 	Link as LinkIcon,
 	LogOut,
 	Settings,
+	UserCheck,
 	Users,
 	Zap,
 } from "lucide-react";
@@ -68,6 +69,11 @@ export const Sidebar = () => {
 						icon={<BookOpen size={20} />}
 						label="Courses"
 						to="/courses"
+					/>
+					<MenuItem
+						icon={<UserCheck size={20} />}
+						label="Enrollments"
+						to="/enrollments"
 					/>
 					<MenuItem
 						icon={<FileText size={20} />}
