@@ -17,7 +17,6 @@ import {
 	Edit,
 	Eye,
 	Search,
-	Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Article } from "../utils/types";
@@ -28,11 +27,7 @@ interface ArticleListProps {
 	loading?: boolean;
 }
 
-export const ArticleList = ({
-	articles,
-	onDelete,
-	loading,
-}: ArticleListProps) => {
+export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const columns: ColumnDef<Article>[] = [
@@ -159,21 +154,11 @@ export const ArticleList = ({
 							</Button>
 						</Link>
 						<Link to="/articles/edit/$id" params={{ id: article.id }}>
-							<Button size="sm">
+							<Button size="sm" variant="secondary">
 								<Edit size={14} />
 								Edit
 							</Button>
 						</Link>
-						{onDelete && (
-							<Button
-								size="sm"
-								variant="secondary"
-								onClick={() => onDelete(article.id)}
-							>
-								<Trash2 size={14} />
-								Delete
-							</Button>
-						)}
 					</div>
 				);
 			},
