@@ -2,7 +2,7 @@ import { Button } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { METADATA } from "../../../constants/metadata";
 import { InviteCodeList } from "../../../features/inviteCode/components/inviteCodeList";
-import { useInviteCodeSubmission } from "../../../features/inviteCode/hooks/useInviteCodeSubmission";
+
 import { useInviteCodes } from "../../../features/inviteCode/hooks/useInviteCodes";
 
 export const Route = createFileRoute("/_dashboardLayout/invite-codes/")({
@@ -28,29 +28,6 @@ export const Route = createFileRoute("/_dashboardLayout/invite-codes/")({
 
 function RouteComponent() {
 	const { inviteCodes, isInviteCodesLoading } = useInviteCodes();
-	const { deleteInviteCode, deactivateInviteCode } = useInviteCodeSubmission();
-
-	const handleDelete = async (id: string) => {
-		if (window.confirm("Are you sure you want to delete this invite code?")) {
-			try {
-				await deleteInviteCode(id);
-			} catch (error) {
-				console.error("Failed to delete invite code:", error);
-			}
-		}
-	};
-
-	const handleDeactivate = async (id: string) => {
-		if (
-			window.confirm("Are you sure you want to deactivate this invite code?")
-		) {
-			try {
-				await deactivateInviteCode(id);
-			} catch (error) {
-				console.error("Failed to deactivate invite code:", error);
-			}
-		}
-	};
 
 	return (
 		<main>
@@ -62,8 +39,6 @@ function RouteComponent() {
 			</div>
 			<InviteCodeList
 				inviteCodes={inviteCodes || []}
-				onDelete={handleDelete}
-				onDeactivate={handleDeactivate}
 				loading={isInviteCodesLoading}
 			/>
 		</main>

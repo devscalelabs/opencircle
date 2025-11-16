@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { DashboardStatsCards } from "../../components/dashboard/dashboardStatistic";
-import { EnrollmentChartComponent } from "../../components/dashboard/enrollmentCharts";
-import { RecentEnrollmentsTable } from "../../components/dashboard/recentCourseEnrollments";
-import { METADATA } from "../../constants/metadata";
-import { dashboardService } from "../../services/dashboard";
+import { METADATA } from "../../../constants/metadata";
+import { DashboardStatsCards } from "../../../features/dashboard/dashboardStatistic";
+import { EnrollmentChartComponent } from "../../../features/dashboard/enrollmentCharts";
+import { RecentEnrollmentsTable } from "../../../features/dashboard/recentCourseEnrollments";
+import { dashboardService } from "../../../services/dashboard";
 
-export const Route = createFileRoute("/_dashboardLayout/dashboard")({
+export const Route = createFileRoute("/_dashboardLayout/enrollments/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Dashboard - OpenCircle Admin",
+				title: "Enrollments - OpenCircle Admin",
 			},
 			{
 				name: "description",
-				content: "Admin Dashboard Overview",
+				content: "Manage and view course enrollments",
 			},
 		],
 		links: [
@@ -60,7 +60,7 @@ function RouteComponent() {
 			<div className="p-6">
 				<div className="rounded-lg border border-border bg-background-secondary p-4">
 					<h3 className="font-medium text-foreground">
-						Error loading dashboard data
+						Error loading enrollment data
 					</h3>
 					<p className="mt-1 text-foreground text-sm">
 						Please try refreshing the page or check your connection.
@@ -73,10 +73,7 @@ function RouteComponent() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h1 className="font-bold text-2xl text-foreground">Dashboard</h1>
-				<p className="text-foreground">
-					Overview of your platform's performance
-				</p>
+				<h1 className="font-medium text-2xl text-foreground">Enrollments</h1>
 			</div>
 
 			<DashboardStatsCards

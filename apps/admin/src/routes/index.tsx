@@ -2,8 +2,7 @@ import { Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { METADATA } from "../constants/metadata";
-import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
-import { useGoogleAuth } from "../features/auth/hooks/useGoogleAuth";
+
 import { useLogin } from "../features/auth/hooks/useLogin";
 
 export const Route = createFileRoute("/")({
@@ -41,9 +40,6 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
 	const { username, setUsername, password, setPassword, login } = useLogin();
-	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
-	const { loginWithGoogle, isCallbackLoading: isGoogleCallbackLoading } =
-		useGoogleAuth();
 
 	return (
 		<main className="m-auto max-w-sm">
@@ -79,28 +75,7 @@ function RouteComponent() {
 						<Button radius="xl" className="mt-2 w-full" onClick={() => login()}>
 							Login
 						</Button>
-					</section>
-					<section className="h-0.25 bg-foreground/10" />
-					<section className="space-y-4">
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGitHub}
-							disabled={isCallbackLoading}
-						>
-							{isCallbackLoading ? "Loading..." : "Continue with Github"}
-						</Button>
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGoogle}
-							disabled={isGoogleCallbackLoading}
-						>
-							{isGoogleCallbackLoading ? "Loading..." : "Continue with Google"}
-						</Button>
-					</section>
+					</section>{" "}
 				</div>
 			</div>
 		</main>

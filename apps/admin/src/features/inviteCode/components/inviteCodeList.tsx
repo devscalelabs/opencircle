@@ -11,28 +11,16 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	Ban,
-	Edit,
-	Search,
-	Trash2,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Eye, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 interface InviteCodeListProps {
 	inviteCodes: InviteCode[];
-	onDelete?: (id: string) => void;
-	onDeactivate?: (id: string) => void;
 	loading?: boolean;
 }
 
 export const InviteCodeList = ({
 	inviteCodes,
-	onDelete,
-	onDeactivate,
 	loading,
 }: InviteCodeListProps) => {
 	const router = useRouter();
@@ -216,32 +204,12 @@ export const InviteCodeList = ({
 						<Button
 							size="sm"
 							onClick={() => {
-								router.navigate({ to: `/invite-codes/edit/${inviteCode.id}` });
+								router.navigate({ to: `/invite-codes/${inviteCode.id}` });
 							}}
 						>
-							<Edit size={14} />
-							Edit
+							<Eye size={14} />
+							View Details
 						</Button>
-						{inviteCode.status === "active" && onDeactivate && (
-							<Button
-								size="sm"
-								variant="secondary"
-								onClick={() => onDeactivate(inviteCode.id)}
-							>
-								<Ban size={14} />
-								Deactivate
-							</Button>
-						)}
-						{onDelete && (
-							<Button
-								size="sm"
-								variant="secondary"
-								onClick={() => onDelete(inviteCode.id)}
-							>
-								<Trash2 size={14} />
-								Delete
-							</Button>
-						)}
 					</div>
 				);
 			},

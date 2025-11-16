@@ -1,12 +1,12 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { METADATA } from "../../constants/metadata";
-import { ArticleEditor } from "../../features/articles/components/articleEditor";
-import { useArticleSubmission } from "../../features/articles/hooks/useArticleSubmission";
+import { METADATA } from "../../../constants/metadata";
+import { ArticleEditor } from "../../../features/articles/components/articleEditor";
+import { useArticleSubmission } from "../../../features/articles/hooks/useArticleSubmission";
 import type {
 	CreateArticleRequest,
 	UpdateArticleRequest,
-} from "../../features/articles/utils/types";
-import { useAccount } from "../../features/auth/hooks/useAccount";
+} from "../../../features/articles/utils/types";
+import { useAccount } from "../../../features/auth/hooks/useAccount";
 
 export const Route = createFileRoute("/_dashboardLayout/articles/new")({
 	head: () => ({

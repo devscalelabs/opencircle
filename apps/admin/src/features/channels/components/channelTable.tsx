@@ -1,5 +1,6 @@
 import type { Channel } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
+import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
 	flexRender,
@@ -9,14 +10,7 @@ import {
 	type SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	Edit,
-	Search,
-	Trash2,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Eye, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 interface ChannelTableProps {
@@ -25,34 +19,11 @@ interface ChannelTableProps {
 }
 
 export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
-	const [rowSelection, setRowSelection] = useState({});
+	const router = useRouter();
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const columns: ColumnDef<Channel>[] = [
-		{
-			id: "select",
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-					className="rounded border-gray-300"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="rounded border-gray-300"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 		{
 			accessorKey: "emoji",
 			header: "Emoji",
@@ -170,21 +141,11 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 						<Button
 							size="sm"
 							onClick={() => {
-								console.log("Edit channel:", channel);
+								router.navigate({ to: `/channels/${channel.id}` });
 							}}
 						>
-							<Edit size={14} />
-							Edit
-						</Button>
-						<Button
-							size="sm"
-							variant="secondary"
-							onClick={() => {
-								console.log("Delete channel:", channel);
-							}}
-						>
-							<Trash2 size={14} />
-							Delete
+							<Eye size={14} />
+							View Details
 						</Button>
 					</div>
 				);
@@ -214,10 +175,8 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
 		state: {
-			rowSelection,
 			sorting,
 		},
 	});

@@ -17,10 +17,10 @@ import {
 	Edit,
 	Eye,
 	Search,
-	Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Article } from "../utils/types";
+import { TableSkeleton } from "./tableSkeleton";
 
 interface ArticleListProps {
 	articles: Article[];
@@ -28,11 +28,7 @@ interface ArticleListProps {
 	loading?: boolean;
 }
 
-export const ArticleList = ({
-	articles,
-	onDelete,
-	loading,
-}: ArticleListProps) => {
+export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const columns: ColumnDef<Article>[] = [
@@ -159,21 +155,11 @@ export const ArticleList = ({
 							</Button>
 						</Link>
 						<Link to="/articles/edit/$id" params={{ id: article.id }}>
-							<Button size="sm">
+							<Button size="sm" variant="secondary">
 								<Edit size={14} />
 								Edit
 							</Button>
 						</Link>
-						{onDelete && (
-							<Button
-								size="sm"
-								variant="secondary"
-								onClick={() => onDelete(article.id)}
-							>
-								<Trash2 size={14} />
-								Delete
-							</Button>
-						)}
 					</div>
 				);
 			},
@@ -207,29 +193,7 @@ export const ArticleList = ({
 	});
 
 	if (loading) {
-		return (
-			<div className="rounded-lg border border-border bg-background shadow-sm">
-				<div className="p-6">
-					<div className="space-y-3">
-						{[...Array(5)].map((_, i) => (
-							<div
-								key={`skeleton-article-row-${i}`}
-								className="animate-pulse border-border border-b pb-4 last:border-0"
-							>
-								<div className="flex items-center gap-4">
-									<div className="flex-1 space-y-2">
-										<div className="h-4 w-48 rounded bg-background-secondary"></div>
-										<div className="h-3 w-32 rounded bg-background-secondary"></div>
-									</div>
-									<div className="h-6 w-20 rounded-full bg-background-secondary"></div>
-									<div className="h-4 w-24 rounded bg-background-secondary"></div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-		);
+		return <TableSkeleton rowCount={5} />;
 	}
 
 	return (

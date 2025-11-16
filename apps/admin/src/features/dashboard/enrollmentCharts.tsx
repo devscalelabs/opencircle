@@ -8,6 +8,7 @@ import {
 	YAxis,
 } from "recharts";
 import type { EnrollmentChartData } from "../../services/dashboard";
+import { ChartSkeleton } from "./chartSkeleton";
 
 interface EnrollmentChartProps {
 	data: EnrollmentChartData[];
@@ -19,14 +20,7 @@ export const EnrollmentChartComponent = ({
 	isLoading,
 }: EnrollmentChartProps) => {
 	if (isLoading) {
-		return (
-			<div className="rounded-lg bg-background p-6 shadow">
-				<h3 className="mb-4 font-semibold text-foreground text-lg">
-					Enrollment Trends
-				</h3>
-				<div className="h-80 animate-pulse rounded bg-background-secondary"></div>
-			</div>
-		);
+		return <ChartSkeleton height={320} />;
 	}
 
 	const formatDate = (dateStr: string) => {
@@ -35,7 +29,7 @@ export const EnrollmentChartComponent = ({
 	};
 
 	return (
-		<div className="rounded-lg bg-background p-6 shadow">
+		<div className="rounded-lg bg-background-secondary p-6 shadow">
 			<h3 className="mb-4 font-semibold text-foreground text-lg">
 				Enrollment Trends
 			</h3>

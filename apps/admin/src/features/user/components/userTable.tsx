@@ -10,15 +10,10 @@ import {
 	type SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	Eye,
-	Search,
-	Trash2,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Eye, Search } from "lucide-react";
+import moment from "moment";
 import { useMemo, useState } from "react";
+import { TableSkeleton } from "./tableSkeleton";
 
 interface UserTableProps {
 	users: User[];
@@ -27,34 +22,10 @@ interface UserTableProps {
 
 export const UserTable = ({ users, isLoading }: UserTableProps) => {
 	const router = useRouter();
-	const [rowSelection, setRowSelection] = useState({});
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const columns: ColumnDef<User>[] = [
-		{
-			id: "select",
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-					className="rounded border-gray-300"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="rounded border-gray-300"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 		{
 			accessorKey: "username",
 			header: ({ column }) => {
@@ -179,7 +150,9 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 			},
 			cell: ({ row }) => {
 				const date = new Date(row.getValue("created_at") as string);
-				return <div className="text-sm">{date.toLocaleDateString()}</div>;
+				return (
+					<div className="text-sm">{moment(date).format("DD MMM YYYY")}</div>
+				);
 			},
 		},
 		{
@@ -198,18 +171,6 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 							<Eye size={14} />
 							View Details
 						</Button>
-						{user.is_active && (
-							<Button
-								size="sm"
-								variant="secondary"
-								onClick={() => {
-									console.log("Ban user:", user);
-								}}
-							>
-								<Trash2 size={14} />
-								Ban
-							</Button>
-						)}
 					</div>
 				);
 			},
@@ -238,38 +199,14 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
 		state: {
-			rowSelection,
 			sorting,
 		},
 	});
 
 	if (isLoading) {
-		return (
-			<div className="rounded-lg border border-border bg-background shadow-sm">
-				<div className="p-6">
-					<div className="space-y-3">
-						{[...Array(5)].map((_, i) => (
-							<div
-								key={`skeleton-user-row-${i}`}
-								className="animate-pulse border-border border-b pb-4 last:border-0"
-							>
-								<div className="flex items-center gap-4">
-									<div className="flex-1 space-y-2">
-										<div className="h-4 w-48 rounded bg-background-secondary"></div>
-										<div className="h-3 w-32 rounded bg-background-secondary"></div>
-									</div>
-									<div className="h-6 w-20 rounded-full bg-background-secondary"></div>
-									<div className="h-4 w-24 rounded bg-background-secondary"></div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-		);
+		return <TableSkeleton rowCount={5} />;
 	}
 
 	return (

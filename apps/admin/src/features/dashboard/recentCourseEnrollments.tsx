@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import type { Enrollment } from "../../services/dashboard";
+import { TableSkeleton } from "./tableSkeleton";
 
 interface RecentEnrollmentsProps {
 	enrollments: Enrollment[];
@@ -17,34 +18,7 @@ export const RecentEnrollmentsTable = ({
 	isLoading,
 }: RecentEnrollmentsProps) => {
 	if (isLoading) {
-		return (
-			<div className="rounded-lg border border-border bg-background shadow-sm">
-				<div className="border-border border-b px-6 py-4">
-					<h3 className="font-semibold text-foreground text-lg">
-						Recent Enrollments
-					</h3>
-				</div>
-				<div className="p-6">
-					<div className="space-y-3">
-						{[...Array(5)].map((i) => (
-							<div
-								key={`skeleton-enrollment-row-${i}`}
-								className="animate-pulse border-border border-b pb-4 last:border-0"
-							>
-								<div className="flex items-center gap-4">
-									<div className="flex-1 space-y-2">
-										<div className="h-4 w-48 rounded bg-background-secondary"></div>
-										<div className="h-3 w-32 rounded bg-background-secondary"></div>
-									</div>
-									<div className="h-6 w-20 rounded-full bg-background-secondary"></div>
-									<div className="h-4 w-24 rounded bg-background-secondary"></div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-		);
+		return <TableSkeleton rowCount={5} showHeader={true} />;
 	}
 
 	const formatDate = (dateString: string | null) => {

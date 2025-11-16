@@ -9,42 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as GoogleCallbackRouteImport } from './routes/google-callback'
-import { Route as GithubCallbackRouteImport } from './routes/github-callback'
 import { Route as DashboardLayoutRouteImport } from './routes/_dashboardLayout'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardLayoutSettingsRouteImport } from './routes/_dashboardLayout/settings'
-import { Route as DashboardLayoutDashboardRouteImport } from './routes/_dashboardLayout/dashboard'
-import { Route as DashboardLayoutChannelsRouteImport } from './routes/_dashboardLayout/channels'
 import { Route as DashboardLayoutBroadcastRouteImport } from './routes/_dashboardLayout/broadcast'
-import { Route as DashboardLayoutAppSettingsRouteImport } from './routes/_dashboardLayout/app-settings'
-import { Route as DashboardLayoutActivityRouteImport } from './routes/_dashboardLayout/activity'
 import { Route as DashboardLayoutUsersIndexRouteImport } from './routes/_dashboardLayout/users/index'
-import { Route as DashboardLayoutResourcesIndexRouteImport } from './routes/_dashboardLayout/resources.index'
+import { Route as DashboardLayoutResourcesIndexRouteImport } from './routes/_dashboardLayout/resources/index'
 import { Route as DashboardLayoutInviteCodesIndexRouteImport } from './routes/_dashboardLayout/invite-codes/index'
+import { Route as DashboardLayoutEnrollmentsIndexRouteImport } from './routes/_dashboardLayout/enrollments/index'
+import { Route as DashboardLayoutDashboardIndexRouteImport } from './routes/_dashboardLayout/dashboard/index'
 import { Route as DashboardLayoutCoursesIndexRouteImport } from './routes/_dashboardLayout/courses/index'
-import { Route as DashboardLayoutArticlesIndexRouteImport } from './routes/_dashboardLayout/articles.index'
+import { Route as DashboardLayoutChannelsIndexRouteImport } from './routes/_dashboardLayout/channels/index'
+import { Route as DashboardLayoutArticlesIndexRouteImport } from './routes/_dashboardLayout/articles/index'
+import { Route as DashboardLayoutAppSettingsIndexRouteImport } from './routes/_dashboardLayout/app-settings/index'
+import { Route as DashboardLayoutActivityIndexRouteImport } from './routes/_dashboardLayout/activity/index'
 import { Route as DashboardLayoutUsersIdRouteImport } from './routes/_dashboardLayout/users/$id'
 import { Route as DashboardLayoutInviteCodesNewRouteImport } from './routes/_dashboardLayout/invite-codes/new'
+import { Route as DashboardLayoutInviteCodesIdRouteImport } from './routes/_dashboardLayout/invite-codes/$id'
 import { Route as DashboardLayoutCoursesNewRouteImport } from './routes/_dashboardLayout/courses/new'
-import { Route as DashboardLayoutArticlesNewRouteImport } from './routes/_dashboardLayout/articles.new'
-import { Route as DashboardLayoutArticlesIdRouteImport } from './routes/_dashboardLayout/articles.$id'
+import { Route as DashboardLayoutChannelsIdRouteImport } from './routes/_dashboardLayout/channels/$id'
+import { Route as DashboardLayoutArticlesNewRouteImport } from './routes/_dashboardLayout/articles/new'
+import { Route as DashboardLayoutArticlesIdRouteImport } from './routes/_dashboardLayout/articles/$id'
 import { Route as DashboardLayoutInviteCodesEditIdRouteImport } from './routes/_dashboardLayout/invite-codes/edit.$id'
 import { Route as DashboardLayoutCoursesEditIdRouteImport } from './routes/_dashboardLayout/courses/edit.$id'
-import { Route as DashboardLayoutArticlesEditIdRouteImport } from './routes/_dashboardLayout/articles.edit.$id'
+import { Route as DashboardLayoutArticlesEditIdRouteImport } from './routes/_dashboardLayout/articles/edit.$id'
 import { Route as DashboardLayoutCoursesSectionsSectionIdEditRouteImport } from './routes/_dashboardLayout/courses/sections/$sectionId/edit'
 import { Route as DashboardLayoutCoursesLessonsLessonIdEditRouteImport } from './routes/_dashboardLayout/courses/lessons/$lessonId/edit'
 
-const GoogleCallbackRoute = GoogleCallbackRouteImport.update({
-  id: '/google-callback',
-  path: '/google-callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GithubCallbackRoute = GithubCallbackRouteImport.update({
-  id: '/github-callback',
-  path: '/github-callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
   id: '/_dashboardLayout',
   getParentRoute: () => rootRouteImport,
@@ -54,39 +44,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardLayoutSettingsRoute = DashboardLayoutSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
-const DashboardLayoutDashboardRoute =
-  DashboardLayoutDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
-const DashboardLayoutChannelsRoute = DashboardLayoutChannelsRouteImport.update({
-  id: '/channels',
-  path: '/channels',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
 const DashboardLayoutBroadcastRoute =
   DashboardLayoutBroadcastRouteImport.update({
     id: '/broadcast',
     path: '/broadcast',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
-const DashboardLayoutAppSettingsRoute =
-  DashboardLayoutAppSettingsRouteImport.update({
-    id: '/app-settings',
-    path: '/app-settings',
-    getParentRoute: () => DashboardLayoutRoute,
-  } as any)
-const DashboardLayoutActivityRoute = DashboardLayoutActivityRouteImport.update({
-  id: '/activity',
-  path: '/activity',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
 const DashboardLayoutUsersIndexRoute =
   DashboardLayoutUsersIndexRouteImport.update({
     id: '/users/',
@@ -105,16 +68,46 @@ const DashboardLayoutInviteCodesIndexRoute =
     path: '/invite-codes/',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
+const DashboardLayoutEnrollmentsIndexRoute =
+  DashboardLayoutEnrollmentsIndexRouteImport.update({
+    id: '/enrollments/',
+    path: '/enrollments/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardLayoutDashboardIndexRoute =
+  DashboardLayoutDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
 const DashboardLayoutCoursesIndexRoute =
   DashboardLayoutCoursesIndexRouteImport.update({
     id: '/courses/',
     path: '/courses/',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
+const DashboardLayoutChannelsIndexRoute =
+  DashboardLayoutChannelsIndexRouteImport.update({
+    id: '/channels/',
+    path: '/channels/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
 const DashboardLayoutArticlesIndexRoute =
   DashboardLayoutArticlesIndexRouteImport.update({
     id: '/articles/',
     path: '/articles/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardLayoutAppSettingsIndexRoute =
+  DashboardLayoutAppSettingsIndexRouteImport.update({
+    id: '/app-settings/',
+    path: '/app-settings/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardLayoutActivityIndexRoute =
+  DashboardLayoutActivityIndexRouteImport.update({
+    id: '/activity/',
+    path: '/activity/',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
 const DashboardLayoutUsersIdRoute = DashboardLayoutUsersIdRouteImport.update({
@@ -128,10 +121,22 @@ const DashboardLayoutInviteCodesNewRoute =
     path: '/invite-codes/new',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
+const DashboardLayoutInviteCodesIdRoute =
+  DashboardLayoutInviteCodesIdRouteImport.update({
+    id: '/invite-codes/$id',
+    path: '/invite-codes/$id',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
 const DashboardLayoutCoursesNewRoute =
   DashboardLayoutCoursesNewRouteImport.update({
     id: '/courses/new',
     path: '/courses/new',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardLayoutChannelsIdRoute =
+  DashboardLayoutChannelsIdRouteImport.update({
+    id: '/channels/$id',
+    path: '/channels/$id',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
 const DashboardLayoutArticlesNewRoute =
@@ -179,21 +184,21 @@ const DashboardLayoutCoursesLessonsLessonIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/github-callback': typeof GithubCallbackRoute
-  '/google-callback': typeof GoogleCallbackRoute
-  '/activity': typeof DashboardLayoutActivityRoute
-  '/app-settings': typeof DashboardLayoutAppSettingsRoute
   '/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/channels': typeof DashboardLayoutChannelsRoute
-  '/dashboard': typeof DashboardLayoutDashboardRoute
-  '/settings': typeof DashboardLayoutSettingsRoute
   '/articles/$id': typeof DashboardLayoutArticlesIdRoute
   '/articles/new': typeof DashboardLayoutArticlesNewRoute
+  '/channels/$id': typeof DashboardLayoutChannelsIdRoute
   '/courses/new': typeof DashboardLayoutCoursesNewRoute
+  '/invite-codes/$id': typeof DashboardLayoutInviteCodesIdRoute
   '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/users/$id': typeof DashboardLayoutUsersIdRoute
+  '/activity': typeof DashboardLayoutActivityIndexRoute
+  '/app-settings': typeof DashboardLayoutAppSettingsIndexRoute
   '/articles': typeof DashboardLayoutArticlesIndexRoute
+  '/channels': typeof DashboardLayoutChannelsIndexRoute
   '/courses': typeof DashboardLayoutCoursesIndexRoute
+  '/dashboard': typeof DashboardLayoutDashboardIndexRoute
+  '/enrollments': typeof DashboardLayoutEnrollmentsIndexRoute
   '/invite-codes': typeof DashboardLayoutInviteCodesIndexRoute
   '/resources': typeof DashboardLayoutResourcesIndexRoute
   '/users': typeof DashboardLayoutUsersIndexRoute
@@ -205,21 +210,21 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/github-callback': typeof GithubCallbackRoute
-  '/google-callback': typeof GoogleCallbackRoute
-  '/activity': typeof DashboardLayoutActivityRoute
-  '/app-settings': typeof DashboardLayoutAppSettingsRoute
   '/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/channels': typeof DashboardLayoutChannelsRoute
-  '/dashboard': typeof DashboardLayoutDashboardRoute
-  '/settings': typeof DashboardLayoutSettingsRoute
   '/articles/$id': typeof DashboardLayoutArticlesIdRoute
   '/articles/new': typeof DashboardLayoutArticlesNewRoute
+  '/channels/$id': typeof DashboardLayoutChannelsIdRoute
   '/courses/new': typeof DashboardLayoutCoursesNewRoute
+  '/invite-codes/$id': typeof DashboardLayoutInviteCodesIdRoute
   '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/users/$id': typeof DashboardLayoutUsersIdRoute
+  '/activity': typeof DashboardLayoutActivityIndexRoute
+  '/app-settings': typeof DashboardLayoutAppSettingsIndexRoute
   '/articles': typeof DashboardLayoutArticlesIndexRoute
+  '/channels': typeof DashboardLayoutChannelsIndexRoute
   '/courses': typeof DashboardLayoutCoursesIndexRoute
+  '/dashboard': typeof DashboardLayoutDashboardIndexRoute
+  '/enrollments': typeof DashboardLayoutEnrollmentsIndexRoute
   '/invite-codes': typeof DashboardLayoutInviteCodesIndexRoute
   '/resources': typeof DashboardLayoutResourcesIndexRoute
   '/users': typeof DashboardLayoutUsersIndexRoute
@@ -233,21 +238,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_dashboardLayout': typeof DashboardLayoutRouteWithChildren
-  '/github-callback': typeof GithubCallbackRoute
-  '/google-callback': typeof GoogleCallbackRoute
-  '/_dashboardLayout/activity': typeof DashboardLayoutActivityRoute
-  '/_dashboardLayout/app-settings': typeof DashboardLayoutAppSettingsRoute
   '/_dashboardLayout/broadcast': typeof DashboardLayoutBroadcastRoute
-  '/_dashboardLayout/channels': typeof DashboardLayoutChannelsRoute
-  '/_dashboardLayout/dashboard': typeof DashboardLayoutDashboardRoute
-  '/_dashboardLayout/settings': typeof DashboardLayoutSettingsRoute
   '/_dashboardLayout/articles/$id': typeof DashboardLayoutArticlesIdRoute
   '/_dashboardLayout/articles/new': typeof DashboardLayoutArticlesNewRoute
+  '/_dashboardLayout/channels/$id': typeof DashboardLayoutChannelsIdRoute
   '/_dashboardLayout/courses/new': typeof DashboardLayoutCoursesNewRoute
+  '/_dashboardLayout/invite-codes/$id': typeof DashboardLayoutInviteCodesIdRoute
   '/_dashboardLayout/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/_dashboardLayout/users/$id': typeof DashboardLayoutUsersIdRoute
+  '/_dashboardLayout/activity/': typeof DashboardLayoutActivityIndexRoute
+  '/_dashboardLayout/app-settings/': typeof DashboardLayoutAppSettingsIndexRoute
   '/_dashboardLayout/articles/': typeof DashboardLayoutArticlesIndexRoute
+  '/_dashboardLayout/channels/': typeof DashboardLayoutChannelsIndexRoute
   '/_dashboardLayout/courses/': typeof DashboardLayoutCoursesIndexRoute
+  '/_dashboardLayout/dashboard/': typeof DashboardLayoutDashboardIndexRoute
+  '/_dashboardLayout/enrollments/': typeof DashboardLayoutEnrollmentsIndexRoute
   '/_dashboardLayout/invite-codes/': typeof DashboardLayoutInviteCodesIndexRoute
   '/_dashboardLayout/resources/': typeof DashboardLayoutResourcesIndexRoute
   '/_dashboardLayout/users/': typeof DashboardLayoutUsersIndexRoute
@@ -261,21 +266,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/github-callback'
-    | '/google-callback'
-    | '/activity'
-    | '/app-settings'
     | '/broadcast'
-    | '/channels'
-    | '/dashboard'
-    | '/settings'
     | '/articles/$id'
     | '/articles/new'
+    | '/channels/$id'
     | '/courses/new'
+    | '/invite-codes/$id'
     | '/invite-codes/new'
     | '/users/$id'
+    | '/activity'
+    | '/app-settings'
     | '/articles'
+    | '/channels'
     | '/courses'
+    | '/dashboard'
+    | '/enrollments'
     | '/invite-codes'
     | '/resources'
     | '/users'
@@ -287,21 +292,21 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/github-callback'
-    | '/google-callback'
-    | '/activity'
-    | '/app-settings'
     | '/broadcast'
-    | '/channels'
-    | '/dashboard'
-    | '/settings'
     | '/articles/$id'
     | '/articles/new'
+    | '/channels/$id'
     | '/courses/new'
+    | '/invite-codes/$id'
     | '/invite-codes/new'
     | '/users/$id'
+    | '/activity'
+    | '/app-settings'
     | '/articles'
+    | '/channels'
     | '/courses'
+    | '/dashboard'
+    | '/enrollments'
     | '/invite-codes'
     | '/resources'
     | '/users'
@@ -314,21 +319,21 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_dashboardLayout'
-    | '/github-callback'
-    | '/google-callback'
-    | '/_dashboardLayout/activity'
-    | '/_dashboardLayout/app-settings'
     | '/_dashboardLayout/broadcast'
-    | '/_dashboardLayout/channels'
-    | '/_dashboardLayout/dashboard'
-    | '/_dashboardLayout/settings'
     | '/_dashboardLayout/articles/$id'
     | '/_dashboardLayout/articles/new'
+    | '/_dashboardLayout/channels/$id'
     | '/_dashboardLayout/courses/new'
+    | '/_dashboardLayout/invite-codes/$id'
     | '/_dashboardLayout/invite-codes/new'
     | '/_dashboardLayout/users/$id'
+    | '/_dashboardLayout/activity/'
+    | '/_dashboardLayout/app-settings/'
     | '/_dashboardLayout/articles/'
+    | '/_dashboardLayout/channels/'
     | '/_dashboardLayout/courses/'
+    | '/_dashboardLayout/dashboard/'
+    | '/_dashboardLayout/enrollments/'
     | '/_dashboardLayout/invite-codes/'
     | '/_dashboardLayout/resources/'
     | '/_dashboardLayout/users/'
@@ -342,26 +347,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
-  GithubCallbackRoute: typeof GithubCallbackRoute
-  GoogleCallbackRoute: typeof GoogleCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/google-callback': {
-      id: '/google-callback'
-      path: '/google-callback'
-      fullPath: '/google-callback'
-      preLoaderRoute: typeof GoogleCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/github-callback': {
-      id: '/github-callback'
-      path: '/github-callback'
-      fullPath: '/github-callback'
-      preLoaderRoute: typeof GithubCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_dashboardLayout': {
       id: '/_dashboardLayout'
       path: ''
@@ -376,46 +365,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_dashboardLayout/settings': {
-      id: '/_dashboardLayout/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof DashboardLayoutSettingsRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/dashboard': {
-      id: '/_dashboardLayout/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardLayoutDashboardRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/channels': {
-      id: '/_dashboardLayout/channels'
-      path: '/channels'
-      fullPath: '/channels'
-      preLoaderRoute: typeof DashboardLayoutChannelsRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
     '/_dashboardLayout/broadcast': {
       id: '/_dashboardLayout/broadcast'
       path: '/broadcast'
       fullPath: '/broadcast'
       preLoaderRoute: typeof DashboardLayoutBroadcastRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/app-settings': {
-      id: '/_dashboardLayout/app-settings'
-      path: '/app-settings'
-      fullPath: '/app-settings'
-      preLoaderRoute: typeof DashboardLayoutAppSettingsRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboardLayout/activity': {
-      id: '/_dashboardLayout/activity'
-      path: '/activity'
-      fullPath: '/activity'
-      preLoaderRoute: typeof DashboardLayoutActivityRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
     '/_dashboardLayout/users/': {
@@ -439,6 +393,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLayoutInviteCodesIndexRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
+    '/_dashboardLayout/enrollments/': {
+      id: '/_dashboardLayout/enrollments/'
+      path: '/enrollments'
+      fullPath: '/enrollments'
+      preLoaderRoute: typeof DashboardLayoutEnrollmentsIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboardLayout/dashboard/': {
+      id: '/_dashboardLayout/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardLayoutDashboardIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboardLayout/courses/': {
       id: '/_dashboardLayout/courses/'
       path: '/courses'
@@ -446,11 +414,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLayoutCoursesIndexRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
+    '/_dashboardLayout/channels/': {
+      id: '/_dashboardLayout/channels/'
+      path: '/channels'
+      fullPath: '/channels'
+      preLoaderRoute: typeof DashboardLayoutChannelsIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboardLayout/articles/': {
       id: '/_dashboardLayout/articles/'
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof DashboardLayoutArticlesIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboardLayout/app-settings/': {
+      id: '/_dashboardLayout/app-settings/'
+      path: '/app-settings'
+      fullPath: '/app-settings'
+      preLoaderRoute: typeof DashboardLayoutAppSettingsIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboardLayout/activity/': {
+      id: '/_dashboardLayout/activity/'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof DashboardLayoutActivityIndexRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
     '/_dashboardLayout/users/$id': {
@@ -467,11 +456,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLayoutInviteCodesNewRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
+    '/_dashboardLayout/invite-codes/$id': {
+      id: '/_dashboardLayout/invite-codes/$id'
+      path: '/invite-codes/$id'
+      fullPath: '/invite-codes/$id'
+      preLoaderRoute: typeof DashboardLayoutInviteCodesIdRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboardLayout/courses/new': {
       id: '/_dashboardLayout/courses/new'
       path: '/courses/new'
       fullPath: '/courses/new'
       preLoaderRoute: typeof DashboardLayoutCoursesNewRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboardLayout/channels/$id': {
+      id: '/_dashboardLayout/channels/$id'
+      path: '/channels/$id'
+      fullPath: '/channels/$id'
+      preLoaderRoute: typeof DashboardLayoutChannelsIdRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
     '/_dashboardLayout/articles/new': {
@@ -527,19 +530,21 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardLayoutRouteChildren {
-  DashboardLayoutActivityRoute: typeof DashboardLayoutActivityRoute
-  DashboardLayoutAppSettingsRoute: typeof DashboardLayoutAppSettingsRoute
   DashboardLayoutBroadcastRoute: typeof DashboardLayoutBroadcastRoute
-  DashboardLayoutChannelsRoute: typeof DashboardLayoutChannelsRoute
-  DashboardLayoutDashboardRoute: typeof DashboardLayoutDashboardRoute
-  DashboardLayoutSettingsRoute: typeof DashboardLayoutSettingsRoute
   DashboardLayoutArticlesIdRoute: typeof DashboardLayoutArticlesIdRoute
   DashboardLayoutArticlesNewRoute: typeof DashboardLayoutArticlesNewRoute
+  DashboardLayoutChannelsIdRoute: typeof DashboardLayoutChannelsIdRoute
   DashboardLayoutCoursesNewRoute: typeof DashboardLayoutCoursesNewRoute
+  DashboardLayoutInviteCodesIdRoute: typeof DashboardLayoutInviteCodesIdRoute
   DashboardLayoutInviteCodesNewRoute: typeof DashboardLayoutInviteCodesNewRoute
   DashboardLayoutUsersIdRoute: typeof DashboardLayoutUsersIdRoute
+  DashboardLayoutActivityIndexRoute: typeof DashboardLayoutActivityIndexRoute
+  DashboardLayoutAppSettingsIndexRoute: typeof DashboardLayoutAppSettingsIndexRoute
   DashboardLayoutArticlesIndexRoute: typeof DashboardLayoutArticlesIndexRoute
+  DashboardLayoutChannelsIndexRoute: typeof DashboardLayoutChannelsIndexRoute
   DashboardLayoutCoursesIndexRoute: typeof DashboardLayoutCoursesIndexRoute
+  DashboardLayoutDashboardIndexRoute: typeof DashboardLayoutDashboardIndexRoute
+  DashboardLayoutEnrollmentsIndexRoute: typeof DashboardLayoutEnrollmentsIndexRoute
   DashboardLayoutInviteCodesIndexRoute: typeof DashboardLayoutInviteCodesIndexRoute
   DashboardLayoutResourcesIndexRoute: typeof DashboardLayoutResourcesIndexRoute
   DashboardLayoutUsersIndexRoute: typeof DashboardLayoutUsersIndexRoute
@@ -551,19 +556,21 @@ interface DashboardLayoutRouteChildren {
 }
 
 const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
-  DashboardLayoutActivityRoute: DashboardLayoutActivityRoute,
-  DashboardLayoutAppSettingsRoute: DashboardLayoutAppSettingsRoute,
   DashboardLayoutBroadcastRoute: DashboardLayoutBroadcastRoute,
-  DashboardLayoutChannelsRoute: DashboardLayoutChannelsRoute,
-  DashboardLayoutDashboardRoute: DashboardLayoutDashboardRoute,
-  DashboardLayoutSettingsRoute: DashboardLayoutSettingsRoute,
   DashboardLayoutArticlesIdRoute: DashboardLayoutArticlesIdRoute,
   DashboardLayoutArticlesNewRoute: DashboardLayoutArticlesNewRoute,
+  DashboardLayoutChannelsIdRoute: DashboardLayoutChannelsIdRoute,
   DashboardLayoutCoursesNewRoute: DashboardLayoutCoursesNewRoute,
+  DashboardLayoutInviteCodesIdRoute: DashboardLayoutInviteCodesIdRoute,
   DashboardLayoutInviteCodesNewRoute: DashboardLayoutInviteCodesNewRoute,
   DashboardLayoutUsersIdRoute: DashboardLayoutUsersIdRoute,
+  DashboardLayoutActivityIndexRoute: DashboardLayoutActivityIndexRoute,
+  DashboardLayoutAppSettingsIndexRoute: DashboardLayoutAppSettingsIndexRoute,
   DashboardLayoutArticlesIndexRoute: DashboardLayoutArticlesIndexRoute,
+  DashboardLayoutChannelsIndexRoute: DashboardLayoutChannelsIndexRoute,
   DashboardLayoutCoursesIndexRoute: DashboardLayoutCoursesIndexRoute,
+  DashboardLayoutDashboardIndexRoute: DashboardLayoutDashboardIndexRoute,
+  DashboardLayoutEnrollmentsIndexRoute: DashboardLayoutEnrollmentsIndexRoute,
   DashboardLayoutInviteCodesIndexRoute: DashboardLayoutInviteCodesIndexRoute,
   DashboardLayoutResourcesIndexRoute: DashboardLayoutResourcesIndexRoute,
   DashboardLayoutUsersIndexRoute: DashboardLayoutUsersIndexRoute,
@@ -583,8 +590,6 @@ const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
-  GithubCallbackRoute: GithubCallbackRoute,
-  GoogleCallbackRoute: GoogleCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

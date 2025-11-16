@@ -1,11 +1,11 @@
 import { Button } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { METADATA } from "../../constants/metadata";
-import { useAccount } from "../../features/auth/hooks/useAccount";
-import { CreateResourceDialog } from "../../features/resources/components/createResourceDialog";
-import { ResourcesList } from "../../features/resources/components/resourcesList";
-import { useResourceCreation } from "../../features/resources/hooks/useResourceCreation";
-import { useResources } from "../../features/resources/hooks/useResources";
+import { METADATA } from "../../../constants/metadata";
+import { useAccount } from "../../../features/auth/hooks/useAccount";
+import { CreateResourceDialog } from "../../../features/resources/components/createResourceDialog";
+import { ResourcesList } from "../../../features/resources/components/resourcesList";
+import { useResourceCreation } from "../../../features/resources/hooks/useResourceCreation";
+import { useResources } from "../../../features/resources/hooks/useResources";
 
 export const Route = createFileRoute("/_dashboardLayout/resources/")({
 	head: () => ({

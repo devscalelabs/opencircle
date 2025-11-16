@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Query
-from sqlmodel import Session, func, select
+from sqlmodel import Session, desc, func, select
 
 from src.database.engine import get_session
 from src.database.models import User, UserPresence
@@ -14,22 +14,26 @@ async def get_presence_stats(
     session: Session = Depends(get_session),
 ):
     """
-    Get overall presence statistics
+    Get overall presence statistics (filters out stale connections)
     """
+    # Filter for recent activity to avoid counting stale connections
+    stale_cutoff = datetime.now(timezone.utc) - timedelta(minutes=30)
+
     # Total sessions
     total_sessions = session.exec(select(func.count(UserPresence.id))).one()
 
-    # Active sessions (not disconnected yet)
+    # Active sessions (not disconnected yet and not stale)
     active_sessions = session.exec(
         select(func.count(UserPresence.id)).where(
-            UserPresence.disconnected_at.is_(None)
+            UserPresence.disconnected_at.is_(None),  # type: ignore - Fine, ty issue.
+            UserPresence.updated_at >= stale_cutoff,
         )
     ).one()
 
     # Average session duration
     avg_duration = session.exec(
         select(func.avg(UserPresence.duration_seconds)).where(
-            UserPresence.duration_seconds.is_not(None)
+            UserPresence.duration_seconds.is_not(None),  # type: ignore - Fine, ty issue.
         )
     ).one()
 
@@ -58,7 +62,7 @@ async def get_user_presence(
     statement = (
         select(UserPresence)
         .where(UserPresence.user_id == user_id)
-        .order_by(UserPresence.connected_at.desc())
+        .order_by(desc(UserPresence.connected_at))
         .limit(limit)
     )
     presences = session.exec(statement).all()
@@ -165,17 +169,57 @@ async def get_presence_timeseries(
     }
 
 
+@router.post("/cleanup")
+async def cleanup_stale_presence(
+    session: Session = Depends(get_session),
+):
+    """
+    Clean up stale presence records (connections older than 1 hour without disconnect)
+    """
+    stale_cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
+
+    # Find stale connections (no disconnect time and older than 1 hour)
+    stale_statement = select(UserPresence).where(
+        UserPresence.disconnected_at.is_(None),  # type: ignore - Fine ty issue.
+        UserPresence.updated_at < stale_cutoff,
+    )
+    stale_records = session.exec(stale_statement).all()
+
+    # Mark them as disconnected
+    for record in stale_records:
+        record.disconnected_at = stale_cutoff.isoformat()
+        record.duration_seconds = (
+            datetime.fromisoformat(record.disconnected_at.replace("Z", "+00:00"))
+            - datetime.fromisoformat(record.connected_at.replace("Z", "+00:00"))
+        ).total_seconds()
+        session.add(record)
+
+    session.commit()
+
+    return {
+        "cleaned_up": len(stale_records),
+        "message": f"Cleaned up {len(stale_records)} stale presence records",
+    }
+
+
 @router.get("/active-now")
 async def get_active_users_now(
     session: Session = Depends(get_session),
 ):
     """
-    Get currently active users (connections without disconnect time)
+    Get currently active users (connections without disconnect time, filtered for recent activity)
     """
+    # Filter for connections that are either very recent (within last 5 minutes)
+    # or have been updated recently (within last 30 minutes)
+    cutoff_time = datetime.now(timezone.utc) - timedelta(minutes=30)
+
     statement = (
         select(UserPresence, User)
         .join(User, UserPresence.user_id == User.id)
-        .where(UserPresence.disconnected_at.is_(None))
+        .where(
+            UserPresence.disconnected_at.is_(None),  # type: ignore - Fine ty issue.
+            UserPresence.updated_at >= cutoff_time,
+        )
     )
     results = session.exec(statement).all()
 
@@ -188,13 +232,14 @@ async def get_active_users_now(
                 "name": user.name,
                 "connection_id": presence.connection_id,
                 "connected_at": presence.connected_at,
-                "duration_seconds": (
+                "duration_seconds": max(
+                    0,
                     (
                         datetime.now(timezone.utc)
                         - datetime.fromisoformat(
                             presence.connected_at.replace("Z", "+00:00")
                         )
-                    ).total_seconds()
+                    ).total_seconds(),
                 ),
             }
             for presence, user in results
