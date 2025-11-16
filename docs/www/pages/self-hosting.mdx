@@ -23,9 +23,44 @@ Access your applications:
 - **Admin Dashboard**: http://localhost:4000
 - **API**: http://localhost:8000
 
+## Install Docker
+
+### macOS
+```bash
+# Install Docker Desktop using Homebrew
+brew install --cask docker
+
+# Or download from https://docker.com/products/docker-desktop
+```
+
+### Ubuntu/Debian
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Add your user to the docker group
+sudo usermod -aG docker $USER
+
+# Install Docker Compose
+sudo apt-get update
+sudo apt-get install docker-compose-plugin
+
+# Log out and back in for group changes to take effect
+```
+
+### Windows
+Download and install Docker Desktop from [docker.com](https://docker.com/products/docker-desktop)
+
+### Verify Installation
+```bash
+docker --version
+docker compose version
+```
+
 ## Prerequisites
 
-- Docker and Docker Compose installed
+- Docker and Docker Compose installed (see installation guide above)
 - At least 2GB RAM available
 - 10GB free disk space
 

@@ -1,6 +1,7 @@
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 from sqlmodel import Session
 
@@ -82,15 +83,37 @@ def get_account(
 
     # Create user settings if they don't exist (for existing users)
     if not user_with_data.user_settings:
-        user_settings = UserSettings(user_id=user_with_data.id, is_onboarded=False)
-        db.add(user_settings)
-        db.commit()
+        try:
+            user_settings = UserSettings(user_id=user_with_data.id, is_onboarded=False)
+            db.add(user_settings)
+            db.commit()
+        except IntegrityError:
+            # Handle race condition - another request already created the settings
+            db.rollback()
+            # Re-load the user to get the newly created settings
+            user_with_data = (
+                db.query(User)
+                .options(joinedload(User.user_settings), joinedload(User.user_social))
+                .filter(User.id == current_user.id)
+                .first()
+            )
 
     # Create user social if they don't exist (for existing users)
     if not user_with_data.user_social:
-        user_social = UserSocial(user_id=user_with_data.id)
-        db.add(user_social)
-        db.commit()
+        try:
+            user_social = UserSocial(user_id=user_with_data.id)
+            db.add(user_social)
+            db.commit()
+        except IntegrityError:
+            # Handle race condition - another request already created the social data
+            db.rollback()
+            # Re-load the user to get the newly created social data
+            user_with_data = (
+                db.query(User)
+                .options(joinedload(User.user_settings), joinedload(User.user_social))
+                .filter(User.id == current_user.id)
+                .first()
+            )
 
     # Refresh to get the newly created relationships
     db.refresh(user_with_data)
