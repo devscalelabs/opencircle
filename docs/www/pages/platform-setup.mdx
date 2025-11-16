@@ -1,0 +1,60 @@
+---
+title: Platform Setup
+---
+
+Once you've deployed OpenCircle using Docker, follow these steps to set up your platform and get started.
+
+## Access the Admin Panel
+
+1. Navigate to your admin dashboard: **http://localhost:4000** (or your configured `ADMIN_URL`)
+2. Log in with your admin credentials
+
+## Create Your First Channel
+
+Channels are the foundation of community interaction in OpenCircle. Follow these steps:
+
+1. Go to **Community Management** → **Channels**
+2. Click **Create Channel**
+3. Fill in the channel details:
+   - **Name**: Give your channel a descriptive name (e.g., "General", "Announcements")
+   - **Description**: Add a brief description of the channel's purpose
+   - **Visibility**: Choose between public or private
+4. Click **Save** to create the channel
+
+## Configure Additional Channels (Optional)
+
+Create additional channels for different purposes:
+
+- **General**: For general discussions
+- **Announcements**: For important updates
+- **Support**: For user support queries
+- **Random**: For off-topic conversations
+
+## Access the Platform
+
+1. Navigate to your platform: **http://localhost:3000** (or your configured `PLATFORM_URL`)
+2. Users can now sign up or log in
+3. They'll see all public channels available to them
+
+## Next Steps
+
+- **Invite Users**: Use invite codes to bring users into your community (found in Admin → Community Management → Invite Codes)
+- **Create Content**: Add courses, lessons, and articles through the Admin Dashboard
+- **Customize Settings**: Configure app settings, authentication methods, and more in Admin → Core Admin → App Settings
+
+## Troubleshooting
+
+**Can't access admin panel?**
+- Verify all services are running: `docker compose ps`
+- Check if port 4000 is accessible: `curl http://localhost:4000`
+
+**Channels not appearing in platform?**
+- Ensure channels are set to public visibility
+- Refresh the platform page and clear browser cache
+- Check API connectivity: verify `VITE_API_URL` in your `.env`
+
+**Users can't log in?**
+- Verify database is running and accessible
+- Check authentication settings in Admin → Core Admin → Auth
+- Review API logs: `docker compose logs api`
+

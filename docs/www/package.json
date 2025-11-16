@@ -1,0 +1,24 @@
+{
+  "name": "www",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "zudoku dev",
+    "build": "zudoku build",
+    "preview": "zudoku preview",
+    "deploy": "pnpm build && pnpm dlx wrangler deploy"
+  },
+  "dependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0",
+    "wrangler": "^4.47.0",
+    "zudoku": "0.64.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

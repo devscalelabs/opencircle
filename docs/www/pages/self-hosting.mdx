@@ -1,0 +1,135 @@
+---
+title: Self-Hosting
+---
+
+Deploy your own OpenCircle instance with Docker.
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/devscalelabs/opencircle.git
+cd opencircle
+
+# Copy environment template
+cp .env.example .env
+
+# Start all services
+docker compose up -d
+```
+
+Access your applications:
+- **Platform**: http://localhost:3000
+- **Admin Dashboard**: http://localhost:4000
+- **API**: http://localhost:8000
+
+## Prerequisites
+
+- Docker and Docker Compose installed
+- At least 2GB RAM available
+- 10GB free disk space
+
+## Environment Configuration
+
+Edit your `.env` file with these settings:
+
+```bash
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres
+DB_URL="postgresql://opencircle:opencircle@localhost:5432/opencircle"
+
+# Redis
+REDIS_URL=redis://localhost:6381
+CELERY_BROKER_URL=redis://localhost:6381
+CELERY_RESULT_BACKEND=redis://localhost:6381
+
+# Platform URLs
+PLATFORM_URL=http://localhost:3000/
+ADMIN_URL=http://localhost:4000/
+VITE_API_URL=http://localhost:8000/
+
+# GitHub OAuth
+GITHUB_CLIENT_ID=your_client_id
+GITHUB_CLIENT_SECRET=your_client_secret
+GITHUB_REDIRECT_URI=http://localhost:3000/github-callback/
+
+# Cloudflare R2 (for media storage)
+R2_ENDPOINT_URL=your_r2_endpoint
+R2_ACCESS_KEY_ID=your_access_key
+R2_SECRET_ACCESS_KEY=your_secret_key
+R2_BUCKET_NAME=opencircle
+R2_PUBLIC_URL=your_public_url
+
+# Email notifications (Resend)
+RESEND_API_KEY=your_resend_key
+
+# Google OAuth (optional)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI="http://localhost:8000/api/v1/auth/google/callback"
+```
+
+## Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **Platform** | 3000 | Main application |
+| **Admin** | 4000 | Admin dashboard |
+| **API** | 8000 | Backend server |
+| **PostgreSQL** | - | Database (internal) |
+| **Redis** | - | Cache (internal) |
+| **Celery** | - | Background tasks (internal) |
+
+## Production Deployment
+
+### Domain Setup
+Update your URLs for production:
+```bash
+PLATFORM_URL=https://yourdomain.com
+ADMIN_URL=https://admin.yourdomain.com
+GITHUB_REDIRECT_URI=https://yourdomain.com/github-callback/
+```
+
+### SSL/TLS with Nginx
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name yourdomain.com;
+    
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+### Security Checklist
+- Change all default passwords
+- Enable firewall rules
+- Set up regular backups
+- Use strong, unique secrets
+
+## Logs and Updates
+
+View logs:
+```bash
+docker compose logs -f
+docker compose logs -f api
+```
+
+Update services:
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Backup database:
+```bash
+docker exec opencircle-postgres pg_dump -U postgres opencircle > backup.sql
+```

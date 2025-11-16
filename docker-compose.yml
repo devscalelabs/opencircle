@@ -131,7 +131,7 @@ services:
     image: ghcr.io/devscalelabs/opencircle-admin:latest
     container_name: opencircle-admin
     ports:
-      - "3001:80"
+      - "4000:80"
     restart: unless-stopped
     networks:
       - opencircle-network
