@@ -418,6 +418,13 @@ class AppSettings(BaseModel, table=True):
     enable_opencircle_branding: bool = Field(default=True)
 
 
+class AppLink(BaseModel, table=True):
+    __tablename__ = "app_links"
+
+    label: str = Field(default="OpenCircle")
+    url: str = Field(index=True)
+
+
 class UserPresence(BaseModel, table=True):
     __tablename__ = "user_presence"
 

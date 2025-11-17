@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Bell, List, Paperclip, Video } from "lucide-react";
+import { useAppLinks } from "../features/appLinks/hooks/useAppLinks";
 import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { ChannelList } from "../features/channels/components/channelList";
 import { NotificationNumbers } from "../features/notifications/components/notificationNumbers";
@@ -8,6 +9,7 @@ import { MenuItem } from "./menuItem";
 
 export const LeftSidebar = () => {
 	const { appSettings } = useAppSettings();
+	const { appLinks } = useAppLinks();
 
 	return (
 		<div className="sticky top-0 flex h-screen flex-col justify-between py-4 pr-4">
@@ -42,24 +44,17 @@ export const LeftSidebar = () => {
 			</div>
 			<div>
 				<section className="flex flex-wrap space-x-4 space-y-2 px-4 py-2 font-semibold text-xs">
-					<a
-						href="https://devscale.id"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="transition duration-150 hover:text-primary"
-					>
-						devscale.id
-					</a>
-					<a
-						href="https://devscale.id/programs"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="transition duration-150 hover:text-primary"
-					>
-						programs
-					</a>
-					<span className="text-foreground/50">help</span>
-					<span className="text-foreground/50">contact</span>
+					{appLinks?.map((appLink) => (
+						<a
+							key={appLink.id}
+							href={appLink.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="transition duration-150 hover:text-primary"
+						>
+							{appLink.label}
+						</a>
+					))}
 				</section>
 				{appSettings?.enable_opencircle_branding && (
 					<div className="space-y-5 rounded-lg border border-border bg-linear-210 from-background-secondary to-40% to-transparent p-4 font-medium text-sm tracking-tight">
