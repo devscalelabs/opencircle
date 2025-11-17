@@ -6,6 +6,7 @@ on:
     paths:
       - "package.json"
   workflow_dispatch:
+  # Allow manual trigger for testing
 
 permissions:
   contents: write
@@ -25,22 +26,58 @@ jobs:
       - name: Check version change
         id: version_check
         run: |
+          # Debug information
+          echo "=== DEBUG INFO ==="
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+
           # Get current version from package.json
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Current version: $CURRENT_VERSION"
 
           # Get previous version from git history
-          git fetch origin main
-          PREVIOUS_VERSION=$(git show origin/main:package.json | node -p "JSON.parse(require('fs').readFileSync(0)).version")
-          echo "Previous version: $PREVIOUS_VERSION"
+          echo "=== FETCHING GIT HISTORY ==="
+          git fetch origin main || echo "No remote main branch yet"
+
+          # Debug git status
+          echo "=== GIT STATUS ==="
+          git log --oneline -5 || echo "No git history available"
+
+          # Try to get previous version from git history
+          PREVIOUS_VERSION=""
+          echo "=== CHECKING PREVIOUS PACKAGE.JSON ==="
+          if git show origin/main:package.json >/dev/null 2>&1; then
+            PREVIOUS_VERSION=$(git show origin/main:package.json | node -p "JSON.parse(require('fs').readFileSync(0)).version")
+            echo "Previous version: $PREVIOUS_VERSION"
+          else
+            echo "No previous version found in git history"
+            # Check if this is the first commit by looking for existing tags
+            echo "=== CHECKING EXISTING TAGS ==="
+            if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+              # There are existing tags, so this is not the first release
+              echo "Found existing tags, but no previous package.json version"
+              echo "changed=false" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "No existing tags found - this might be the first release"
+              # For first release, we'll create a tag if there are no tags at all
+              PREVIOUS_VERSION=""
+            fi
+          fi
 
           # Compare versions
-          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
-            echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+          echo "=== VERSION COMPARISON ==="
+          if [ -z "$PREVIOUS_VERSION" ] || [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            if [ -n "$PREVIOUS_VERSION" ]; then
+              echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+            else
+              echo "Creating first release with version $CURRENT_VERSION"
+            fi
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           else
-            echo "Version unchanged"
+            echo "Version unchanged ($CURRENT_VERSION)"
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
@@ -49,6 +86,11 @@ jobs:
     if: needs.check-version.outputs.version_changed == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Debug outputs
+        run: |
+          echo "Version changed: ${{ needs.check-version.outputs.version_changed }}"
+          echo "New version: ${{ needs.check-version.outputs.new_version }}"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -93,10 +135,20 @@ jobs:
       - name: Create Git Tag
         run: |
           VERSION="${{ needs.check-version.outputs.new_version }}"
+          echo "Creating tag for version: v$VERSION"
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v$VERSION" -m "Release version $VERSION"
-          git push origin "v$VERSION"
+
+          # Check if tag already exists
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists, skipping tag creation"
+          else
+            echo "Creating tag v$VERSION"
+            git tag -a "v$VERSION" -m "Release version $VERSION"
+            echo "Pushing tag to origin"
+            git push origin "v$VERSION" || echo "Failed to push tag - this might be expected in some cases"
+          fi
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
