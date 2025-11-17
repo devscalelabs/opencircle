@@ -182,24 +182,30 @@ function RouteComponent() {
 					</section>
 					<section className="h-0.25 bg-foreground/10" />
 					<section className="space-y-4">
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGitHub}
-							disabled={isCallbackLoading || !isRegistrationEnabled}
-						>
-							{isCallbackLoading ? "Loading..." : "Continue with Github"}
-						</Button>
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGoogle}
-							disabled={isGoogleCallbackLoading || !isRegistrationEnabled}
-						>
-							{isGoogleCallbackLoading ? "Loading..." : "Continue with Google"}
-						</Button>
+						{appSettings?.oauth_github_enabled && (
+							<Button
+								radius="xl"
+								variant="secondary"
+								className="w-full"
+								onClick={loginWithGitHub}
+								disabled={isCallbackLoading || !isRegistrationEnabled}
+							>
+								{isCallbackLoading ? "Loading..." : "Continue with Github"}
+							</Button>
+						)}
+						{appSettings?.oauth_google_enabled && (
+							<Button
+								radius="xl"
+								variant="secondary"
+								className="w-full"
+								onClick={loginWithGoogle}
+								disabled={isGoogleCallbackLoading || !isRegistrationEnabled}
+							>
+								{isGoogleCallbackLoading
+									? "Loading..."
+									: "Continue with Google"}
+							</Button>
+						)}
 					</section>
 					<section className="px-4 text-center">
 						<p className="text-sm">

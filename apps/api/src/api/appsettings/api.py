@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlmodel import Session
 
+from src.core.settings import settings
 from src.database.engine import get_session
 from src.modules.appsettings import appsettings_methods
 from src.modules.storages.storage_methods import upload_file
@@ -12,19 +13,57 @@ router = APIRouter()
 @router.get("/")
 async def get_app_settings(db: Session = Depends(get_session)):
     """Get the current app settings."""
-    settings = appsettings_methods.get_active_app_settings(db)
-    if not settings:
+    app_settings = appsettings_methods.get_active_app_settings(db)
+    if not app_settings:
         raise HTTPException(status_code=404, detail="App settings not found")
-    return settings
+
+    # Add OAuth configuration status
+    oauth_status = {
+        "oauth_github_enabled": bool(
+            settings.GITHUB_CLIENT_ID and settings.GITHUB_CLIENT_SECRET
+        ),
+        "oauth_google_enabled": bool(
+            settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET
+        ),
+    }
+
+    # Merge with existing settings
+    settings_dict = app_settings.model_dump()
+    settings_dict.update(oauth_status)
+
+    return settings_dict
 
 
 @router.put("/")
 async def update_app_settings(settings_data: dict, db: Session = Depends(get_session)):
     """Update the app settings."""
-    settings = appsettings_methods.update_app_settings(db, settings_data)
-    if not settings:
+    # Remove OAuth status fields from update data since they are read-only
+    # (derived from environment settings)
+    update_data = {
+        k: v
+        for k, v in settings_data.items()
+        if k not in ["oauth_github_enabled", "oauth_google_enabled"]
+    }
+
+    app_settings = appsettings_methods.update_app_settings(db, update_data)
+    if not app_settings:
         raise HTTPException(status_code=404, detail="App settings not found")
-    return settings
+
+    # Add OAuth configuration status to response
+    oauth_status = {
+        "oauth_github_enabled": bool(
+            settings.GITHUB_CLIENT_ID and settings.GITHUB_CLIENT_SECRET
+        ),
+        "oauth_google_enabled": bool(
+            settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET
+        ),
+    }
+
+    # Merge with updated settings
+    settings_dict = app_settings.model_dump()
+    settings_dict.update(oauth_status)
+
+    return settings_dict
 
 
 @router.post("/upload-logo")
@@ -37,11 +76,27 @@ async def upload_logo(file: UploadFile = File(...), db: Session = Depends(get_se
     logo_url = upload_file(file)
 
     # Update app settings with the new logo URL
-    settings = appsettings_methods.update_app_settings(db, {"app_logo_url": logo_url})
-    if not settings:
+    app_settings = appsettings_methods.update_app_settings(
+        db, {"app_logo_url": logo_url}
+    )
+    if not app_settings:
         raise HTTPException(status_code=404, detail="App settings not found")
 
-    return settings
+    # Add OAuth configuration status to response
+    oauth_status = {
+        "oauth_github_enabled": bool(
+            settings.GITHUB_CLIENT_ID and settings.GITHUB_CLIENT_SECRET
+        ),
+        "oauth_google_enabled": bool(
+            settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET
+        ),
+    }
+
+    # Merge with updated settings
+    settings_dict = app_settings.model_dump()
+    settings_dict.update(oauth_status)
+
+    return settings_dict
 
 
 @router.get("/count")

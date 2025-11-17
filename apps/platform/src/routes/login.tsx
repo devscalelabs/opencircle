@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Zap } from "lucide-react";
 import { useId } from "react";
 import { METADATA } from "../constants/metadata";
+import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
 import { useGoogleAuth } from "../features/auth/hooks/useGoogleAuth";
 import { useLogin } from "../features/auth/hooks/useLogin";
@@ -55,6 +56,8 @@ function RouteComponent() {
 	const { loginWithGitHub, isCallbackLoading } = useGitHubAuth();
 	const { loginWithGoogle, isCallbackLoading: isGoogleCallbackLoading } =
 		useGoogleAuth();
+
+	const { appSettings } = useAppSettings();
 
 	return (
 		<main className="m-auto max-w-sm">
@@ -115,24 +118,30 @@ function RouteComponent() {
 					</section>
 					<section className="h-0.25 bg-foreground/10" />
 					<section className="space-y-4">
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGitHub}
-							disabled={isCallbackLoading}
-						>
-							{isCallbackLoading ? "Loading..." : "Continue with Github"}
-						</Button>
-						<Button
-							radius="xl"
-							variant="secondary"
-							className="w-full"
-							onClick={loginWithGoogle}
-							disabled={isGoogleCallbackLoading}
-						>
-							{isGoogleCallbackLoading ? "Loading..." : "Continue with Google"}
-						</Button>
+						{appSettings?.oauth_github_enabled && (
+							<Button
+								radius="xl"
+								variant="secondary"
+								className="w-full"
+								onClick={loginWithGitHub}
+								disabled={isCallbackLoading}
+							>
+								{isCallbackLoading ? "Loading..." : "Continue with Github"}
+							</Button>
+						)}
+						{appSettings?.oauth_google_enabled && (
+							<Button
+								radius="xl"
+								variant="secondary"
+								className="w-full"
+								onClick={loginWithGoogle}
+								disabled={isGoogleCallbackLoading}
+							>
+								{isGoogleCallbackLoading
+									? "Loading..."
+									: "Continue with Google"}
+							</Button>
+						)}
 						<section className="px-4 text-center">
 							<p className="text-sm">
 								Don't have an account?{" "}

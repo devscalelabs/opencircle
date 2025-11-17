@@ -3,6 +3,8 @@ export interface AppSettings {
 	app_name: string;
 	app_logo_url?: string;
 	enable_sign_up: boolean;
+	oauth_github_enabled: boolean;
+	oauth_google_enabled: boolean;
 	created_at: string;
 	updated_at: string;
 }
