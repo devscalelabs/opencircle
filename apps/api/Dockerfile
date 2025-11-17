@@ -29,9 +29,6 @@ RUN uv sync --frozen --no-dev
 # Copy application code
 COPY apps/api/ .
 
-# Copy .env.prod to root for settings to find it
-COPY .env.prod ../../.env
-
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
