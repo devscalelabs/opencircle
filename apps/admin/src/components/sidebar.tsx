@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import {
 	Activity,
 	BookOpen,
+	ExternalLink,
 	FileText,
 	Hash,
 	Key,
@@ -84,6 +85,11 @@ export const Sidebar = () => {
 						icon={<LinkIcon size={20} />}
 						label="Resources"
 						to="/resources"
+					/>
+					<MenuItem
+						icon={<ExternalLink size={20} />}
+						label="App Links"
+						to="/app-links"
 					/>
 					<MenuItem
 						icon={<Settings size={20} />}

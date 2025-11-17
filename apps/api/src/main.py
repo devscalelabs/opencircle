@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
 from src.api.account.api import router as account_router
+from src.api.applinks.api import router as applinks_router
 from src.api.appsettings.api import router as appsettings_router
 from src.api.article.api import router as article_router
 from src.api.auth.api import router as auth_router
@@ -61,7 +62,7 @@ logger = logging.getLogger(__name__)
 
 
 app.add_middleware(
-    CORSMiddleware,
+    CORSMiddleware,  # type: ignore
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -82,6 +83,7 @@ app.include_router(extras_router, prefix="/api", tags=["extras"])
 app.include_router(invite_code_router, prefix="/api", tags=["invite-codes"])
 app.include_router(notifications_router, prefix="/api", tags=["notifications"])
 app.include_router(resources_router, prefix="/api", tags=["resources"])
+app.include_router(applinks_router, prefix="/api", tags=["applinks"])
 app.include_router(appsettings_router, prefix="/api/appsettings", tags=["appsettings"])
 app.include_router(websocket_router, prefix="/api", tags=["websocket"])
 app.include_router(presence_router, prefix="/api/presence", tags=["presence"])

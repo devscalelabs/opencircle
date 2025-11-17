@@ -1,5 +1,6 @@
 import type { Hooks } from "ky";
 import { AccountRouter } from "../services/routers/account";
+import { AppLinksRouter } from "../services/routers/applinks";
 import { AppSettingsRouter } from "../services/routers/appsettings";
 import { ArticlesRouter } from "../services/routers/articles";
 import { AuthRouter } from "../services/routers/auth";
@@ -19,6 +20,7 @@ export class Api {
 	public users: UsersRouter;
 	public auth: AuthRouter;
 	public appSettings: AppSettingsRouter;
+	public appLinks: AppLinksRouter;
 	public channels: ChannelsRouter;
 	public posts: PostsRouter;
 	public media: MediaRouter;
@@ -36,6 +38,7 @@ export class Api {
 		this.users = new UsersRouter(baseUrl, hooks);
 		this.auth = new AuthRouter(baseUrl, hooks);
 		this.appSettings = new AppSettingsRouter(baseUrl, hooks);
+		this.appLinks = new AppLinksRouter(baseUrl, hooks);
 		this.channels = new ChannelsRouter(baseUrl, hooks);
 		this.posts = new PostsRouter(baseUrl, hooks);
 		this.media = new MediaRouter(baseUrl, hooks);
@@ -60,6 +63,9 @@ export function createApi(baseUrl: string, hooks?: Hooks): Api {
 export type {
 	ActiveUser,
 	ActiveUsersResponse,
+	AppLink,
+	AppLinkCreate,
+	AppLinkUpdate,
 	AppSettings,
 	AppSettingsCreate,
 	AppSettingsUpdate,

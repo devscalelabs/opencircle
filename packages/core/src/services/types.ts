@@ -1,5 +1,6 @@
 // Re-export all types from service routers to maintain backward compatibility
 
+export * from "./routers/applinks/types";
 export * from "./routers/appsettings/types";
 export * from "./routers/articles/types";
 export * from "./routers/auth/types";

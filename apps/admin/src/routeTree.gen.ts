@@ -21,6 +21,7 @@ import { Route as DashboardLayoutCoursesIndexRouteImport } from './routes/_dashb
 import { Route as DashboardLayoutChannelsIndexRouteImport } from './routes/_dashboardLayout/channels/index'
 import { Route as DashboardLayoutArticlesIndexRouteImport } from './routes/_dashboardLayout/articles/index'
 import { Route as DashboardLayoutAppSettingsIndexRouteImport } from './routes/_dashboardLayout/app-settings/index'
+import { Route as DashboardLayoutAppLinksIndexRouteImport } from './routes/_dashboardLayout/app-links/index'
 import { Route as DashboardLayoutActivityIndexRouteImport } from './routes/_dashboardLayout/activity/index'
 import { Route as DashboardLayoutUsersIdRouteImport } from './routes/_dashboardLayout/users/$id'
 import { Route as DashboardLayoutInviteCodesNewRouteImport } from './routes/_dashboardLayout/invite-codes/new'
@@ -102,6 +103,12 @@ const DashboardLayoutAppSettingsIndexRoute =
   DashboardLayoutAppSettingsIndexRouteImport.update({
     id: '/app-settings/',
     path: '/app-settings/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardLayoutAppLinksIndexRoute =
+  DashboardLayoutAppLinksIndexRouteImport.update({
+    id: '/app-links/',
+    path: '/app-links/',
     getParentRoute: () => DashboardLayoutRoute,
   } as any)
 const DashboardLayoutActivityIndexRoute =
@@ -193,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/users/$id': typeof DashboardLayoutUsersIdRoute
   '/activity': typeof DashboardLayoutActivityIndexRoute
+  '/app-links': typeof DashboardLayoutAppLinksIndexRoute
   '/app-settings': typeof DashboardLayoutAppSettingsIndexRoute
   '/articles': typeof DashboardLayoutArticlesIndexRoute
   '/channels': typeof DashboardLayoutChannelsIndexRoute
@@ -219,6 +227,7 @@ export interface FileRoutesByTo {
   '/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/users/$id': typeof DashboardLayoutUsersIdRoute
   '/activity': typeof DashboardLayoutActivityIndexRoute
+  '/app-links': typeof DashboardLayoutAppLinksIndexRoute
   '/app-settings': typeof DashboardLayoutAppSettingsIndexRoute
   '/articles': typeof DashboardLayoutArticlesIndexRoute
   '/channels': typeof DashboardLayoutChannelsIndexRoute
@@ -247,6 +256,7 @@ export interface FileRoutesById {
   '/_dashboardLayout/invite-codes/new': typeof DashboardLayoutInviteCodesNewRoute
   '/_dashboardLayout/users/$id': typeof DashboardLayoutUsersIdRoute
   '/_dashboardLayout/activity/': typeof DashboardLayoutActivityIndexRoute
+  '/_dashboardLayout/app-links/': typeof DashboardLayoutAppLinksIndexRoute
   '/_dashboardLayout/app-settings/': typeof DashboardLayoutAppSettingsIndexRoute
   '/_dashboardLayout/articles/': typeof DashboardLayoutArticlesIndexRoute
   '/_dashboardLayout/channels/': typeof DashboardLayoutChannelsIndexRoute
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/invite-codes/new'
     | '/users/$id'
     | '/activity'
+    | '/app-links'
     | '/app-settings'
     | '/articles'
     | '/channels'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/invite-codes/new'
     | '/users/$id'
     | '/activity'
+    | '/app-links'
     | '/app-settings'
     | '/articles'
     | '/channels'
@@ -328,6 +340,7 @@ export interface FileRouteTypes {
     | '/_dashboardLayout/invite-codes/new'
     | '/_dashboardLayout/users/$id'
     | '/_dashboardLayout/activity/'
+    | '/_dashboardLayout/app-links/'
     | '/_dashboardLayout/app-settings/'
     | '/_dashboardLayout/articles/'
     | '/_dashboardLayout/channels/'
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLayoutAppSettingsIndexRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
+    '/_dashboardLayout/app-links/': {
+      id: '/_dashboardLayout/app-links/'
+      path: '/app-links'
+      fullPath: '/app-links'
+      preLoaderRoute: typeof DashboardLayoutAppLinksIndexRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboardLayout/activity/': {
       id: '/_dashboardLayout/activity/'
       path: '/activity'
@@ -539,6 +559,7 @@ interface DashboardLayoutRouteChildren {
   DashboardLayoutInviteCodesNewRoute: typeof DashboardLayoutInviteCodesNewRoute
   DashboardLayoutUsersIdRoute: typeof DashboardLayoutUsersIdRoute
   DashboardLayoutActivityIndexRoute: typeof DashboardLayoutActivityIndexRoute
+  DashboardLayoutAppLinksIndexRoute: typeof DashboardLayoutAppLinksIndexRoute
   DashboardLayoutAppSettingsIndexRoute: typeof DashboardLayoutAppSettingsIndexRoute
   DashboardLayoutArticlesIndexRoute: typeof DashboardLayoutArticlesIndexRoute
   DashboardLayoutChannelsIndexRoute: typeof DashboardLayoutChannelsIndexRoute
@@ -565,6 +586,7 @@ const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
   DashboardLayoutInviteCodesNewRoute: DashboardLayoutInviteCodesNewRoute,
   DashboardLayoutUsersIdRoute: DashboardLayoutUsersIdRoute,
   DashboardLayoutActivityIndexRoute: DashboardLayoutActivityIndexRoute,
+  DashboardLayoutAppLinksIndexRoute: DashboardLayoutAppLinksIndexRoute,
   DashboardLayoutAppSettingsIndexRoute: DashboardLayoutAppSettingsIndexRoute,
   DashboardLayoutArticlesIndexRoute: DashboardLayoutArticlesIndexRoute,
   DashboardLayoutChannelsIndexRoute: DashboardLayoutChannelsIndexRoute,

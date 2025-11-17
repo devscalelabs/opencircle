@@ -1,7 +1,7 @@
 import { Button, Input } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Zap } from "lucide-react";
 import { useId } from "react";
+import { Brand } from "../components/brand";
 import { METADATA } from "../constants/metadata";
 import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { useGitHubAuth } from "../features/auth/hooks/useGitHubAuth";
@@ -73,12 +73,7 @@ function RouteComponent() {
 		<main className="m-auto max-w-sm">
 			<div className="flex h-screen flex-col justify-center gap-10">
 				<section className="space-y-8 text-center">
-					<section className="ml-2 flex items-center justify-center gap-2">
-						<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
-							<Zap size={12} fill="currentColor" />
-						</div>
-						<h2 className="font-medium">Opencircle</h2>
-					</section>
+					<Brand as="section" className="ml-2 justify-center" />
 					<div className="space-y-2">
 						<h1 className="font-medium text-2xl">Join OpenCircle</h1>
 						<p className="text-foreground/50">Create your account</p>

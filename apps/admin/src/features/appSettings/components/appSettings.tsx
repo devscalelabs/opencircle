@@ -18,6 +18,7 @@ export function AppSettings() {
 		app_name: "",
 		app_logo_url: "",
 		enable_sign_up: true,
+		enable_opencircle_branding: true,
 	});
 	const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
@@ -25,6 +26,7 @@ export function AppSettings() {
 	const appNameId = useId();
 	const logoUploadId = useId();
 	const enableSignUpId = useId();
+	const enableOpencircleBrandingId = useId();
 	const appLogoId = useId();
 
 	useEffect(() => {
@@ -33,6 +35,7 @@ export function AppSettings() {
 				app_name: appSettings.app_name,
 				app_logo_url: appSettings.app_logo_url || "",
 				enable_sign_up: appSettings.enable_sign_up,
+				enable_opencircle_branding: appSettings.enable_opencircle_branding,
 			});
 		}
 	}, [appSettings]);
@@ -53,6 +56,7 @@ export function AppSettings() {
 				app_name: formData.app_name,
 				app_logo_url: formData.app_logo_url || null,
 				enable_sign_up: formData.enable_sign_up,
+				enable_opencircle_branding: formData.enable_opencircle_branding,
 			};
 
 			updateAppSettings(updateData, {
@@ -188,6 +192,27 @@ export function AppSettings() {
 						/>
 						<label htmlFor="enable_sign_up" className="font-medium text-sm">
 							Enable user registration
+						</label>
+					</div>
+
+					<div className="flex items-center space-x-2">
+						<input
+							type="checkbox"
+							id={enableOpencircleBrandingId}
+							checked={formData.enable_opencircle_branding}
+							onChange={(e) =>
+								handleInputChange(
+									"enable_opencircle_branding",
+									e.target.checked,
+								)
+							}
+							className="rounded"
+						/>
+						<label
+							htmlFor={enableOpencircleBrandingId}
+							className="font-medium text-sm"
+						>
+							Enable OpenCircle branding
 						</label>
 					</div>
 
