@@ -11,7 +11,7 @@ import { UrlPreview } from "../../extras/components/urlPreview";
 import { MediaGallery } from "../../media/components/media";
 import { usePostDelete } from "../hooks/usePostDelete";
 import { usePostUpdate } from "../hooks/usePostUpdate";
-import { renderContent } from "../utils/contentRendering";
+import { renderTruncatedContent } from "../utils/contentRendering";
 import { PostCardReactions } from "./postCardReactions";
 import { PostCommentSummary } from "./postCommentSummary";
 
@@ -153,7 +153,9 @@ export const PostCard = ({ post }: PostCardProps) => {
 							}
 						>
 							<p className="whitespace-pre-line">
-								{renderContent(post.content)}
+								{renderTruncatedContent(post.content, 300, () =>
+									navigate({ to: "/posts/$id", params: { id: post.id } }),
+								)}
 							</p>
 							<UrlPreview content={post.content} />
 						</div>

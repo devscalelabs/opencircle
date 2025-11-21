@@ -11,6 +11,12 @@ export const MediaGallery = ({ media }: MediaGalleryProps) => {
 
 	if (media.length === 0) return null;
 
+	// Determine grid layout based on media count
+	const getGridClass = () => {
+		if (media.length === 1) return "grid-cols-1";
+		return "grid-cols-2";
+	};
+
 	return (
 		<>
 			<Dialog
@@ -25,12 +31,13 @@ export const MediaGallery = ({ media }: MediaGalleryProps) => {
 					/>
 				</DialogContent>
 			</Dialog>
-			<section className="grid grid-cols-2 gap-2">
-				{media.map((mediaItem) => (
+			<section className={`grid ${getGridClass()} gap-2`}>
+				{media.map((mediaItem, index) => (
 					<button
 						key={mediaItem.id}
 						type="button"
 						onClick={() => setShowedMediaUrl(mediaItem.url)}
+						className={media.length === 3 && index === 0 ? "col-span-2" : ""}
 					>
 						<img
 							src={mediaItem.url}
