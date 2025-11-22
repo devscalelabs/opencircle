@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { useBanUser } from "../../../features/user/hooks/useBanUser";
 import { useDeleteUser } from "../../../features/user/hooks/useDeleteUser";
+import { usePromoteToAdmin } from "../../../features/user/hooks/usePromoteToAdmin";
 import { useUnbanUser } from "../../../features/user/hooks/useUnbanUser";
 import { useUser } from "../../../features/user/hooks/useUser";
 
@@ -28,9 +29,11 @@ function RouteComponent() {
 	const { banUser, isBanning } = useBanUser();
 	const { unbanUser, isUnbanning } = useUnbanUser();
 	const { deleteUser, isDeleting } = useDeleteUser();
+	const { promoteToAdmin, isPromoting } = usePromoteToAdmin();
 	const [showBanConfirm, setShowBanConfirm] = useState(false);
 	const [showUnbanConfirm, setShowUnbanConfirm] = useState(false);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [showPromoteConfirm, setShowPromoteConfirm] = useState(false);
 
 	if (isUserLoading) {
 		return <div>Loading...</div>;
@@ -51,6 +54,16 @@ function RouteComponent() {
 					</Button>
 				</Link>
 				<div className="flex gap-2">
+					{user.role !== "admin" && (
+						<Button
+							variant="primary"
+							onClick={() => setShowPromoteConfirm(true)}
+							disabled={isPromoting}
+						>
+							<Shield size={16} className="mr-2" />
+							{isPromoting ? "Promoting..." : "Raise to Admin"}
+						</Button>
+					)}
 					{user.is_active ? (
 						<Button
 							variant="destructive"
@@ -306,6 +319,45 @@ function RouteComponent() {
 								disabled={isDeleting}
 							>
 								{isDeleting ? "Deleting..." : "Delete User"}
+							</Button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* Promote to Admin Confirmation Dialog */}
+			{showPromoteConfirm && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
+						<h3 className="mb-4 font-semibold text-lg">Promote to Admin</h3>
+						<p className="mb-6 text-foreground/80 text-sm">
+							Are you sure you want to promote{" "}
+							<span className="font-semibold">
+								{user.name || user.username}
+							</span>{" "}
+							to admin? This will grant them full administrative privileges
+							including access to the admin dashboard and all management
+							features.
+						</p>
+						<div className="flex justify-end gap-3">
+							<Button
+								variant="secondary"
+								onClick={() => setShowPromoteConfirm(false)}
+								disabled={isPromoting}
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={() => {
+									promoteToAdmin(id, {
+										onSuccess: () => {
+											setShowPromoteConfirm(false);
+										},
+									});
+								}}
+								disabled={isPromoting}
+							>
+								{isPromoting ? "Promoting..." : "Promote to Admin"}
 							</Button>
 						</div>
 					</div>

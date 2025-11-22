@@ -54,7 +54,9 @@ def get_all_channels(
 ) -> List[Channel]:
     """Get all channels with pagination - all public and private channels."""
     # Get all channels (public and private) with pagination, ordered by type (public first, then private)
-    statement = select(Channel).order_by(asc(Channel.type)).offset(skip).limit(limit)
+    statement = (
+        select(Channel).order_by(asc(Channel.created_at)).offset(skip).limit(limit)
+    )
     return list(db.exec(statement).all())
 
 
