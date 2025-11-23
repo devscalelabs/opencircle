@@ -10,10 +10,12 @@ import {
 	Users,
 	Zap,
 } from "lucide-react";
+import { useId } from "react";
 import {
+	Area,
+	AreaChart,
+	CartesianGrid,
 	Legend,
-	Line,
-	LineChart,
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
@@ -45,6 +47,8 @@ export const Route = createFileRoute("/_dashboardLayout/dashboard/")({
 });
 
 function RouteComponent() {
+	const usersGradientId = useId();
+	const sessionsGradientId = useId();
 	// Fetch key platform data
 	const { data: dashboardStats, isLoading: statsLoading } = useQuery({
 		queryKey: ["dashboard-stats"],
@@ -236,26 +240,71 @@ function RouteComponent() {
 				</div>
 				{chartData.length > 0 ? (
 					<ResponsiveContainer width="100%" height={300}>
-						<LineChart data={chartData}>
-							<XAxis dataKey="date" />
-							<YAxis />
-							<Tooltip />
+						<AreaChart
+							data={chartData}
+							margin={{ top: 8, right: 12, bottom: 8, left: 0 }}
+						>
+							<defs>
+								<linearGradient
+									id={usersGradientId}
+									x1="0"
+									y1="0"
+									x2="0"
+									y2="1"
+								>
+									<stop offset="0%" stopColor="#6366f1" stopOpacity={0.25} />
+									<stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+								</linearGradient>
+								<linearGradient
+									id={sessionsGradientId}
+									x1="0"
+									y1="0"
+									x2="0"
+									y2="1"
+								>
+									<stop offset="0%" stopColor="#818cf8" stopOpacity={0.25} />
+									<stop offset="100%" stopColor="#818cf8" stopOpacity={0} />
+								</linearGradient>
+							</defs>
+							<CartesianGrid
+								stroke="currentColor"
+								strokeOpacity={0.08}
+								vertical={false}
+							/>
+							<XAxis dataKey="date" tickLine={false} axisLine={false} />
+							<YAxis tickLine={false} axisLine={false} />
+							<Tooltip
+								cursor={{ stroke: "#4b5563", strokeDasharray: "3 3" }}
+								contentStyle={{
+									backgroundColor: "var(--background)",
+									border: "1px solid var(--border)",
+									borderRadius: 8,
+								}}
+								labelStyle={{ color: "var(--foreground)" }}
+								itemStyle={{ color: "var(--foreground)" }}
+							/>
 							<Legend />
-							<Line
-								type="monotone"
+							<Area
+								type="linear"
 								dataKey="users"
 								name="Unique Users"
-								stroke="#3b82f6"
+								stroke="#6366f1"
 								strokeWidth={2}
+								fill={`url(#${usersGradientId})`}
+								dot={false}
+								activeDot={{ r: 4 }}
 							/>
-							<Line
-								type="monotone"
+							<Area
+								type="linear"
 								dataKey="sessions"
 								name="Sessions"
-								stroke="#10b981"
+								stroke="#818cf8"
 								strokeWidth={2}
+								fill={`url(#${sessionsGradientId})`}
+								dot={false}
+								activeDot={{ r: 4 }}
 							/>
-						</LineChart>
+						</AreaChart>
 					</ResponsiveContainer>
 				) : (
 					<div className="flex h-[300px] items-center justify-center text-foreground-secondary">

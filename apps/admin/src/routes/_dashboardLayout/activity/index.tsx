@@ -3,14 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format, subDays } from "date-fns";
 import { Activity, Clock, TrendingUp, Users } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import {
+	Area,
+	AreaChart,
+	CartesianGrid,
 	Legend,
-	Line,
-	LineChart,
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
+	YAxis,
 } from "recharts";
 import { METADATA } from "../../../constants/metadata";
 import { api } from "../../../utils/api";
@@ -38,6 +40,10 @@ export const Route = createFileRoute("/_dashboardLayout/activity/")({
 
 function RouteComponent() {
 	const [dateRange, setDateRange] = useState<7 | 14 | 30>(7);
+	const sessionsGradientId = useId();
+	const usersGradientId = useId();
+	const avgDurationGradientId = useId();
+	const totalDurationGradientId = useId();
 
 	const { startDate, endDate } = useMemo(() => {
 		const end = new Date();
@@ -175,12 +181,73 @@ function RouteComponent() {
 					Activity Overview
 				</h3>
 				<ResponsiveContainer width="100%" height={400}>
-					<LineChart data={timeseries?.data || []}>
+					<AreaChart
+						data={timeseries?.data || []}
+						margin={{ top: 8, right: 12, bottom: 8, left: 0 }}
+					>
+						<defs>
+							<linearGradient
+								id={sessionsGradientId}
+								x1="0"
+								y1="0"
+								x2="0"
+								y2="1"
+							>
+								<stop offset="0%" stopColor="#6366f1" stopOpacity={0.25} />
+								<stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+							</linearGradient>
+							<linearGradient id={usersGradientId} x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0%" stopColor="#818cf8" stopOpacity={0.25} />
+								<stop offset="100%" stopColor="#818cf8" stopOpacity={0} />
+							</linearGradient>
+							<linearGradient
+								id={avgDurationGradientId}
+								x1="0"
+								y1="0"
+								x2="0"
+								y2="1"
+							>
+								<stop offset="0%" stopColor="#a5b4fc" stopOpacity={0.25} />
+								<stop offset="100%" stopColor="#a5b4fc" stopOpacity={0} />
+							</linearGradient>
+							<linearGradient
+								id={totalDurationGradientId}
+								x1="0"
+								y1="0"
+								x2="0"
+								y2="1"
+							>
+								<stop offset="0%" stopColor="#c7d2fe" stopOpacity={0.25} />
+								<stop offset="100%" stopColor="#c7d2fe" stopOpacity={0} />
+							</linearGradient>
+						</defs>
+						<CartesianGrid
+							stroke="currentColor"
+							strokeOpacity={0.08}
+							vertical={false}
+						/>
 						<XAxis
 							dataKey="timestamp"
+							tickLine={false}
+							axisLine={false}
 							tickFormatter={(value) => format(new Date(value), "MMM dd")}
 						/>
+						<YAxis yAxisId="left" tickLine={false} axisLine={false} />
+						<YAxis
+							yAxisId="right"
+							orientation="right"
+							tickLine={false}
+							axisLine={false}
+						/>
 						<Tooltip
+							cursor={{ stroke: "#4b5563", strokeDasharray: "3 3" }}
+							contentStyle={{
+								backgroundColor: "var(--background)",
+								border: "1px solid var(--border)",
+								borderRadius: 8,
+							}}
+							labelStyle={{ color: "var(--foreground)" }}
+							itemStyle={{ color: "var(--foreground)" }}
 							labelFormatter={(value) =>
 								format(new Date(value as string), "PPP")
 							}
@@ -195,39 +262,51 @@ function RouteComponent() {
 							}}
 						/>
 						<Legend />
-						<Line
+						<Area
 							yAxisId="left"
-							type="monotone"
+							type="linear"
 							dataKey="session_count"
 							name="Sessions"
-							stroke="#8884d8"
+							stroke="#6366f1"
 							strokeWidth={2}
+							fill={`url(#${sessionsGradientId})`}
+							dot={false}
+							activeDot={{ r: 4 }}
 						/>
-						<Line
+						<Area
 							yAxisId="left"
-							type="monotone"
+							type="linear"
 							dataKey="unique_users"
 							name="Unique Users"
-							stroke="#82ca9d"
+							stroke="#818cf8"
 							strokeWidth={2}
+							fill={`url(#${usersGradientId})`}
+							dot={false}
+							activeDot={{ r: 4 }}
 						/>
-						<Line
+						<Area
 							yAxisId="right"
-							type="monotone"
+							type="linear"
 							dataKey="average_duration_seconds"
 							name="Avg Duration"
-							stroke="#ffc658"
+							stroke="#a5b4fc"
 							strokeWidth={2}
+							fill={`url(#${avgDurationGradientId})`}
+							dot={false}
+							activeDot={{ r: 4 }}
 						/>
-						<Line
+						<Area
 							yAxisId="right"
-							type="monotone"
+							type="linear"
 							dataKey="total_duration_seconds"
 							name="Total Duration"
-							stroke="#ff7300"
+							stroke="#c7d2fe"
 							strokeWidth={2}
+							fill={`url(#${totalDurationGradientId})`}
+							dot={false}
+							activeDot={{ r: 4 }}
 						/>
-					</LineChart>
+					</AreaChart>
 				</ResponsiveContainer>
 			</div>
 
