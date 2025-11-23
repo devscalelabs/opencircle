@@ -1,5 +1,5 @@
 import type { Channel } from "@opencircle/core";
-import { Button, Input } from "@opencircle/ui";
+import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -76,13 +76,6 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 			cell: ({ row }) => <div className="text-sm">{row.getValue("slug")}</div>,
 		},
 		{
-			accessorKey: "description",
-			header: "Description",
-			cell: ({ row }) => (
-				<div className="text-sm">{row.getValue("description") || "-"}</div>
-			),
-		},
-		{
 			accessorKey: "type",
 			header: ({ column }) => {
 				return (
@@ -102,9 +95,17 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 					</button>
 				);
 			},
-			cell: ({ row }) => (
-				<div className="text-sm capitalize">{row.getValue("type")}</div>
-			),
+			cell: ({ row }) => {
+				const type = row.getValue("type") as string;
+				return (
+					<Badge
+						variant={type === "public" ? "secondary" : "primary"}
+						size="sm"
+					>
+						{type}
+					</Badge>
+				);
+			},
 		},
 		{
 			accessorKey: "created_at",
@@ -163,7 +164,6 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 			return (
 				channel.name?.toLowerCase().includes(query) ||
 				channel.slug?.toLowerCase().includes(query) ||
-				channel.description?.toLowerCase().includes(query) ||
 				channel.type?.toLowerCase().includes(query)
 			);
 		});
@@ -216,7 +216,7 @@ export const ChannelTable = ({ channels, isLoading }: ChannelTableProps) => {
 				</div>
 				<Input
 					type="text"
-					placeholder="Search by name, slug, description, or type..."
+					placeholder="Search by name, slug, or type..."
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 					className="pl-10"

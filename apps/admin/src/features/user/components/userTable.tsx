@@ -1,5 +1,5 @@
 import type { User } from "@opencircle/core";
-import { Button, Input } from "@opencircle/ui";
+import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -91,13 +91,13 @@ export const UserTable = ({ users, isLoading }: UserTableProps) => {
 			cell: ({ row }) => (
 				<div className="text-sm">
 					{(row.getValue("is_active") as boolean) ? (
-						<span className="rounded-full bg-emerald-500 px-2.5 py-1 font-medium text-white text-xs">
+						<Badge variant="primary" size="sm">
 							Active
-						</span>
+						</Badge>
 					) : (
-						<span className="rounded-full bg-rose-500 px-2.5 py-1 font-medium text-white text-xs">
+						<Badge variant="destructive" size="sm">
 							Inactive
-						</span>
+						</Badge>
 					)}
 				</div>
 			),
