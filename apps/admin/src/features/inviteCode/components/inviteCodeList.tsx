@@ -1,5 +1,5 @@
 import type { InviteCode } from "@opencircle/core";
-import { Button, Input } from "@opencircle/ui";
+import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -26,6 +26,13 @@ export const InviteCodeList = ({
 	const router = useRouter();
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const statusVariantMap = {
+		active: "primary",
+		used: "destructive",
+		expired: "secondary",
+	} as const;
+
 	const columns: ColumnDef<InviteCode>[] = [
 		{
 			accessorKey: "code",
@@ -102,17 +109,14 @@ export const InviteCodeList = ({
 			},
 			cell: ({ row }) => {
 				const status = row.getValue("status") as string;
-				const statusColors = {
-					active: "text-green-600",
-					used: "text-red-600",
-					expired: "text-gray-600",
-				};
+				const variant =
+					statusVariantMap[status as keyof typeof statusVariantMap] ||
+					"secondary";
+
 				return (
-					<div
-						className={`text-sm capitalize ${statusColors[status as keyof typeof statusColors]}`}
-					>
+					<Badge variant={variant} size="sm">
 						{status}
-					</div>
+					</Badge>
 				);
 			},
 		},

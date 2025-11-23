@@ -1,5 +1,5 @@
 import type { Course } from "@opencircle/core";
-import { Button, Input } from "@opencircle/ui";
+import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
 import {
 	type ColumnDef,
@@ -24,6 +24,12 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const router = useRouter();
+
+	const statusVariantMap = {
+		draft: "secondary",
+		published: "primary",
+		archived: "destructive",
+	} as const;
 
 	const columns: ColumnDef<Course>[] = [
 		{
@@ -105,21 +111,18 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 					</button>
 				);
 			},
-			cell: ({ row }) => (
-				<div className="text-sm capitalize">
-					<span
-						className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-medium text-xs ${
-							row.getValue("status") === "published"
-								? "bg-green-100 text-green-800"
-								: row.getValue("status") === "draft"
-									? "bg-yellow-100 text-yellow-800"
-									: "bg-gray-100 text-gray-800"
-						}`}
-					>
-						{row.getValue("status")}
-					</span>
-				</div>
-			),
+			cell: ({ row }) => {
+				const status = row.getValue("status") as string;
+				const variant =
+					statusVariantMap[status as keyof typeof statusVariantMap] ||
+					"secondary";
+
+				return (
+					<Badge variant={variant} size="sm">
+						{status}
+					</Badge>
+				);
+			},
 		},
 		{
 			accessorKey: "price",

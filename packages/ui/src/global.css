@@ -2,7 +2,15 @@
 
 @theme {
     --color-primary: oklch(0.4769 0.2307 271.68);
+    --color-primary-foreground: oklch(0.9843 0 0);
+    --color-secondary: oklch(0.2708 0.006 258.37);
+    --color-secondary-foreground: oklch(0.9519 0 258.37);
+    --color-destructive: oklch(0.577 0.245 27.33);
+    --color-destructive-foreground: oklch(0.9843 0 0);
     --color-foreground: oklch(0.9519 0 258.37);
     --color-background: oklch(0.1768 0.007 258.37);
-    --color-border: oklch(0.2146 0.007 258.37)
+    --color-border: oklch(0.2146 0.007 258.37);
+    --color-input: oklch(0.2146 0.007 258.37);
+    --color-accent: oklch(0.2708 0.006 258.37);
+    --color-accent-foreground: oklch(0.9519 0 258.37);
 }
