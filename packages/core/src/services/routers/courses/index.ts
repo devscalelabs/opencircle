@@ -3,9 +3,11 @@ import type {
 	Course,
 	CourseCreate,
 	CourseUpdate,
+	DashboardStats,
 	EnrolledCourse,
 	EnrolledCourseCreate,
 	EnrolledCourseUpdate,
+	EnrollmentChartData,
 	Lesson,
 	LessonCreate,
 	LessonUpdate,
@@ -188,4 +190,83 @@ export class CoursesRouter extends BaseRouter {
 			status: "active" as any,
 		});
 	}
+
+	// Dashboard methods
+	async getDashboardStats(): Promise<DashboardStats> {
+		// Get all users, courses, and enrollments
+		const [users, courses, enrollments] = await Promise.all([
+			this.client.get<any[]>("users/?limit=10000"),
+			this.getAllCourses(0, 10000),
+			this.getAllEnrollments(undefined, undefined, undefined, 0, 10000),
+		]);
+
+		const totalUsers = users.length;
+		const totalCourses = courses.length;
+		const activeEnrollments = enrollments.filter(
+			(e) => e.status === "active",
+		).length;
+		const completedEnrollments = enrollments.filter(
+			(e) => e.status === "completed",
+		).length;
+		const totalEnrollments = enrollments.length;
+
+		return {
+			totalUsers,
+			totalCourses,
+			activeEnrollments,
+			completedEnrollments,
+			totalEnrollments,
+		};
+	}
+
+	async getEnrollmentChartData(days = 30): Promise<EnrollmentChartData[]> {
+		// Get enrollments with course data
+		const enrollments = await this.getAllEnrollments(
+			undefined,
+			undefined,
+			undefined,
+			0,
+			1000,
+		);
+
+		// Group by date for the last N days
+		const endDate = new Date();
+		const startDate = new Date();
+		startDate.setDate(endDate.getDate() - days);
+
+		// Create a map to count enrollments by date
+		const dateMap = new Map<string, number>();
+
+		// Initialize all dates with 0
+		for (
+			let d = new Date(startDate);
+			d <= endDate;
+			d.setDate(d.getDate() + 1)
+		) {
+			const dateStr = d.toISOString().split("T")[0];
+			dateMap.set(dateStr, 0);
+		}
+
+		// Count enrollments by date (total, regardless of course)
+		enrollments.forEach((enrollment) => {
+			// Use enrolled_at if available, otherwise fall back to created_at
+			const enrollmentDate = enrollment.enrolled_at || enrollment.created_at;
+			if (enrollmentDate) {
+				const enrolledDate = new Date(enrollmentDate)
+					.toISOString()
+					.split("T")[0];
+				const currentCount = dateMap.get(enrolledDate) || 0;
+				dateMap.set(enrolledDate, currentCount + 1);
+			}
+		});
+
+		// Convert to array format for chart, sorted by date
+		return Array.from(dateMap.entries())
+			.map(([date, total]) => ({ date, total }))
+			.sort(
+				(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+			) as EnrollmentChartData[];
+	}
 }
+
+export type { DashboardStats, EnrollmentChartData } from "./types";

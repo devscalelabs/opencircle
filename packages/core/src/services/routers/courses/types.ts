@@ -147,3 +147,17 @@ export interface EnrolledCourseUpdate {
 	enrolled_at?: string;
 	completed_at?: string;
 }
+
+// Dashboard types
+export interface DashboardStats {
+	totalUsers: number;
+	totalCourses: number;
+	activeEnrollments: number;
+	completedEnrollments: number;
+	totalEnrollments: number;
+}
+
+export interface EnrollmentChartData {
+	date: string;
+	total: number;
+}

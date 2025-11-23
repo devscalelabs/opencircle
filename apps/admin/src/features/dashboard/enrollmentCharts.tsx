@@ -1,13 +1,16 @@
+import type { EnrollmentChartData } from "@opencircle/core";
+import { format } from "date-fns";
+import { useId } from "react";
 import {
-	Bar,
-	BarChart,
-	Legend,
+	Area,
+	AreaChart,
+	CartesianGrid,
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
 	YAxis,
 } from "recharts";
-import type { EnrollmentChartData } from "../../services/dashboard";
+
 import { ChartSkeleton } from "./chartSkeleton";
 
 interface EnrollmentChartProps {
@@ -19,58 +22,62 @@ export const EnrollmentChartComponent = ({
 	data,
 	isLoading,
 }: EnrollmentChartProps) => {
-	if (isLoading) {
-		return <ChartSkeleton height={320} />;
-	}
+	const gradientId = useId();
 
-	const formatDate = (dateStr: string) => {
-		const date = new Date(dateStr);
-		return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-	};
+	if (isLoading) {
+		return <ChartSkeleton height={400} />;
+	}
 
 	return (
 		<div className="rounded-lg bg-background-secondary p-6 shadow">
 			<h3 className="mb-4 font-semibold text-foreground text-lg">
-				Enrollment Trends
+				Daily Enrollment Trends
 			</h3>
-			<ResponsiveContainer width="100%" height={320}>
-				<BarChart data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+			<ResponsiveContainer width="100%" height={400}>
+				<AreaChart
+					data={data}
+					margin={{ top: 8, right: 12, bottom: 8, left: 0 }}
+				>
+					<defs>
+						<linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+							<stop offset="0%" stopColor="#6366f1" stopOpacity={0.25} />
+							<stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+						</linearGradient>
+					</defs>
+					<CartesianGrid
+						stroke="currentColor"
+						strokeOpacity={0.08}
+						vertical={false}
+					/>
 					<XAxis
 						dataKey="date"
-						tickFormatter={formatDate}
-						tick={{ fontSize: 12 }}
+						tickLine={false}
+						axisLine={false}
+						tickFormatter={(value) => format(new Date(value), "MMM dd")}
 					/>
-					<YAxis hide />
+					<YAxis tickLine={false} axisLine={false} />
 					<Tooltip
-						labelFormatter={(value) => formatDate(value as string)}
-						formatter={(value, name) => [
-							value,
-							name === "enrollments" ? "New Enrollments" : "Completions",
-						]}
+						cursor={{ stroke: "#4b5563", strokeDasharray: "3 3" }}
 						contentStyle={{
-							backgroundColor: "rgba(255, 255, 255, 0.95)",
-							border: "1px solid #e5e7eb",
-							borderRadius: "6px",
+							backgroundColor: "var(--background)",
+							border: "1px solid var(--border)",
+							borderRadius: 8,
 						}}
+						labelStyle={{ color: "var(--foreground)" }}
+						labelFormatter={(value) => format(new Date(value as string), "PPP")}
+						formatter={(value) => [value, "Enrollments"]}
 					/>
-					<Legend
-						formatter={(value) =>
-							value === "enrollments" ? "New Enrollments" : "Completions"
-						}
+					<Area
+						type="linear"
+						dataKey="total"
+						name="Enrollments"
+						stroke="#6366f1"
+						strokeWidth={2}
+						fill={`url(#${gradientId})`}
+						dot={false}
+						activeDot={{ r: 4 }}
 					/>
-					<Bar
-						dataKey="enrollments"
-						fill="#6366f1"
-						fillOpacity={0.8}
-						radius={[4, 4, 0, 0]}
-					/>
-					<Bar
-						dataKey="completions"
-						fill="#818cf8"
-						fillOpacity={0.6}
-						radius={[4, 4, 0, 0]}
-					/>
-				</BarChart>
+				</AreaChart>
 			</ResponsiveContainer>
 		</div>
 	);

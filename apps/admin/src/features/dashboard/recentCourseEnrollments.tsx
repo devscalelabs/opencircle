@@ -1,9 +1,9 @@
+import type { EnrolledCourse } from "@opencircle/core";
 import { format } from "date-fns";
-import type { Enrollment } from "../../services/dashboard";
 import { TableSkeleton } from "./tableSkeleton";
 
 interface RecentEnrollmentsProps {
-	enrollments: Enrollment[];
+	enrollments: EnrolledCourse[];
 	isLoading?: boolean;
 }
 
@@ -34,7 +34,7 @@ export const RecentEnrollmentsTable = ({
 		<div className="rounded-lg border border-border bg-background shadow-sm">
 			<div className="border-border border-b px-6 py-4">
 				<h3 className="font-semibold text-foreground text-lg">
-					Recent Enrollments
+					All Enrollments
 				</h3>
 			</div>
 			<div className="overflow-x-auto">
@@ -74,16 +74,16 @@ export const RecentEnrollmentsTable = ({
 									<td className="px-6 py-4">
 										<div className="flex flex-col">
 											<span className="font-medium text-foreground text-sm">
-												{enrollment.user.username}
+												{enrollment.user?.username || "Unknown User"}
 											</span>
 											<span className="text-foreground/60 text-xs">
-												{enrollment.user.email}
+												{enrollment.user?.email || "No email"}
 											</span>
 										</div>
 									</td>
 									<td className="px-6 py-4">
 										<span className="text-foreground text-sm">
-											{enrollment.course.title}
+											{enrollment.course?.title || "Unknown Course"}
 										</span>
 									</td>
 									<td className="px-6 py-4">
@@ -96,7 +96,9 @@ export const RecentEnrollmentsTable = ({
 									</td>
 									<td className="px-6 py-4">
 										<span className="text-foreground/80 text-sm">
-											{formatDate(enrollment.enrolled_at)}
+											{formatDate(
+												enrollment.enrolled_at || enrollment.created_at,
+											)}
 										</span>
 									</td>
 								</tr>
