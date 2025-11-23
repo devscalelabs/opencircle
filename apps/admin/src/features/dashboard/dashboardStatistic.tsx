@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: The index errors is fine since for skeleton! */
+
+import type { DashboardStats } from "@opencircle/core";
 import { Activity, BookOpen, CheckCircle, Users } from "lucide-react";
-import type { DashboardStats } from "../../services/dashboard";
 import { StatCardSkeleton } from "./statCardSkeleton";
 
 interface DashboardStatsProps {

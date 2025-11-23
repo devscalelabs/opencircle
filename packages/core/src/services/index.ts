@@ -7,6 +7,11 @@ export {
 export { ArticlesRouter } from "./routers/articles";
 export { AuthRouter } from "./routers/auth";
 export { ChannelsRouter } from "./routers/channels";
+export {
+	CoursesRouter,
+	type DashboardStats,
+	type EnrollmentChartData,
+} from "./routers/courses";
 export { MediaRouter } from "./routers/media";
 export { PostsRouter } from "./routers/posts";
 export { PresenceRouter } from "./routers/presence";

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from sqlalchemy.orm import selectinload
@@ -237,6 +238,13 @@ def get_all_lessons(
 # Enrollment methods
 def create_enrollment(db: Session, enrollment_data: dict) -> EnrolledCourse:
     """Create a new enrollment."""
+    # Set enrolled_at to current timestamp if not provided
+    if (
+        "enrolled_at" not in enrollment_data
+        or enrollment_data.get("enrolled_at") is None
+    ):
+        enrollment_data["enrolled_at"] = datetime.now().isoformat()
+
     enrollment = EnrolledCourse(**enrollment_data)
     db.add(enrollment)
     db.commit()
@@ -292,5 +300,8 @@ def get_all_enrollments(
 
     if status:
         statement = statement.where(EnrolledCourse.status == status)
+
+    # Order by newest first (created_at descending)
+    statement = statement.order_by(desc(EnrolledCourse.created_at))
 
     return list(db.exec(statement).all())

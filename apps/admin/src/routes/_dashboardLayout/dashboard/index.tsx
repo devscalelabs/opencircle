@@ -1,3 +1,4 @@
+import type { DashboardStats } from "@opencircle/core";
 import { Button } from "@opencircle/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -22,7 +23,6 @@ import {
 	YAxis,
 } from "recharts";
 import { METADATA } from "../../../constants/metadata";
-import { dashboardService } from "../../../services/dashboard";
 import { api } from "../../../utils/api";
 
 export const Route = createFileRoute("/_dashboardLayout/dashboard/")({
@@ -50,10 +50,11 @@ function RouteComponent() {
 	const usersGradientId = useId();
 	const sessionsGradientId = useId();
 	// Fetch key platform data
-	const { data: dashboardStats, isLoading: statsLoading } = useQuery({
-		queryKey: ["dashboard-stats"],
-		queryFn: dashboardService.getDashboardStats,
-	});
+	const { data: dashboardStats, isLoading: statsLoading } =
+		useQuery<DashboardStats>({
+			queryKey: ["dashboard-stats"],
+			queryFn: () => api.courses.getDashboardStats(),
+		});
 
 	const { data: channels = [], isLoading: channelsLoading } = useQuery({
 		queryKey: ["channels", "dashboard"],

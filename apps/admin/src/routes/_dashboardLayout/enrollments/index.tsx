@@ -1,10 +1,11 @@
+import type { DashboardStats, EnrollmentChartData } from "@opencircle/core";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { METADATA } from "../../../constants/metadata";
 import { DashboardStatsCards } from "../../../features/dashboard/dashboardStatistic";
 import { EnrollmentChartComponent } from "../../../features/dashboard/enrollmentCharts";
 import { RecentEnrollmentsTable } from "../../../features/dashboard/recentCourseEnrollments";
-import { dashboardService } from "../../../services/dashboard";
+import { api } from "../../../utils/api";
 
 export const Route = createFileRoute("/_dashboardLayout/enrollments/")({
 	head: () => ({
@@ -32,18 +33,18 @@ function RouteComponent() {
 		data: stats,
 		isLoading: statsLoading,
 		error: statsError,
-	} = useQuery({
+	} = useQuery<DashboardStats>({
 		queryKey: ["dashboard-stats"],
-		queryFn: dashboardService.getDashboardStats,
+		queryFn: () => api.courses.getDashboardStats(),
 	});
 
 	const {
 		data: chartData,
 		isLoading: chartLoading,
 		error: chartError,
-	} = useQuery({
+	} = useQuery<EnrollmentChartData[]>({
 		queryKey: ["dashboard-chart"],
-		queryFn: () => dashboardService.getEnrollmentChartData(7),
+		queryFn: () => api.courses.getEnrollmentChartData(7),
 	});
 
 	const {
@@ -52,7 +53,8 @@ function RouteComponent() {
 		error: enrollmentsError,
 	} = useQuery({
 		queryKey: ["dashboard-enrollments"],
-		queryFn: () => dashboardService.getEnrollments(10),
+		queryFn: () =>
+			api.courses.getAllEnrollments(undefined, undefined, undefined, 0, 50),
 	});
 
 	if (statsError || chartError || enrollmentsError) {
