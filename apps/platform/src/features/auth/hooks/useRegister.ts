@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { HTTPError } from "ky";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -33,7 +32,6 @@ export const registerSchema = z.object({
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const useRegister = () => {
-	const navigate = useNavigate();
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -78,8 +76,7 @@ export const useRegister = () => {
 			return res;
 		},
 		onSuccess: () => {
-			toast.success("Registration successful! Redirecting to login...");
-			navigate({ to: "/login" });
+			toast.success("Registration successful! Please verify your email.");
 		},
 		onError: async (error) => {
 			if (error instanceof HTTPError) {

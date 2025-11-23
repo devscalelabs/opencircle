@@ -8,6 +8,7 @@ from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.models import InviteCodeStatus, User, UserSettings
+from src.modules.auth.email_verification_methods import create_email_verification
 from src.modules.auth.password_reset_methods import create_password_reset
 from src.modules.email.email_service import email_service
 from src.modules.invite_code.invite_code_methods import (
@@ -106,6 +107,18 @@ def register_user(
     except IntegrityError:
         # Settings already exist (race condition or other error), rollback and continue
         db.rollback()
+
+    # Send email verification
+    email_verification = create_email_verification(db, email, user.id)
+    if email_verification:
+        verification_link = (
+            f"{settings.PLATFORM_URL}/verify-email?code={email_verification.code}"
+        )
+        email_service.send_verification_email(
+            to_email=email,
+            verification_code=email_verification.code,
+            verification_link=verification_link,
+        )
 
     # Handle invite code usage and auto-join after user creation
     if invite_code:

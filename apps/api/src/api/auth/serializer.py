@@ -69,3 +69,11 @@ class GoogleLoginResponse(BaseModel):
     email: str
     name: Optional[str] = None
     avatar_url: Optional[str] = None
+
+
+class VerifyEmailRequest(BaseModel):
+    code: str
+
+
+class VerifyEmailResponse(BaseModel):
+    message: str

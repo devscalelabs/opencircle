@@ -143,3 +143,11 @@ export interface GoogleLoginResponse {
 	name?: string;
 	avatar_url?: string;
 }
+
+export interface VerifyEmailRequest {
+	code: string;
+}
+
+export interface VerifyEmailResponse {
+	message: string;
+}
