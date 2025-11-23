@@ -47,6 +47,12 @@ class PasswordResetStatus(str, Enum):
     EXPIRED = "expired"
 
 
+class EmailVerificationStatus(str, Enum):
+    ACTIVE = "active"
+    USED = "used"
+    EXPIRED = "expired"
+
+
 class PostType(str, Enum):
     POST = "post"
     COMMENT = "comment"
@@ -85,6 +91,17 @@ class PasswordReset(BaseModel, table=True):
     code: str = Field(index=True, unique=True)  # 6-letter code
     email: str = Field(index=True)
     status: PasswordResetStatus = Field(default=PasswordResetStatus.ACTIVE)
+    expires_at: str  # ISO datetime string
+    user_id: str = Field(foreign_key="user.id")
+    user: "User" = Relationship(sa_relationship=relationship("User"))
+
+
+class EmailVerification(BaseModel, table=True):
+    __tablename__ = "email_verification"
+
+    code: str = Field(index=True, unique=True)  # 6-letter code
+    email: str = Field(index=True)
+    status: EmailVerificationStatus = Field(default=EmailVerificationStatus.ACTIVE)
     expires_at: str  # ISO datetime string
     user_id: str = Field(foreign_key="user.id")
     user: "User" = Relationship(sa_relationship=relationship("User"))
@@ -144,6 +161,9 @@ class User(BaseModel, table=True):
     )
     password_resets: List["PasswordReset"] = Relationship(
         sa_relationship=relationship("PasswordReset", back_populates="user")
+    )
+    email_verifications: List["EmailVerification"] = Relationship(
+        sa_relationship=relationship("EmailVerification", back_populates="user")
     )
 
 

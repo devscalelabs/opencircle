@@ -14,6 +14,8 @@ import type {
 	RegisterResponse,
 	ResetPasswordRequest,
 	ResetPasswordResponse,
+	VerifyEmailRequest,
+	VerifyEmailResponse,
 } from "../../types";
 
 export class AuthRouter extends BaseRouter {
@@ -58,5 +60,9 @@ export class AuthRouter extends BaseRouter {
 
 	async googleCallback(data: GoogleLoginRequest): Promise<GoogleLoginResponse> {
 		return this.client.post<GoogleLoginResponse>("google/callback", data);
+	}
+
+	async verifyEmail(data: VerifyEmailRequest): Promise<VerifyEmailResponse> {
+		return this.client.post<VerifyEmailResponse>("verify-email", data);
 	}
 }

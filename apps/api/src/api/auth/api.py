@@ -13,6 +13,7 @@ from src.modules.auth.auth_methods import (
     register_user,
     reset_password,
 )
+from src.modules.auth.email_verification_methods import verify_user_email
 from src.modules.auth.github_methods import (
     generate_state_token,
     get_github_authorization_url,
@@ -33,6 +34,8 @@ from .serializer import (
     RegisterRequest,
     ResetPasswordRequest,
     ResetPasswordResponse,
+    VerifyEmailRequest,
+    VerifyEmailResponse,
 )
 
 router = APIRouter()
@@ -304,3 +307,20 @@ def confirm_reset_password_endpoint(
     except Exception as e:
         logger.error(f"Failed to reset password: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to reset password")
+
+
+@router.post("/verify-email", response_model=VerifyEmailResponse)
+def verify_email_endpoint(request: VerifyEmailRequest, db: Session = Depends(get_db)):
+    """Verify user email using a verification code."""
+    try:
+        success = verify_user_email(db, request.code)
+        if not success:
+            raise HTTPException(
+                status_code=400, detail="Invalid or expired verification code"
+            )
+        return {"message": "Email verified successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to verify email: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to verify email")

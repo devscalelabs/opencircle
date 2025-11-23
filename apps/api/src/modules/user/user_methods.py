@@ -47,6 +47,7 @@ def delete_user(db: Session, user_id: str) -> bool:
     """Delete a user by ID and all related records."""
     from src.database.models import (
         ChannelMember,
+        EmailVerification,
         Media,
         Notification,
         PasswordReset,
@@ -78,6 +79,11 @@ def delete_user(db: Session, user_id: str) -> bool:
     stmt = select(PasswordReset).where(PasswordReset.user_id == user_id)
     for password_reset in db.exec(stmt).all():
         db.delete(password_reset)
+
+    # Delete email verifications
+    stmt = select(EmailVerification).where(EmailVerification.user_id == user_id)
+    for email_verification in db.exec(stmt).all():
+        db.delete(email_verification)
 
     # Delete channel memberships
     stmt = select(ChannelMember).where(ChannelMember.user_id == user_id)
