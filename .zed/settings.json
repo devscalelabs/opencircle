@@ -3,8 +3,7 @@
     "Python": {
       "language_servers": [
         "ruff",
-        "ty",
-        "!basedpyright"
+        "basedpyright"
       ],
       "code_actions_on_format": {
         "source.fixAll.ruff": true
