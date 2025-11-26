@@ -66,62 +66,62 @@ def delete_user(db: Session, user_id: str) -> bool:
     if not user:
         return False
 
-    stmt = select(UserPresence).where(UserPresence.user_id == user_id)
-    for presence in db.exec(stmt).all():
+    statement = select(UserPresence).where(UserPresence.user_id == user_id)
+    for presence in db.exec(statement).all():
         db.delete(presence)
 
-    stmt = select(Activity).where(Activity.user_id == user_id)
-    for activity in db.exec(stmt).all():
+    statement = select(Activity).where(Activity.user_id == user_id)
+    for activity in db.exec(statement).all():
         db.delete(activity)
 
-    stmt = select(Reaction).where(Reaction.user_id == user_id)
-    for reaction in db.exec(stmt).all():
+    statement = select(Reaction).where(Reaction.user_id == user_id)
+    for reaction in db.exec(statement).all():
         db.delete(reaction)
 
-    stmt = select(Notification).where(
+    statement = select(Notification).where(
         (Notification.sender_id == user_id) | (Notification.recipient_id == user_id)
     )
-    for notification in db.exec(stmt).all():
+    for notification in db.exec(statement).all():
         db.delete(notification)
 
-    stmt = select(PasswordReset).where(PasswordReset.user_id == user_id)
-    for password_reset in db.exec(stmt).all():
+    statement = select(PasswordReset).where(PasswordReset.user_id == user_id)
+    for password_reset in db.exec(statement).all():
         db.delete(password_reset)
 
-    stmt = select(EmailVerification).where(EmailVerification.user_id == user_id)
-    for email_verification in db.exec(stmt).all():
+    statement = select(EmailVerification).where(EmailVerification.user_id == user_id)
+    for email_verification in db.exec(statement).all():
         db.delete(email_verification)
 
-    stmt = select(EnrolledCourse).where(EnrolledCourse.user_id == user_id)
-    for enrolled_course in db.exec(stmt).all():
+    statement = select(EnrolledCourse).where(EnrolledCourse.user_id == user_id)
+    for enrolled_course in db.exec(statement).all():
         db.delete(enrolled_course)
 
-    stmt = select(Course).where(Course.instructor_id == user_id)
-    for course in db.exec(stmt).all():
+    statement = select(Course).where(Course.instructor_id == user_id)
+    for course in db.exec(statement).all():
         db.delete(course)
 
-    stmt = select(ChannelMember).where(ChannelMember.user_id == user_id)
-    for channel_member in db.exec(stmt).all():
+    statement = select(ChannelMember).where(ChannelMember.user_id == user_id)
+    for channel_member in db.exec(statement).all():
         db.delete(channel_member)
 
-    stmt = select(Resource).where(Resource.user_id == user_id)
-    for resource in db.exec(stmt).all():
+    statement = select(Resource).where(Resource.user_id == user_id)
+    for resource in db.exec(statement).all():
         db.delete(resource)
 
-    stmt = select(Media).where(Media.user_id == user_id)
-    for media in db.exec(stmt).all():
+    statement = select(Media).where(Media.user_id == user_id)
+    for media in db.exec(statement).all():
         db.delete(media)
 
-    stmt = select(Post).where(Post.user_id == user_id)
-    for post in db.exec(stmt).all():
+    statement = select(Post).where(Post.user_id == user_id)
+    for post in db.exec(statement).all():
         db.delete(post)
 
-    stmt = select(UserSettings).where(UserSettings.user_id == user_id)
-    for user_settings in db.exec(stmt).all():
+    statement = select(UserSettings).where(UserSettings.user_id == user_id)
+    for user_settings in db.exec(statement).all():
         db.delete(user_settings)
 
-    stmt = select(UserSocial).where(UserSocial.user_id == user_id)
-    for user_social in db.exec(stmt).all():
+    statement = select(UserSocial).where(UserSocial.user_id == user_id)
+    for user_social in db.exec(statement).all():
         db.delete(user_social)
 
     db.delete(user)
