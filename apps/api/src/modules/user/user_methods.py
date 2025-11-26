@@ -170,5 +170,5 @@ def ban_user(db: Session, user_id: str) -> Optional[User]:
 
 def get_admin_count(db: Session) -> int:
     """Get the count of admin users."""
-    statement = select(func.count(User.id)).where(User.role == Role.ADMIN)
+    statement = select(func.count(col(User.id))).where(col(User.role) == Role.ADMIN)
     return db.exec(statement).one()

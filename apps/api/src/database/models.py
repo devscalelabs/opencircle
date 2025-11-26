@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from sqlalchemy import JSON
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, relationship
 from sqlmodel import Field, Relationship
 
 from src.core.base_models import BaseModel
@@ -70,10 +70,10 @@ class InviteCode(BaseModel, table=True):
     status: InviteCodeStatus = Field(default=InviteCodeStatus.ACTIVE)
     created_by: str = Field(foreign_key="user.id")
     auto_join_channel_id: str | None = Field(foreign_key="channel.id", default=None)
-    created_by_user: "User" = Relationship(
+    created_by_user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", foreign_keys="InviteCode.created_by")
     )
-    used_by: List["User"] = Relationship(
+    used_by: Mapped[List["User"]] = Relationship(
         sa_relationship=relationship(
             "User", back_populates="invite_code", foreign_keys="User.invite_code_id"
         )
@@ -93,7 +93,7 @@ class PasswordReset(BaseModel, table=True):
     status: PasswordResetStatus = Field(default=PasswordResetStatus.ACTIVE)
     expires_at: str  # ISO datetime string
     user_id: str = Field(foreign_key="user.id")
-    user: "User" = Relationship(sa_relationship=relationship("User"))
+    user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
 
 
 class EmailVerification(BaseModel, table=True):
@@ -104,7 +104,7 @@ class EmailVerification(BaseModel, table=True):
     status: EmailVerificationStatus = Field(default=EmailVerificationStatus.ACTIVE)
     expires_at: str  # ISO datetime string
     user_id: str = Field(foreign_key="user.id")
-    user: "User" = Relationship(sa_relationship=relationship("User"))
+    user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
 
 
 class User(BaseModel, table=True):
@@ -119,50 +119,50 @@ class User(BaseModel, table=True):
     is_verified: bool = Field(default=False)
     avatar_url: str | None = Field(default=None)
     role: Role = Field(default=Role.USER)
-    posts: List["Post"] = Relationship(
+    posts: Mapped[List["Post"]] = Relationship(
         sa_relationship=relationship("Post", back_populates="user")
     )
-    medias: List["Media"] = Relationship(
+    medias: Mapped[List["Media"]] = Relationship(
         sa_relationship=relationship("Media", back_populates="user")
     )
-    resources: List["Resource"] = Relationship(
+    resources: Mapped[List["Resource"]] = Relationship(
         sa_relationship=relationship("Resource", back_populates="user")
     )
-    channel_members: List["ChannelMember"] = Relationship(
+    channel_members: Mapped[List["ChannelMember"]] = Relationship(
         sa_relationship=relationship("ChannelMember", back_populates="user")
     )
 
-    reactions: List["Reaction"] = Relationship(
+    reactions: Mapped[List["Reaction"]] = Relationship(
         sa_relationship=relationship("Reaction", back_populates="user")
     )
-    sent_notifications: List["Notification"] = Relationship(
+    sent_notifications: Mapped[List["Notification"]] = Relationship(
         sa_relationship=relationship(
             "Notification", foreign_keys="Notification.sender_id"
         )
     )
-    received_notifications: List["Notification"] = Relationship(
+    received_notifications: Mapped[List["Notification"]] = Relationship(
         sa_relationship=relationship(
             "Notification", foreign_keys="Notification.recipient_id"
         )
     )
     invite_code_id: str | None = Field(foreign_key="invite_code.id", default=None)
-    invite_code: Optional["InviteCode"] = Relationship(
+    invite_code: Mapped[Optional["InviteCode"]] = Relationship(
         sa_relationship=relationship(
             "InviteCode", back_populates="used_by", foreign_keys="User.invite_code_id"
         )
     )
-    user_settings: "UserSettings" = Relationship(
+    user_settings: Mapped["UserSettings"] = Relationship(
         sa_relationship=relationship(
             "UserSettings", back_populates="user", uselist=False
         )
     )
-    user_social: "UserSocial" = Relationship(
+    user_social: Mapped["UserSocial"] = Relationship(
         sa_relationship=relationship("UserSocial", back_populates="user", uselist=False)
     )
-    password_resets: List["PasswordReset"] = Relationship(
+    password_resets: Mapped[List["PasswordReset"]] = Relationship(
         sa_relationship=relationship("PasswordReset", back_populates="user")
     )
-    email_verifications: List["EmailVerification"] = Relationship(
+    email_verifications: Mapped[List["EmailVerification"]] = Relationship(
         sa_relationship=relationship("EmailVerification", back_populates="user")
     )
 
@@ -172,7 +172,7 @@ class UserSettings(BaseModel, table=True):
 
     user_id: str = Field(foreign_key="user.id", unique=True)
     is_onboarded: bool = Field(default=False)
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="user_settings")
     )
 
@@ -185,7 +185,7 @@ class UserSocial(BaseModel, table=True):
     linkedin_url: str | None = Field(default=None)
     github_url: str | None = Field(default=None)
     website_url: str | None = Field(default=None)
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="user_social")
     )
 
@@ -198,25 +198,25 @@ class Post(BaseModel, table=True):
     channel_id: str | None = Field(foreign_key="channel.id", default=None)
     parent_id: str | None = Field(foreign_key="post.id", default=None)
     is_pinned: bool = Field(default=False)
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="posts")
     )
-    channel: Optional["Channel"] = Relationship(
+    channel: Mapped[Optional["Channel"]] = Relationship(
         sa_relationship=relationship("Channel", back_populates="posts")
     )
-    parent: Optional["Post"] = Relationship(
+    parent: Mapped[Optional["Post"]] = Relationship(
         sa_relationship=relationship(
             "Post", back_populates="replies", remote_side="Post.id"
         )
     )
-    replies: List["Post"] = Relationship(
+    replies: Mapped[List["Post"]] = Relationship(
         sa_relationship=relationship("Post", back_populates="parent")
     )
-    medias: List["Media"] = Relationship(
+    medias: Mapped[List["Media"]] = Relationship(
         sa_relationship=relationship("Media", back_populates="post")
     )
 
-    reactions: List["Reaction"] = Relationship(
+    reactions: Mapped[List["Reaction"]] = Relationship(
         sa_relationship=relationship("Reaction", back_populates="post")
     )
 
@@ -248,10 +248,10 @@ class Media(BaseModel, table=True):
     url: str = Field(index=True)
     post_id: str | None = Field(foreign_key="post.id", default=None)
     user_id: str = Field(foreign_key="user.id")
-    post: "Post" = Relationship(
+    post: Mapped["Post"] = Relationship(
         sa_relationship=relationship("Post", back_populates="medias")
     )
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="medias")
     )
 
@@ -269,13 +269,13 @@ class Channel(BaseModel, table=True):
     description: str | None = Field(default=None)
     slug: str = Field(index=True, unique=True)
     type: ChannelType = Field(default=ChannelType.PUBLIC)
-    members: List["ChannelMember"] = Relationship(
+    members: Mapped[List["ChannelMember"]] = Relationship(
         sa_relationship=relationship("ChannelMember", back_populates="channel")
     )
-    posts: List["Post"] = Relationship(
+    posts: Mapped[List["Post"]] = Relationship(
         sa_relationship=relationship("Post", back_populates="channel")
     )
-    resources: List["Resource"] = Relationship(
+    resources: Mapped[List["Resource"]] = Relationship(
         sa_relationship=relationship("Resource", back_populates="channel")
     )
 
@@ -283,10 +283,10 @@ class Channel(BaseModel, table=True):
 class ChannelMember(BaseModel, table=True):
     channel_id: str = Field(foreign_key="channel.id")
     user_id: str = Field(foreign_key="user.id")
-    channel: "Channel" = Relationship(
+    channel: Mapped["Channel"] = Relationship(
         sa_relationship=relationship("Channel", back_populates="members")
     )
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="channel_members")
     )
 
@@ -308,10 +308,10 @@ class Reaction(BaseModel, table=True):
     user_id: str = Field(foreign_key="user.id")
     post_id: str = Field(foreign_key="post.id")
     emoji: str
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="reactions")
     )
-    post: "Post" = Relationship(
+    post: Mapped["Post"] = Relationship(
         sa_relationship=relationship("Post", back_populates="reactions")
     )
 
@@ -357,13 +357,13 @@ class Course(BaseModel, table=True):
     instructor_id: str = Field(foreign_key="user.id")
     price: float | None = Field(default=None)
     is_featured: bool = Field(default=False)
-    instructor: "User" = Relationship(sa_relationship=relationship("User"))
-    sections: List["Section"] = Relationship(
+    instructor: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
+    sections: Mapped[List["Section"]] = Relationship(
         sa_relationship=relationship(
             "Section", back_populates="course", order_by="Section.order"
         )
     )
-    enrollments: List["EnrolledCourse"] = Relationship(
+    enrollments: Mapped[List["EnrolledCourse"]] = Relationship(
         sa_relationship=relationship("EnrolledCourse", back_populates="course")
     )
 
@@ -373,10 +373,10 @@ class Section(BaseModel, table=True):
     description: str | None = Field(default=None)
     order: int = Field(index=True)
     course_id: str = Field(foreign_key="course.id")
-    course: "Course" = Relationship(
+    course: Mapped["Course"] = Relationship(
         sa_relationship=relationship("Course", back_populates="sections")
     )
-    lessons: List["Lesson"] = Relationship(
+    lessons: Mapped[List["Lesson"]] = Relationship(
         sa_relationship=relationship(
             "Lesson", back_populates="section", order_by="Lesson.order"
         )
@@ -390,7 +390,7 @@ class Lesson(BaseModel, table=True):
     order: int = Field(index=True)
     type: LessonType = Field(default=LessonType.TEXT)
     section_id: str = Field(foreign_key="section.id")
-    section: "Section" = Relationship(
+    section: Mapped["Section"] = Relationship(
         sa_relationship=relationship("Section", back_populates="lessons")
     )
 
@@ -401,8 +401,8 @@ class EnrolledCourse(BaseModel, table=True):
     status: EnrollmentStatus = Field(default=EnrollmentStatus.ACTIVE)
     enrolled_at: str | None = Field(default=None)
     completed_at: str | None = Field(default=None)
-    user: "User" = Relationship(sa_relationship=relationship("User"))
-    course: "Course" = Relationship(
+    user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
+    course: Mapped["Course"] = Relationship(
         sa_relationship=relationship("Course", back_populates="enrollments")
     )
 
@@ -419,10 +419,10 @@ class Resource(BaseModel, table=True):
     description: str | None = Field(default=None)
     user_id: str = Field(foreign_key="user.id")
     channel_id: str = Field(foreign_key="channel.id")
-    user: "User" = Relationship(
+    user: Mapped["User"] = Relationship(
         sa_relationship=relationship("User", back_populates="resources")
     )
-    channel: "Channel" = Relationship(
+    channel: Mapped["Channel"] = Relationship(
         sa_relationship=relationship("Channel", back_populates="resources")
     )
 
@@ -455,4 +455,4 @@ class UserPresence(BaseModel, table=True):
         default=None, index=True
     )  # ISO datetime when disconnected
     duration_seconds: float | None = Field(default=None)  # Total connection duration
-    user: "User" = Relationship(sa_relationship=relationship("User"))
+    user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
