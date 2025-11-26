@@ -32,12 +32,12 @@ def fetch_url_metadata(url: str) -> dict:
             "meta", attrs={"property": "og:description"}
         )
         if desc_tag and desc_tag.get("content"):
-            description = desc_tag["content"].strip()
+            description = str(desc_tag["content"]).strip()
 
         image_url = None
         img_tag = soup.find("meta", attrs={"property": "og:image"})
         if img_tag and img_tag.get("content"):
-            image_url = img_tag["content"].strip()
+            image_url = str(img_tag["content"]).strip()
 
         return {"title": title, "description": description, "image_url": image_url}
     except requests.RequestException:

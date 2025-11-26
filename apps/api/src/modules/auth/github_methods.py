@@ -1,21 +1,15 @@
-"""
-GitHub OAuth authentication methods.
-"""
-
-import logging
 import secrets
 from typing import Optional, TypedDict
 
 from httpx_oauth.clients.github import GitHubOAuth2
 from httpx_oauth.oauth2 import OAuth2Token
+from loguru import logger
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.models import User, UserSettings
 from src.modules.user.user_methods import create_user, get_user_by_email
-
-logger = logging.getLogger(__name__)
 
 # Initialize GitHub OAuth client
 github_client = GitHubOAuth2(

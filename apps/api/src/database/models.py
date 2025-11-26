@@ -61,7 +61,7 @@ class PostType(str, Enum):
 
 
 class InviteCode(BaseModel, table=True):
-    __tablename__ = "invite_code"
+    __tablename__ = "invite_code"  # type: ignore
 
     code: str = Field(index=True, unique=True)
     max_uses: int = Field(default=1)
@@ -86,7 +86,7 @@ class InviteCode(BaseModel, table=True):
 
 
 class PasswordReset(BaseModel, table=True):
-    __tablename__ = "password_reset"
+    __tablename__ = "password_reset"  # type: ignore
 
     code: str = Field(index=True, unique=True)  # 6-letter code
     email: str = Field(index=True)
@@ -97,7 +97,7 @@ class PasswordReset(BaseModel, table=True):
 
 
 class EmailVerification(BaseModel, table=True):
-    __tablename__ = "email_verification"
+    __tablename__ = "email_verification"  # type: ignore
 
     code: str = Field(index=True, unique=True)  # 6-letter code
     email: str = Field(index=True)
@@ -108,7 +108,7 @@ class EmailVerification(BaseModel, table=True):
 
 
 class User(BaseModel, table=True):
-    __tablename__ = "user"
+    __tablename__ = "user"  # type: ignore
 
     name: str | None = Field(default=None)
     bio: str | None = Field(default=None)
@@ -168,7 +168,7 @@ class User(BaseModel, table=True):
 
 
 class UserSettings(BaseModel, table=True):
-    __tablename__ = "user_settings"
+    __tablename__ = "user_settings"  # type: ignore
 
     user_id: str = Field(foreign_key="user.id", unique=True)
     is_onboarded: bool = Field(default=False)
@@ -178,7 +178,7 @@ class UserSettings(BaseModel, table=True):
 
 
 class UserSocial(BaseModel, table=True):
-    __tablename__ = "user_social"
+    __tablename__ = "user_social"  # type: ignore
 
     user_id: str = Field(foreign_key="user.id", unique=True)
     twitter_url: str | None = Field(default=None)
@@ -232,9 +232,9 @@ class Post(BaseModel, table=True):
         )
         SELECT COUNT(*) FROM rt
         """)
-        session = inspect(self).session
-        if session:
-            return session.scalar(sql.bindparams(post_id=self.id))
+        insp = inspect(self)
+        if insp is not None and hasattr(insp, "session") and insp.session is not None:
+            return insp.session.scalar(sql.bindparams(post_id=self.id))
         return 0
 
     @hybrid_property
@@ -262,7 +262,7 @@ class ChannelType(str, Enum):
 
 
 class Channel(BaseModel, table=True):
-    __tablename__ = "channel"
+    __tablename__ = "channel"  # type: ignore
 
     emoji: str = Field(default="😊")
     name: str = Field(index=True)
@@ -428,7 +428,7 @@ class Resource(BaseModel, table=True):
 
 
 class AppSettings(BaseModel, table=True):
-    __tablename__ = "app_settings"
+    __tablename__ = "app_settings"  # type: ignore
 
     # Override id to use a constant value, ensuring only one record exists
     id: str = Field(default="singleton", primary_key=True)
@@ -439,14 +439,14 @@ class AppSettings(BaseModel, table=True):
 
 
 class AppLink(BaseModel, table=True):
-    __tablename__ = "app_links"
+    __tablename__ = "app_links"  # type: ignore
 
     label: str = Field(default="OpenCircle")
     url: str = Field(index=True)
 
 
 class UserPresence(BaseModel, table=True):
-    __tablename__ = "user_presence"
+    __tablename__ = "user_presence"  # type: ignore
 
     user_id: str = Field(foreign_key="user.id", index=True)
     connection_id: str = Field(index=True)  # WebSocket connection ID
