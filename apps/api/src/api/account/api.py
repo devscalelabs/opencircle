@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from src.core.settings import settings
 from src.database.engine import get_session as get_db
@@ -69,12 +69,12 @@ def get_account(
 ):
     """Get current user account information."""
     # Load user with user_settings and user_social relationships
-    user_with_data = (
-        db.query(User)
+    statement = (
+        select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .filter(User.id == current_user.id)
-        .first()
+        .where(User.id == current_user.id)
     )
+    user_with_data = db.exec(statement).first()
 
     if not user_with_data:
         raise HTTPException(
@@ -91,12 +91,17 @@ def get_account(
             # Handle race condition - another request already created the settings
             db.rollback()
             # Re-load the user to get the newly created settings
-            user_with_data = (
-                db.query(User)
+            statement = (
+                select(User)
                 .options(joinedload(User.user_settings), joinedload(User.user_social))
-                .filter(User.id == current_user.id)
-                .first()
+                .where(User.id == current_user.id)
             )
+            user_with_data = db.exec(statement).first()
+
+            if not user_with_data:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+                )
 
     # Create user social if they don't exist (for existing users)
     if not user_with_data.user_social:
@@ -108,12 +113,17 @@ def get_account(
             # Handle race condition - another request already created the social data
             db.rollback()
             # Re-load the user to get the newly created social data
-            user_with_data = (
-                db.query(User)
+            statement = (
+                select(User)
                 .options(joinedload(User.user_settings), joinedload(User.user_social))
-                .filter(User.id == current_user.id)
-                .first()
+                .where(User.id == current_user.id)
             )
+            user_with_data = db.exec(statement).first()
+
+            if not user_with_data:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+                )
 
     # Refresh to get the newly created relationships
     db.refresh(user_with_data)

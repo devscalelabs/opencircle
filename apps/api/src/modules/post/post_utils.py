@@ -15,8 +15,7 @@ def extract_mention(text: str) -> List[str]:
     if not text:
         return []
 
-    # Pattern to match @username where username contains word characters, underscores, and hyphens
     pattern = r"@(\w[\w-]*)"
     mentions = re.findall(pattern, text)
 
-    return list(set(mentions))  # Remove duplicates
+    return list(set(mentions))

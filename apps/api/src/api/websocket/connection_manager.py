@@ -59,7 +59,6 @@ class ConnectionManager:
 
     def disconnect(self, connection_id: str):
         """Remove a WebSocket connection and clean up subscriptions"""
-        # Calculate duration before removing metadata
         duration = self.get_connection_duration(connection_id)
 
         if connection_id in self.active_connections:
@@ -98,7 +97,6 @@ class ConnectionManager:
                 logger.error(f"Error updating presence record: {e}")
                 self.db_session.rollback()
 
-        # Remove metadata
         if connection_id in self.connection_metadata:
             del self.connection_metadata[connection_id]
 

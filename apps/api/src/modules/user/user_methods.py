@@ -66,81 +66,64 @@ def delete_user(db: Session, user_id: str) -> bool:
     if not user:
         return False
 
-    # Delete related records in order to avoid foreign key constraint violations
-
-    # Delete user presence records
     stmt = select(UserPresence).where(UserPresence.user_id == user_id)
     for presence in db.exec(stmt).all():
         db.delete(presence)
 
-    # Delete activities
     stmt = select(Activity).where(Activity.user_id == user_id)
     for activity in db.exec(stmt).all():
         db.delete(activity)
 
-    # Delete reactions first
     stmt = select(Reaction).where(Reaction.user_id == user_id)
     for reaction in db.exec(stmt).all():
         db.delete(reaction)
 
-    # Delete notifications (both sent and received)
     stmt = select(Notification).where(
         (Notification.sender_id == user_id) | (Notification.recipient_id == user_id)
     )
     for notification in db.exec(stmt).all():
         db.delete(notification)
 
-    # Delete password resets
     stmt = select(PasswordReset).where(PasswordReset.user_id == user_id)
     for password_reset in db.exec(stmt).all():
         db.delete(password_reset)
 
-    # Delete email verifications
     stmt = select(EmailVerification).where(EmailVerification.user_id == user_id)
     for email_verification in db.exec(stmt).all():
         db.delete(email_verification)
 
-    # Delete enrolled courses
     stmt = select(EnrolledCourse).where(EnrolledCourse.user_id == user_id)
     for enrolled_course in db.exec(stmt).all():
         db.delete(enrolled_course)
 
-    # Delete courses where user is instructor
     stmt = select(Course).where(Course.instructor_id == user_id)
     for course in db.exec(stmt).all():
         db.delete(course)
 
-    # Delete channel memberships
     stmt = select(ChannelMember).where(ChannelMember.user_id == user_id)
     for channel_member in db.exec(stmt).all():
         db.delete(channel_member)
 
-    # Delete resources
     stmt = select(Resource).where(Resource.user_id == user_id)
     for resource in db.exec(stmt).all():
         db.delete(resource)
 
-    # Delete media
     stmt = select(Media).where(Media.user_id == user_id)
     for media in db.exec(stmt).all():
         db.delete(media)
 
-    # Delete posts (this will handle replies via cascade if properly configured)
     stmt = select(Post).where(Post.user_id == user_id)
     for post in db.exec(stmt).all():
         db.delete(post)
 
-    # Delete user settings
     stmt = select(UserSettings).where(UserSettings.user_id == user_id)
     for user_settings in db.exec(stmt).all():
         db.delete(user_settings)
 
-    # Delete user social
     stmt = select(UserSocial).where(UserSocial.user_id == user_id)
     for user_social in db.exec(stmt).all():
         db.delete(user_social)
 
-    # Finally, delete the user
     db.delete(user)
     db.commit()
     return True

@@ -19,12 +19,10 @@ def create_reaction(db: Session, reaction_data: dict) -> Optional[Reaction]:
 
     if existing:
         if existing.emoji == emoji:
-            # Toggle off: delete the reaction
             db.delete(existing)
             db.commit()
             return None
         else:
-            # Update emoji
             existing.emoji = emoji
             db.commit()
             db.refresh(existing)

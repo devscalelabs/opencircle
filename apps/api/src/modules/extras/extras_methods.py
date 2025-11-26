@@ -7,7 +7,6 @@ from opengraph import OpenGraph
 def fetch_url_metadata(url: str) -> dict:
     """Fetch metadata from a URL using OpenGraph or fallback to HTML parsing."""
     try:
-        # Try OpenGraph first
         og = OpenGraph(url=url)
         if og.title or og.description or og.image:
             return {
@@ -18,7 +17,6 @@ def fetch_url_metadata(url: str) -> dict:
     except Exception:
         pass  # Fall back to HTML parsing
 
-    # Fallback to HTML parsing
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()

@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import joinedload
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from src.api.account.api import get_current_admin
 from src.database.engine import get_session as get_db
@@ -30,12 +30,12 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/users/{user_id}", response_model=UserResponse)
 def get_user_endpoint(user_id: str, db: Session = Depends(get_db)):
-    user = (
-        db.query(User)
+    statement = (
+        select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .filter(User.id == user_id)
-        .first()
+        .where(User.id == user_id)
     )
+    user = db.exec(statement).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -43,12 +43,12 @@ def get_user_endpoint(user_id: str, db: Session = Depends(get_db)):
 
 @router.get("/users/username/{username}", response_model=UserResponse)
 def get_user_by_username_endpoint(username: str, db: Session = Depends(get_db)):
-    user = (
-        db.query(User)
+    statement = (
+        select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .filter(User.username == username)
-        .first()
+        .where(User.username == username)
     )
+    user = db.exec(statement).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -75,7 +75,8 @@ def update_user_endpoint(user_id: str, user: UserUpdate, db: Session = Depends(g
 
     # Handle user_social updates
     if user_social_data:
-        user_social = db.query(UserSocial).filter(UserSocial.user_id == user_id).first()
+        statement = select(UserSocial).where(UserSocial.user_id == user_id)
+        user_social = db.exec(statement).first()
         if not user_social:
             user_social = UserSocial(user_id=user_id)
             db.add(user_social)
@@ -86,12 +87,12 @@ def update_user_endpoint(user_id: str, user: UserUpdate, db: Session = Depends(g
         db.commit()
 
     # Load user with relationships before returning
-    user_with_relations = (
-        db.query(User)
+    statement = (
+        select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .filter(User.id == user_id)
-        .first()
+        .where(User.id == user_id)
     )
+    user_with_relations = db.exec(statement).first()
 
     return user_with_relations
 
@@ -125,7 +126,8 @@ def update_user_with_file_endpoint(
 
     # Handle user_social updates
     if user_social_data:
-        user_social = db.query(UserSocial).filter(UserSocial.user_id == user_id).first()
+        statement = select(UserSocial).where(UserSocial.user_id == user_id)
+        user_social = db.exec(statement).first()
         if not user_social:
             user_social = UserSocial(user_id=user_id)
             db.add(user_social)
@@ -136,12 +138,12 @@ def update_user_with_file_endpoint(
     db.commit()
 
     # Load user with relationships before returning
-    user_with_relations = (
-        db.query(User)
+    statement = (
+        select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .filter(User.id == user_id)
-        .first()
+        .where(User.id == user_id)
     )
+    user_with_relations = db.exec(statement).first()
 
     return user_with_relations
 
