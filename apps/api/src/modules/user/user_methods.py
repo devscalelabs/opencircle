@@ -155,3 +155,16 @@ def get_admin_count(db: Session) -> int:
     """Get the count of admin users."""
     statement = select(func.count(col(User.id))).where(col(User.role) == Role.ADMIN)
     return db.exec(statement).one()
+
+
+def promote_user_to_admin(db: Session, user_id: str) -> Optional[User]:
+    """Promote a user to admin role and activate them."""
+    user = db.get(User, user_id)
+    if not user:
+        return None
+
+    user.role = Role.ADMIN
+    user.is_active = True  # Admin is active by default
+    db.commit()
+    db.refresh(user)
+    return user

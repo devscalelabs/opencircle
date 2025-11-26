@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, col, func, select
+from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.engine import get_session as get_db
-from src.database.models import Role, User
 from src.modules.appsettings import appsettings_methods
 from src.modules.auth.auth_methods import (
     create_access_token,
@@ -20,6 +19,7 @@ from src.modules.auth.github_methods import (
     handle_github_callback,
 )
 from src.modules.auth.password_reset_methods import reset_user_password
+from src.modules.user.user_methods import get_admin_count, promote_user_to_admin
 
 from .serializer import (
     ConfirmResetPasswordRequest,
@@ -78,9 +78,7 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
     """Register a new admin user - only allowed if no admin exists (admin_count == 0)."""
 
-    admin_count = db.exec(
-        select(func.count(col(User.id))).where(col(User.role) == Role.ADMIN.value)
-    ).one()
+    admin_count = get_admin_count(db)
     if admin_count > 0:
         raise HTTPException(
             status_code=403,
@@ -97,12 +95,13 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
             request.invite_code,
         )
 
-        user.role = Role.ADMIN
-        user.is_active = True  # Admin is active by default
-        db.commit()
-        db.refresh(user)
+        promoted_user = promote_user_to_admin(db, user.id)
+        if not promoted_user:
+            raise HTTPException(
+                status_code=500, detail="Failed to promote user to admin"
+            )
 
-        return {"message": "Admin registered successfully", "user_id": user.id}
+        return {"message": "Admin registered successfully", "user_id": promoted_user.id}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except IntegrityError as e:
