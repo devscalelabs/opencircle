@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, func, select
+from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.engine import get_session as get_db
-from src.database.models import Role, User
 from src.modules.appsettings import appsettings_methods
 from src.modules.auth.auth_methods import (
     create_access_token,
@@ -20,6 +19,7 @@ from src.modules.auth.github_methods import (
     handle_github_callback,
 )
 from src.modules.auth.password_reset_methods import reset_user_password
+from src.modules.user.user_methods import get_admin_count, promote_user_to_admin
 
 from .serializer import (
     ConfirmResetPasswordRequest,
@@ -43,7 +43,6 @@ router = APIRouter()
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
-    # Check if registration is enabled
     app_settings = appsettings_methods.get_active_app_settings(db)
     if app_settings and not app_settings.enable_sign_up:
         raise HTTPException(
@@ -78,10 +77,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 @router.post("/register-admin")
 def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
     """Register a new admin user - only allowed if no admin exists (admin_count == 0)."""
-    # Check if any admin already exists
-    admin_count = db.exec(
-        select(func.count(User.id)).where(User.role == Role.ADMIN)
-    ).one()
+
+    admin_count = get_admin_count(db)
     if admin_count > 0:
         raise HTTPException(
             status_code=403,
@@ -89,7 +86,6 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
         )
 
     try:
-        # Create admin user with admin role
         user = register_user(
             db,
             request.username,
@@ -99,13 +95,13 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
             request.invite_code,
         )
 
-        # Update user role to admin
-        user.role = Role.ADMIN
-        user.is_active = True  # Admin is active by default
-        db.commit()
-        db.refresh(user)
+        promoted_user = promote_user_to_admin(db, user.id)
+        if not promoted_user:
+            raise HTTPException(
+                status_code=500, detail="Failed to promote user to admin"
+            )
 
-        return {"message": "Admin registered successfully", "user_id": user.id}
+        return {"message": "Admin registered successfully", "user_id": promoted_user.id}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except IntegrityError as e:
@@ -124,7 +120,6 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     from src.modules.user.user_methods import get_user_by_username
 
-    # Check if user exists and is banned before attempting login
     user = get_user_by_username(db, request.username)
     if user and not user.is_active:
         raise HTTPException(
@@ -156,13 +151,11 @@ async def github_callback(
 ):
     """Handle GitHub OAuth callback and complete login."""
     try:
-        # Debug logging
         import logging
 
         logger = logging.getLogger(__name__)
         logger.info(f"GitHub callback received with code: {request.code[:10]}...")
 
-        # Check GitHub OAuth configuration
         if not settings.GITHUB_CLIENT_ID or not settings.GITHUB_CLIENT_SECRET:
             logger.error("GitHub OAuth credentials not configured")
             raise HTTPException(
@@ -170,7 +163,6 @@ async def github_callback(
                 detail="GitHub OAuth not properly configured",
             )
 
-        # Handle GitHub OAuth callback
         user, token = await handle_github_callback(db, request.code)
         if not user:
             raise HTTPException(
@@ -227,13 +219,11 @@ async def google_callback(
 ):
     """Handle Google OAuth callback and complete login."""
     try:
-        # Debug logging
         import logging
 
         logger = logging.getLogger(__name__)
         logger.info(f"Google callback received with code: {request.code[:10]}...")
 
-        # Check Google OAuth configuration
         if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
             logger.error("Google OAuth credentials not configured")
             raise HTTPException(
@@ -241,7 +231,6 @@ async def google_callback(
                 detail="Google OAuth not properly configured",
             )
 
-        # Handle Google OAuth callback
         from src.modules.auth.google_methods import handle_google_callback
 
         user, token = await handle_google_callback(db, request.code)

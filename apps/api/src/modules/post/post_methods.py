@@ -19,21 +19,17 @@ def filter_private_channel_posts(
     """Filter out posts from private channels where user is not a member."""
     filtered_posts = []
     for post in posts:
-        # If post has no channel, include it
         if not post.channel_id:
             filtered_posts.append(post)
             continue
 
-        # If channel is public, include the post
         if post.channel and post.channel.type != "private":
             filtered_posts.append(post)
             continue
 
-        # If channel is private and user is not provided, exclude the post
         if not current_user_id or not db:
             continue
 
-        # If channel is private, check if user is a member
         if post.channel and is_member(db, post.channel_id, current_user_id):
             filtered_posts.append(post)
 
@@ -49,7 +45,6 @@ def create_post(
     db.commit()
     db.refresh(post)
 
-    # Handle file uploads if provided
     if files:
         for file in files:
             url = upload_file(file)
@@ -92,7 +87,6 @@ def delete_post(db: Session, post_id: str) -> bool:
     if not post:
         return False
 
-    # Delete related media records first
     from src.database.models import Media, Reaction
 
     media_statement = select(Media).where(Media.post_id == post_id)
@@ -100,17 +94,14 @@ def delete_post(db: Session, post_id: str) -> bool:
     for media in media_records:
         db.delete(media)
 
-    # Delete related reactions
     reaction_statement = select(Reaction).where(Reaction.post_id == post_id)
     reaction_records = db.exec(reaction_statement).all()
     for reaction in reaction_records:
         db.delete(reaction)
 
-    # Delete all replies (nested posts) recursively
     replies_statement = select(Post).where(Post.parent_id == post_id)
     replies_records = db.exec(replies_statement).all()
     for reply in replies_records:
-        # Recursively delete each reply and its children
         delete_post(db, reply.id)
 
     db.delete(post)
@@ -169,13 +160,6 @@ def get_all_nested_posts_by_parent_id(
 ) -> list[Post]:
     from src.database.models import PostType, Role
 
-    # Recursive CTE to fetch all nested replies for a given parent post
-    # This query builds a hierarchical tree of all comments/replies starting from the specified parent_id
-    # 1. Base case: Get direct replies to the parent post (depth = 0)
-    # 2. Recursive case: Get replies to each reply, incrementing depth level
-    # 3. Join with user table to get author information for each post
-    # 4. Join with media table to get media files for each post
-    # 5. Order by parent creation time first, then by reply creation time to maintain hierarchy
     sql = """
     WITH RECURSIVE reply_tree AS (
         -- Base case: Get direct replies to the parent post
@@ -201,12 +185,10 @@ def get_all_nested_posts_by_parent_id(
     """
     result = db.exec(text(sql).bindparams(parent_id=parent_id))
 
-    # Group results by post to handle multiple media per post
     posts_dict = {}
     for row in result.all():
         post_id = row.id
 
-        # Create user object if not already created
         user = None
         if row.user_id:
             user_dict = {
@@ -224,7 +206,6 @@ def get_all_nested_posts_by_parent_id(
             }
             user = User(**user_dict)
 
-        # Create post if not already created
         if post_id not in posts_dict:
             post_dict = {
                 "id": row.id,
@@ -240,7 +221,6 @@ def get_all_nested_posts_by_parent_id(
             }
             posts_dict[post_id] = Post(**post_dict)
 
-        # Add media if present
         if row.media_id:
             media_dict = {
                 "id": row.media_id,
@@ -252,7 +232,6 @@ def get_all_nested_posts_by_parent_id(
             }
             posts_dict[post_id].medias.append(Media(**media_dict))
 
-    # Convert to list and sort by creation time to show newest first
     all_posts = list(posts_dict.values())
     return filter_private_channel_posts(all_posts, current_user_id, db)
 

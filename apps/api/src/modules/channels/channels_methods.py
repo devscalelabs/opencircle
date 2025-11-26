@@ -53,7 +53,6 @@ def get_all_channels(
     db: Session, skip: int = 0, limit: int = 100, user_id: Optional[str] = None
 ) -> List[Channel]:
     """Get all channels with pagination - all public and private channels."""
-    # Get all channels (public and private) with pagination, ordered by type (public first, then private)
     statement = (
         select(Channel).order_by(asc(Channel.created_at)).offset(skip).limit(limit)
     )
@@ -62,7 +61,6 @@ def get_all_channels(
 
 def add_member(db: Session, channel_id: str, user_id: str) -> Optional[ChannelMember]:
     """Add a member to a channel."""
-    # Check if already a member
     existing = db.exec(
         select(ChannelMember).where(
             ChannelMember.channel_id == channel_id, ChannelMember.user_id == user_id

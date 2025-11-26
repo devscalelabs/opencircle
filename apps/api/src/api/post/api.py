@@ -91,7 +91,6 @@ def create_post_endpoint(
 ):
     post_data = post.model_dump()
 
-    # Check channel access if post is in a channel
     if post_data.get("channel_id"):
         from src.modules.channels.channels_methods import get_channel, is_member
 
@@ -107,10 +106,8 @@ def create_post_endpoint(
 
     created_post = create_post(db, post_data)
 
-    # Calculate original_post_id for notification
     original_post_id = None
     if post_data.get("parent_id"):
-        # Walk up the parent chain to find the original post
         current_parent = get_post(db, post_data["parent_id"])
         while current_parent and current_parent.parent_id:
             current_parent = get_post(db, current_parent.parent_id)
@@ -118,7 +115,6 @@ def create_post_endpoint(
             current_parent.id if current_parent else post_data["parent_id"]
         )
 
-    # Extract mentions and create notifications
     if post_data.get("content"):
         mentions = extract_mention(post_data["content"])
         logger.info(mentions)
@@ -126,7 +122,7 @@ def create_post_endpoint(
             for username in mentions:
                 mentioned_user = get_user_by_username(db, username)
                 if mentioned_user:
-                    create_notification_task.delay(
+                    create_notification_task.delay(  # type: ignore
                         recipient_id=mentioned_user.id,
                         sender_id=current_user.id,
                         notification_type="mention",
@@ -137,7 +133,6 @@ def create_post_endpoint(
                         },
                     )
 
-    # Get the full post with relationships
     full_post = get_post(db, created_post.id)
     post_response_data = build_post_response_data(full_post, current_user.id, db)
     return PostResponse(**post_response_data)
@@ -154,7 +149,6 @@ def create_post_with_files_endpoint(
 
     post_data = json.loads(post)
 
-    # Check channel access if post is in a channel
     if post_data.get("channel_id"):
         from src.modules.channels.channels_methods import get_channel, is_member
 
@@ -170,10 +164,8 @@ def create_post_with_files_endpoint(
 
     created_post = create_post(db, post_data, files)
 
-    # Calculate original_post_id for notification
     original_post_id = None
     if post_data.get("parent_id"):
-        # Walk up the parent chain to find the original post
         current_parent = get_post(db, post_data["parent_id"])
         while current_parent and current_parent.parent_id:
             current_parent = get_post(db, current_parent.parent_id)
@@ -181,14 +173,13 @@ def create_post_with_files_endpoint(
             current_parent.id if current_parent else post_data["parent_id"]
         )
 
-    # Extract mentions and create notifications
     if post_data.get("content"):
         mentions = extract_mention(post_data["content"])
         if mentions:
             for username in mentions:
                 mentioned_user = get_user_by_username(db, username)
                 if mentioned_user:
-                    create_notification_task.delay(
+                    create_notification_task.delay(  # type: ignore
                         recipient_id=mentioned_user.id,
                         sender_id=current_user.id,
                         notification_type="mention",
@@ -199,7 +190,6 @@ def create_post_with_files_endpoint(
                         },
                     )
 
-    # Get the full post with relationships
     full_post = get_post(db, created_post.id)
     post_response_data = build_post_response_data(full_post, current_user.id, db)
     return PostResponse(**post_response_data)
@@ -215,7 +205,6 @@ def get_post_endpoint(
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    # Check channel access if post is in a channel
     if post.channel_id:
         from src.modules.channels.channels_methods import get_channel, is_member
 
@@ -231,8 +220,6 @@ def get_post_endpoint(
     return PostResponse(**post_response_data)
 
 
-# TODO : This is shitty
-# Need to rework on this endpoint
 @router.get("/posts/", response_model=List[PostResponse])
 def get_all_posts_endpoint(
     skip: int = 0,
@@ -244,7 +231,6 @@ def get_all_posts_endpoint(
     db: Session = Depends(get_session),
     current_user: Optional[User] = Depends(get_current_user_optional),
 ):
-    # Check channel access if filtering by channel
     if channel_slug:
         from src.modules.channels.channels_methods import get_channel_by_slug, is_member
 
@@ -284,12 +270,10 @@ def update_post_endpoint(
     db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    # Check if post exists and get channel access
     existing_post = get_post(db, post_id)
     if not existing_post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    # Check channel access if post is in a channel
     if existing_post.channel_id:
         from src.modules.channels.channels_methods import get_channel, is_member
 
@@ -305,7 +289,6 @@ def update_post_endpoint(
     if not updated_post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    # Get the full post with relationships
     full_post = get_post(db, updated_post.id)
     post_response_data = build_post_response_data(full_post, current_user.id, db)
     return PostResponse(**post_response_data)
@@ -321,7 +304,6 @@ def delete_post_endpoint(
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    # Check channel access if post is in a channel
     if post.channel_id:
         from src.modules.channels.channels_methods import get_channel, is_member
 

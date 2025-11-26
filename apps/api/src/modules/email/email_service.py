@@ -39,13 +39,12 @@ class EmailService:
             <p>Thanks,<br>The OpenCircle Team</p>
             """
 
-            params = {
+            params: resend.Emails.SendParams = {
                 "from": from_email,
                 "to": [to_email],
                 "subject": subject,
                 "html": html_content,
             }
-
             result = resend.Emails.send(params)
             logger.info(f"Email sent successfully: {result}")
             return True
@@ -81,13 +80,12 @@ class EmailService:
             <p>Thanks,<br>The OpenCircle Team</p>
             """
 
-            params = {
+            params: resend.Emails.SendParams = {
                 "from": from_email,
                 "to": [to_email],
                 "subject": subject,
                 "html": html_content,
             }
-
             result = resend.Emails.send(params)
             logger.info(f"Verification email sent successfully: {result}")
             return True

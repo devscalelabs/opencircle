@@ -31,6 +31,7 @@ from src.modules.appsettings import appsettings_methods
 async def lifespan(app: FastAPI):
     """Manage application lifecycle with AppSettings initialization."""
     logger.info("Initializing AppSettings...")
+    session = None
     try:
         session = next(get_session())
         appsettings_methods.get_or_create_app_settings(
@@ -46,7 +47,7 @@ async def lifespan(app: FastAPI):
         logger.error(f"Failed to initialize AppSettings: {e}")
         logger.warning("Continuing startup without AppSettings initialization")
     finally:
-        if "session" in locals():
+        if session is not None:
             session.close()
 
     yield

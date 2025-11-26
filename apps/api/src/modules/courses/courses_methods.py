@@ -61,20 +61,16 @@ def delete_course(db: Session, course_id: str) -> bool:
     for enrollment in enrollment_records:
         db.delete(enrollment)
 
-    # Delete related lessons (through sections)
     section_statement = select(Section).where(Section.course_id == course_id)
     section_records = db.exec(section_statement).all()
     for section in section_records:
-        # Delete lessons in this section
         lesson_statement = select(Lesson).where(Lesson.section_id == section.id)
         lesson_records = db.exec(lesson_statement).all()
         for lesson in lesson_records:
             db.delete(lesson)
 
-        # Delete the section
         db.delete(section)
 
-    # Finally delete the course
     db.delete(course)
     db.commit()
     return True
@@ -235,7 +231,6 @@ def get_all_lessons(
     return list(db.exec(statement).all())
 
 
-# Enrollment methods
 def create_enrollment(db: Session, enrollment_data: dict) -> EnrolledCourse:
     """Create a new enrollment."""
     # Set enrolled_at to current timestamp if not provided

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import event
+from sqlalchemy import DateTime, event
 from sqlmodel import Field, SQLModel
 
 from src.core.common import generate_id
@@ -8,8 +8,14 @@ from src.core.common import generate_id
 
 class BaseModel(SQLModel):
     id: str = Field(default_factory=generate_id, primary_key=True)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_type=DateTime(timezone=True),
+    )
 
 
 # Auto-update updated_at on model updates

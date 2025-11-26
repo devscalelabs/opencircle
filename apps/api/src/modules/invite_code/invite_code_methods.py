@@ -3,7 +3,7 @@ import string
 from datetime import datetime, timezone
 from typing import List, Optional
 
-from sqlalchemy import desc
+from sqlalchemy import desc, inspect
 from sqlmodel import Session, and_, select
 
 from src.database.models import (
@@ -84,9 +84,10 @@ def get_all_invite_codes(
     if filters:
         statement = statement.where(and_(*filters))
 
-    statement = (
-        statement.offset(skip).limit(limit).order_by(desc(InviteCode.created_at))
-    )
+    # Get the actual column from the table using inspect
+    mapper = inspect(InviteCode)
+    created_at_column = mapper.columns.created_at
+    statement = statement.offset(skip).limit(limit).order_by(desc(created_at_column))
     return list(db.exec(statement).all())
 
 
@@ -211,7 +212,7 @@ def get_invite_codes_by_channel(
         .where(InviteCode.auto_join_channel_id == channel_id)
         .offset(skip)
         .limit(limit)
-        .order_by(desc(InviteCode.created_at))
+        .order_by(desc(inspect(InviteCode).columns.created_at))
     )
 
     return list(db.exec(statement).all())

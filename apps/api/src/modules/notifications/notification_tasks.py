@@ -16,7 +16,6 @@ def create_notification_task(
     data: Optional[dict] = None,
 ):
     """Create a notification as a background task."""
-    # Skip notification if recipient is the same as sender
     if recipient_id == sender_id:
         return {
             "success": True,
@@ -25,7 +24,6 @@ def create_notification_task(
 
     with Session(engine) as db:
         try:
-            # Convert string to NotificationType enum
             notification_type_enum = NotificationType(notification_type)
 
             notification = create_notification(

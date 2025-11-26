@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Query
-from sqlmodel import Session, desc, func, select
+from sqlmodel import Session, col, desc, func, select
 
 from src.database.engine import get_session
 from src.database.models import User, UserPresence
@@ -20,26 +20,26 @@ async def get_presence_stats(
     stale_cutoff = datetime.now(timezone.utc) - timedelta(minutes=30)
 
     # Total sessions
-    total_sessions = session.exec(select(func.count(UserPresence.id))).one()
+    total_sessions = session.exec(select(func.count(col(UserPresence.id)))).one()
 
     # Active sessions (not disconnected yet and not stale)
     active_sessions = session.exec(
-        select(func.count(UserPresence.id)).where(
-            UserPresence.disconnected_at.is_(None),  # type: ignore - Fine, ty issue.
-            UserPresence.updated_at >= stale_cutoff,
+        select(func.count(col(UserPresence.id))).where(
+            col(UserPresence.disconnected_at).is_(None),
+            col(UserPresence.updated_at) >= stale_cutoff,
         )
     ).one()
 
     # Average session duration
     avg_duration = session.exec(
-        select(func.avg(UserPresence.duration_seconds)).where(
-            UserPresence.duration_seconds.is_not(None),  # type: ignore - Fine, ty issue.
+        select(func.avg(col(UserPresence.duration_seconds))).where(
+            col(UserPresence.duration_seconds).is_not(None),
         )
     ).one()
 
     # Total unique users
     unique_users = session.exec(
-        select(func.count(func.distinct(UserPresence.user_id)))
+        select(func.count(func.distinct(col(UserPresence.user_id))))
     ).one()
 
     return {
@@ -61,8 +61,8 @@ async def get_user_presence(
     """
     statement = (
         select(UserPresence)
-        .where(UserPresence.user_id == user_id)
-        .order_by(desc(UserPresence.connected_at))
+        .where(col(UserPresence.user_id) == user_id)
+        .order_by(desc(col(UserPresence.connected_at)))
         .limit(limit)
     )
     presences = session.exec(statement).all()
@@ -101,8 +101,8 @@ async def get_presence_timeseries(
 
     # Query all presence records in the date range
     statement = select(UserPresence).where(
-        UserPresence.connected_at >= start.isoformat(),
-        UserPresence.connected_at <= end.isoformat(),
+        col(UserPresence.connected_at) >= start.isoformat(),
+        col(UserPresence.connected_at) <= end.isoformat(),
     )
     presences = session.exec(statement).all()
 
@@ -180,8 +180,8 @@ async def cleanup_stale_presence(
 
     # Find stale connections (no disconnect time and older than 1 hour)
     stale_statement = select(UserPresence).where(
-        UserPresence.disconnected_at.is_(None),  # type: ignore - Fine ty issue.
-        UserPresence.updated_at < stale_cutoff,
+        col(UserPresence.disconnected_at).is_(None),
+        col(UserPresence.updated_at) < stale_cutoff,
     )
     stale_records = session.exec(stale_statement).all()
 
@@ -215,10 +215,10 @@ async def get_active_users_now(
 
     statement = (
         select(UserPresence, User)
-        .join(User, UserPresence.user_id == User.id)
+        .join(User, col(UserPresence.user_id) == col(User.id))
         .where(
-            UserPresence.disconnected_at.is_(None),  # type: ignore - Fine ty issue.
-            UserPresence.updated_at >= cutoff_time,
+            col(UserPresence.disconnected_at).is_(None),
+            col(UserPresence.updated_at) >= cutoff_time,
         )
     )
     results = session.exec(statement).all()
