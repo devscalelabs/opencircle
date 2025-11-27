@@ -193,6 +193,11 @@ class User(BaseModel, table=True):
     refresh_tokens: Mapped[List["RefreshToken"]] = Relationship(
         sa_relationship=relationship("RefreshToken", back_populates="user")
     )
+    notification_preferences: Mapped["NotificationPreferences"] = Relationship(
+        sa_relationship=relationship(
+            "NotificationPreferences", back_populates="user", uselist=False
+        )
+    )
 
 
 class UserSettings(BaseModel, table=True):
@@ -322,6 +327,14 @@ class ChannelMember(BaseModel, table=True):
 class NotificationType(str, Enum):
     MENTION = "mention"
     LIKE = "like"
+    REPLY = "reply"
+
+
+class NotificationFrequency(str, Enum):
+    IMMEDIATE = "immediate"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    NONE = "none"
 
 
 class ActivityType(str, Enum):
@@ -484,3 +497,32 @@ class UserPresence(BaseModel, table=True):
     )  # ISO datetime when disconnected
     duration_seconds: float | None = Field(default=None)  # Total connection duration
     user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
+
+
+class NotificationPreferences(BaseModel, table=True):
+    __tablename__ = "notification_preferences"  # type: ignore
+
+    user_id: str = Field(foreign_key="user.id", unique=True, index=True)
+    mention_email: NotificationFrequency = Field(
+        default=NotificationFrequency.IMMEDIATE
+    )
+    like_email: NotificationFrequency = Field(default=NotificationFrequency.DAILY)
+    reply_email: NotificationFrequency = Field(default=NotificationFrequency.IMMEDIATE)
+    user: Mapped["User"] = Relationship(
+        sa_relationship=relationship("User", back_populates="notification_preferences")
+    )
+
+
+class PendingNotificationEmail(BaseModel, table=True):
+    __tablename__ = "pending_notification_email"  # type: ignore
+
+    user_id: str = Field(foreign_key="user.id", index=True)
+    notification_id: str = Field(foreign_key="notification.id", index=True)
+    notification_type: NotificationType
+    frequency: NotificationFrequency
+    scheduled_for: str = Field(index=True)  # ISO datetime for when to send
+    is_sent: bool = Field(default=False, index=True)
+    user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
+    notification: Mapped["Notification"] = Relationship(
+        sa_relationship=relationship("Notification")
+    )

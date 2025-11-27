@@ -107,12 +107,26 @@ def create_post_endpoint(
     created_post = create_post(db, post_data)
 
     original_post_id = None
+    parent_post = None
     if post_data.get("parent_id"):
-        current_parent = get_post(db, post_data["parent_id"])
+        parent_post = get_post(db, post_data["parent_id"])
+        current_parent = parent_post
         while current_parent and current_parent.parent_id:
             current_parent = get_post(db, current_parent.parent_id)
         original_post_id = (
             current_parent.id if current_parent else post_data["parent_id"]
+        )
+
+    if parent_post and parent_post.user_id != current_user.id:
+        create_notification_task.delay(  # type: ignore
+            recipient_id=parent_post.user_id,
+            sender_id=current_user.id,
+            notification_type="reply",
+            data={
+                "post_id": created_post.id,
+                "content": post_data.get("content", ""),
+                "original_post_id": original_post_id,
+            },
         )
 
     if post_data.get("content"):
@@ -121,7 +135,9 @@ def create_post_endpoint(
         if mentions:
             for username in mentions:
                 mentioned_user = get_user_by_username(db, username)
-                if mentioned_user:
+                if mentioned_user and mentioned_user.id != current_user.id:
+                    if parent_post and mentioned_user.id == parent_post.user_id:
+                        continue
                     create_notification_task.delay(  # type: ignore
                         recipient_id=mentioned_user.id,
                         sender_id=current_user.id,
@@ -165,12 +181,26 @@ def create_post_with_files_endpoint(
     created_post = create_post(db, post_data, files)
 
     original_post_id = None
+    parent_post = None
     if post_data.get("parent_id"):
-        current_parent = get_post(db, post_data["parent_id"])
+        parent_post = get_post(db, post_data["parent_id"])
+        current_parent = parent_post
         while current_parent and current_parent.parent_id:
             current_parent = get_post(db, current_parent.parent_id)
         original_post_id = (
             current_parent.id if current_parent else post_data["parent_id"]
+        )
+
+    if parent_post and parent_post.user_id != current_user.id:
+        create_notification_task.delay(  # type: ignore
+            recipient_id=parent_post.user_id,
+            sender_id=current_user.id,
+            notification_type="reply",
+            data={
+                "post_id": created_post.id,
+                "content": post_data.get("content", ""),
+                "original_post_id": original_post_id,
+            },
         )
 
     if post_data.get("content"):
@@ -178,7 +208,9 @@ def create_post_with_files_endpoint(
         if mentions:
             for username in mentions:
                 mentioned_user = get_user_by_username(db, username)
-                if mentioned_user:
+                if mentioned_user and mentioned_user.id != current_user.id:
+                    if parent_post and mentioned_user.id == parent_post.user_id:
+                        continue
                     create_notification_task.delay(  # type: ignore
                         recipient_id=mentioned_user.id,
                         sender_id=current_user.id,
