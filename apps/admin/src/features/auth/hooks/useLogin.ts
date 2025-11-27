@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { HTTPError } from "ky";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { api } from "../../../utils/api";
+import { api, setTokens } from "../../../utils/api";
 export const useLogin = () => {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("");
@@ -21,7 +21,7 @@ export const useLogin = () => {
 			return res;
 		},
 		onSuccess: async (data) => {
-			localStorage.setItem("token", data.access_token);
+			setTokens(data.access_token, data.refresh_token);
 
 			// Check if user is admin
 			try {

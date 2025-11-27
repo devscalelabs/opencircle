@@ -16,6 +16,29 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class LoginResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+class RefreshTokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class LogoutRequest(BaseModel):
+    refresh_token: str
+
+
+class LogoutResponse(BaseModel):
+    message: str
+
+
 class GitHubLoginRequest(BaseModel):
     code: str
 
@@ -27,6 +50,7 @@ class GitHubAuthUrlResponse(BaseModel):
 
 class GitHubLoginResponse(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
     user_id: str
     username: str
@@ -63,6 +87,7 @@ class GoogleAuthUrlResponse(BaseModel):
 
 class GoogleLoginResponse(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
     user_id: str
     username: str
@@ -76,4 +101,23 @@ class VerifyEmailRequest(BaseModel):
 
 
 class VerifyEmailResponse(BaseModel):
+    message: str
+
+
+class SessionResponse(BaseModel):
+    id: str
+    device_name: Optional[str] = None
+    device_type: Optional[str] = None
+    browser: Optional[str] = None
+    os: Optional[str] = None
+    ip_address: Optional[str] = None
+    created_at: str
+    last_used_at: Optional[str] = None
+
+
+class RevokeSessionRequest(BaseModel):
+    session_id: str
+
+
+class RevokeSessionResponse(BaseModel):
     message: str

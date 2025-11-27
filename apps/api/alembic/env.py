@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from sqlmodel import SQLModel
-from src.database.models import Role, PostType, User, Post, Media, Channel, ChannelMember, ChannelType
+from src.database.models import Role, PostType, User, Post, Media, Channel, ChannelMember, ChannelType, RefreshToken, RefreshTokenStatus
 from src.core.settings import settings
 
 # this is the Alembic Config object, which provides
