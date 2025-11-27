@@ -33,6 +33,8 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 				return `${notification.sender.username} mentioned you`;
 			case "like":
 				return `${notification.sender.username} liked your post`;
+			case "reply":
+				return `${notification.sender.username} replied to your post`;
 			default:
 				return `${notification.sender.username} sent you a notification`;
 		}

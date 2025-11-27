@@ -10,6 +10,10 @@ import type {
 	GoogleLoginResponse,
 	LoginRequest,
 	LoginResponse,
+	LogoutRequest,
+	LogoutResponse,
+	RefreshTokenRequest,
+	RefreshTokenResponse,
 	RegisterRequest,
 	RegisterResponse,
 	ResetPasswordRequest,
@@ -64,5 +68,13 @@ export class AuthRouter extends BaseRouter {
 
 	async verifyEmail(data: VerifyEmailRequest): Promise<VerifyEmailResponse> {
 		return this.client.post<VerifyEmailResponse>("verify-email", data);
+	}
+
+	async refresh(data: RefreshTokenRequest): Promise<RefreshTokenResponse> {
+		return this.client.post<RefreshTokenResponse>("refresh", data);
+	}
+
+	async logout(data: LogoutRequest): Promise<LogoutResponse> {
+		return this.client.post<LogoutResponse>("logout", data);
 	}
 }

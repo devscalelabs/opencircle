@@ -55,6 +55,17 @@ function RouteComponent() {
 		validationErrors,
 	} = useRegister();
 
+	const showRegisterForm = !installationStatus?.is_installed;
+
+	const handleFormSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (showRegisterForm) {
+			register();
+		} else {
+			login();
+		}
+	};
+
 	if (isInstallationLoading) {
 		return (
 			<main className="m-auto max-w-sm">
@@ -74,8 +85,6 @@ function RouteComponent() {
 			</main>
 		);
 	}
-
-	const showRegisterForm = !installationStatus?.is_installed;
 
 	return (
 		<main className="m-auto max-w-sm">
@@ -104,7 +113,10 @@ function RouteComponent() {
 						)}
 					</div>
 				</section>
-				<div className="space-y-6 rounded-xl border border-border p-8 shadow-2xl">
+				<form
+					onSubmit={handleFormSubmit}
+					className="space-y-6 rounded-xl border border-border p-8 shadow-2xl"
+				>
 					<section className="space-y-3">
 						{showRegisterForm ? (
 							<>
@@ -162,11 +174,7 @@ function RouteComponent() {
 										</p>
 									)}
 								</section>
-								<Button
-									radius="xl"
-									className="mt-2 w-full"
-									onClick={() => register()}
-								>
+								<Button type="submit" radius="xl" className="mt-2 w-full">
 									Create Admin Account
 								</Button>
 							</>
@@ -187,17 +195,13 @@ function RouteComponent() {
 										onChange={(v) => setPassword(v.target.value)}
 									/>
 								</section>
-								<Button
-									radius="xl"
-									className="mt-2 w-full"
-									onClick={() => login()}
-								>
+								<Button type="submit" radius="xl" className="mt-2 w-full">
 									Login
 								</Button>
 							</>
 						)}
-					</section>{" "}
-				</div>
+					</section>
+				</form>
 			</div>
 		</main>
 	);

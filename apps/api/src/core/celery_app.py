@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 
 from src.core.settings import settings
 
@@ -22,4 +23,16 @@ celery_app.conf.update(
     task_soft_time_limit=25 * 60,
     worker_prefetch_multiplier=1,
     worker_max_tasks_per_child=1000,
+    beat_schedule={
+        "send-daily-notification-digest": {
+            "task": "src.modules.notifications.notification_tasks.send_notification_digest",
+            "schedule": crontab(hour=8, minute=0),
+            "args": ("daily",),
+        },
+        "send-weekly-notification-digest": {
+            "task": "src.modules.notifications.notification_tasks.send_notification_digest",
+            "schedule": crontab(hour=8, minute=0, day_of_week=1),
+            "args": ("weekly",),
+        },
+    },
 )

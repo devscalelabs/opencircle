@@ -14,19 +14,16 @@ def filter_private_channel_resources(
     """Filter out resources from private channels where user is not a member."""
     filtered_resources = []
     for resource in resources:
-        # If resource's channel is public, include it
-        if resource.channel.type != "private":
+        if resource.channel and resource.channel.type != "private":
             filtered_resources.append(resource)
             continue
 
-        # If channel is private and user is not provided, exclude the resource
         if not current_user_id or not db:
             continue
 
-        # If channel is private, check if user is a member
         from src.modules.channels.channels_methods import is_member
 
-        if is_member(db, resource.channel_id, current_user_id):
+        if resource.channel and is_member(db, resource.channel_id, current_user_id):
             filtered_resources.append(resource)
 
     return filtered_resources
@@ -52,6 +49,43 @@ def get_resource(db: Session, resource_id: str) -> Optional[Resource]:
     return resource
 
 
+def get_resources_by_user(db: Session, user_id: str) -> List[Resource]:
+    """Get all resources created by a user."""
+    statement = (
+        select(Resource)
+        .options(joinedload(Resource.user), joinedload(Resource.channel))
+        .where(Resource.user_id == user_id)
+        .order_by(desc(Resource.created_at))
+    )
+    resources = list(db.exec(statement).unique().all())
+    return resources
+
+
+def get_resources_by_channel(db: Session, channel_id: str) -> List[Resource]:
+    """Get all resources for a specific channel."""
+    statement = (
+        select(Resource)
+        .options(joinedload(Resource.user), joinedload(Resource.channel))
+        .where(Resource.channel_id == channel_id)
+        .order_by(desc(Resource.created_at))
+    )
+    resources = list(db.exec(statement).unique().all())
+    return resources
+
+
+def get_all_resources(db: Session, skip: int = 0, limit: int = 100) -> List[Resource]:
+    """Get all resources with pagination."""
+    statement = (
+        select(Resource)
+        .options(joinedload(Resource.user), joinedload(Resource.channel))
+        .order_by(desc(Resource.created_at))
+        .offset(skip)
+        .limit(limit)
+    )
+    resources = list(db.exec(statement).unique().all())
+    return resources
+
+
 def update_resource(
     db: Session, resource_id: str, update_data: dict
 ) -> Optional[Resource]:
@@ -74,40 +108,3 @@ def delete_resource(db: Session, resource_id: str) -> bool:
     db.delete(resource)
     db.commit()
     return True
-
-
-def get_resources_by_user(db: Session, user_id: str) -> List[Resource]:
-    """Get all resources created by a user."""
-    statement = (
-        select(Resource)
-        .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .where(Resource.user_id == user_id)
-        .order_by(desc(Resource.created_at))
-    )
-    resources = list(db.exec(statement).unique().all())
-    return resources
-
-
-def get_resources_by_channel(db: Session, channel_id: str) -> List[Resource]:
-    """Get all resources for a channel."""
-    statement = (
-        select(Resource)
-        .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .where(Resource.channel_id == channel_id)
-        .order_by(desc(Resource.created_at))
-    )
-    resources = list(db.exec(statement).unique().all())
-    return resources
-
-
-def get_all_resources(db: Session, skip: int = 0, limit: int = 100) -> List[Resource]:
-    """Get all resources with pagination."""
-    statement = (
-        select(Resource)
-        .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .order_by(desc(Resource.created_at))
-        .offset(skip)
-        .limit(limit)
-    )
-    resources = list(db.exec(statement).unique().all())
-    return resources

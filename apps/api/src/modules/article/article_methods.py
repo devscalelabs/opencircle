@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import desc
+from sqlalchemy import column, desc
 from sqlmodel import Session, select
 
 from src.database.models import Post, PostType
@@ -33,7 +33,7 @@ def get_all_articles(db: Session, skip: int = 0, limit: int = 100) -> List[Post]
     statement = (
         select(Post)
         .where(Post.type == PostType.ARTICLE)
-        .order_by(desc(Post.created_at))
+        .order_by(desc(column("created_at")))
         .offset(skip)
         .limit(limit)
     )
@@ -48,7 +48,7 @@ def get_articles_by_user(
     statement = (
         select(Post)
         .where(Post.type == PostType.ARTICLE, Post.user_id == user_id)
-        .order_by(desc(Post.created_at))
+        .order_by(desc(column("created_at")))
         .offset(skip)
         .limit(limit)
     )

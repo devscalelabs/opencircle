@@ -1,6 +1,6 @@
 {
   "name": "@opencircle/ui",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -22,6 +22,7 @@
   "packageManager": "pnpm@10.18.3",
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-select": "^2.2.6",
     "@tailwindcss/cli": "^4.1.14",
     "lucide-react": "^0.546.0",
     "radix-ui": "^1.4.3",

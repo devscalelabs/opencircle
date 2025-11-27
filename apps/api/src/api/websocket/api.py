@@ -43,13 +43,11 @@ async def websocket_endpoint(
     """
     connection_id = str(uuid.uuid4())
 
-    # Set database session for the connection manager
     manager.db_session = session
 
     try:
         await manager.connect(websocket, connection_id, user_id)
 
-        # Send connection confirmation
         await manager.send_personal_message(
             {
                 "type": "connected",
@@ -62,14 +60,11 @@ async def websocket_endpoint(
             connection_id,
         )
 
-        # Main message loop
         while True:
             try:
-                # Receive message from client
                 try:
                     data = await websocket.receive_text()
                 except RuntimeError as e:
-                    # Connection closed
                     logger.info(f"Connection closed for {connection_id}: {e}")
                     break
 
@@ -79,7 +74,6 @@ async def websocket_endpoint(
                 message_data = message.get("data", {})
 
                 if message_type == "subscribe":
-                    # Handle subscription request
                     subscription_type = message_data.get("subscription_type")
                     target_id = message_data.get("target_id")
 
@@ -109,7 +103,6 @@ async def websocket_endpoint(
                         )
 
                 elif message_type == "unsubscribe":
-                    # Handle unsubscription request
                     subscription_type = message_data.get("subscription_type")
                     target_id = message_data.get("target_id")
 
@@ -130,10 +123,8 @@ async def websocket_endpoint(
                     )
 
                 elif message_type == "heartbeat":
-                    # Update heartbeat timestamp
                     manager.update_heartbeat(connection_id)
 
-                    # Calculate and send connection duration
                     duration = manager.get_connection_duration(connection_id)
                     await manager.send_personal_message(
                         {
@@ -147,7 +138,6 @@ async def websocket_endpoint(
                     )
 
                 elif message_type == "ping":
-                    # Simple ping/pong for connection health check
                     await manager.send_personal_message(
                         {
                             "type": "pong",
@@ -157,7 +147,6 @@ async def websocket_endpoint(
                     )
 
                 else:
-                    # Unknown message type
                     await manager.send_personal_message(
                         {
                             "type": "error",
@@ -176,10 +165,8 @@ async def websocket_endpoint(
                         connection_id,
                     )
                 except Exception:
-                    # Connection might be closed, break the loop
                     break
             except Exception as e:
-                # Check if it's a connection close error
                 if "CloseCode" in str(e) or "disconnect" in str(e).lower():
                     logger.info(f"Connection closing for {connection_id}: {e}")
                     break
@@ -191,11 +178,9 @@ async def websocket_endpoint(
                         connection_id,
                     )
                 except Exception:
-                    # Connection might be closed, break the loop
                     break
 
     except WebSocketDisconnect:
-        # Calculate total session duration
         duration = manager.get_connection_duration(connection_id)
         logger.info(
             f"User {user_id} disconnected after {duration:.2f} seconds (connection: {connection_id})"

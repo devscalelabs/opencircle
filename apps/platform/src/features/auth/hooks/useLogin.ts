@@ -4,7 +4,7 @@ import { HTTPError } from "ky";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { api } from "../../../utils/api";
+import { api, setTokens } from "../../../utils/api";
 
 export const loginSchema = z.object({
 	username: z
@@ -51,7 +51,7 @@ export const useLogin = () => {
 			return res;
 		},
 		onSuccess: (data) => {
-			localStorage.setItem("token", data.access_token);
+			setTokens(data.access_token, data.refresh_token);
 			navigate({ to: "/" });
 		},
 		onError: async (error) => {

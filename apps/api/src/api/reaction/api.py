@@ -30,10 +30,9 @@ def create_reaction_endpoint(
     if created_reaction is None:
         return {"message": "Reaction removed"}
 
-    # Create notification for post owner when reaction is created
     post = get_post(db, created_reaction.post_id)
     if post and post.user_id != current_user.id:
-        create_notification_task.delay(
+        create_notification_task.delay(  # type: ignore
             recipient_id=post.user_id,
             sender_id=current_user.id,
             notification_type="like",
@@ -43,7 +42,6 @@ def create_reaction_endpoint(
             },
         )
 
-    # Manually construct response to avoid circular reference with post.reactions
     return {
         "id": created_reaction.id,
         "user_id": created_reaction.user_id,

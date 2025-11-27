@@ -3,10 +3,21 @@ import type { User } from "../auth/types";
 export const NotificationType = {
 	MENTION: "mention",
 	LIKE: "like",
+	REPLY: "reply",
 } as const;
 
 export type NotificationType =
 	(typeof NotificationType)[keyof typeof NotificationType];
+
+export const NotificationFrequency = {
+	IMMEDIATE: "immediate",
+	DAILY: "daily",
+	WEEKLY: "weekly",
+	NONE: "none",
+} as const;
+
+export type NotificationFrequency =
+	(typeof NotificationFrequency)[keyof typeof NotificationFrequency];
 
 export interface Notification {
 	id: string;
@@ -23,4 +34,20 @@ export interface Notification {
 	sender: User;
 	created_at: string;
 	updated_at: string;
+}
+
+export interface NotificationPreferences {
+	id: string;
+	user_id: string;
+	mention_email: NotificationFrequency;
+	like_email: NotificationFrequency;
+	reply_email: NotificationFrequency;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface NotificationPreferencesUpdate {
+	mention_email?: NotificationFrequency;
+	like_email?: NotificationFrequency;
+	reply_email?: NotificationFrequency;
 }

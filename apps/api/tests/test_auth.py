@@ -75,11 +75,16 @@ def test_login(monkeypatch):
     mock_db = MagicMock()
     mock_user = MagicMock()
     mock_user.is_active = True
-    mock_result = {"access_token": "token", "token_type": "bearer"}
-    
+    mock_result = {
+        "access_token": "token",
+        "refresh_token": "refresh_token",
+        "token_type": "bearer",
+    }
+
     # Mock get_user_by_username to return an active user
     monkeypatch.setattr(
-        "src.modules.user.user_methods.get_user_by_username", lambda *args, **kwargs: mock_user
+        "src.modules.user.user_methods.get_user_by_username",
+        lambda *args, **kwargs: mock_user,
     )
     # Mock login_user to return the token
     monkeypatch.setattr(
@@ -94,6 +99,7 @@ def test_login(monkeypatch):
     )
     assert response.status_code == 200
     assert "access_token" in response.json()
+    assert "refresh_token" in response.json()
 
 
 def test_login_banned_user(monkeypatch):

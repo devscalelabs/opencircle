@@ -1,17 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException
+from datetime import timedelta
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, func, select
+from sqlmodel import Session
 
 from src.core.settings import settings
 from src.database.engine import get_session as get_db
-from src.database.models import Role, User
 from src.modules.appsettings import appsettings_methods
 from src.modules.auth.auth_methods import (
+    DeviceInfo,
     create_access_token,
+    create_refresh_token,
     login_user,
     register_user,
     reset_password,
+    revoke_refresh_token,
+    verify_refresh_token,
 )
 from src.modules.auth.email_verification_methods import verify_user_email
 from src.modules.auth.github_methods import (
@@ -20,6 +25,7 @@ from src.modules.auth.github_methods import (
     handle_github_callback,
 )
 from src.modules.auth.password_reset_methods import reset_user_password
+from src.modules.user.user_methods import get_admin_count, promote_user_to_admin
 
 from .serializer import (
     ConfirmResetPasswordRequest,
@@ -31,6 +37,11 @@ from .serializer import (
     GoogleLoginRequest,
     GoogleLoginResponse,
     LoginRequest,
+    LoginResponse,
+    LogoutRequest,
+    LogoutResponse,
+    RefreshTokenRequest,
+    RefreshTokenResponse,
     RegisterRequest,
     ResetPasswordRequest,
     ResetPasswordResponse,
@@ -38,12 +49,77 @@ from .serializer import (
     VerifyEmailResponse,
 )
 
+
+def parse_user_agent(user_agent: str) -> dict:
+    """Parse user agent string to extract browser and OS info."""
+    browser = "Unknown Browser"
+    os = "Unknown OS"
+    device_type = "desktop"
+
+    ua_lower = user_agent.lower()
+
+    # Detect OS
+    if "windows" in ua_lower:
+        os = "Windows"
+    elif "mac os x" in ua_lower or "macintosh" in ua_lower:
+        os = "macOS"
+    elif "linux" in ua_lower:
+        os = "Linux"
+    elif "android" in ua_lower:
+        os = "Android"
+        device_type = "mobile"
+    elif "iphone" in ua_lower or "ipad" in ua_lower:
+        os = "iOS"
+        device_type = "mobile" if "iphone" in ua_lower else "tablet"
+
+    # Detect Browser
+    if "edg/" in ua_lower:
+        browser = "Edge"
+    elif "chrome" in ua_lower and "safari" in ua_lower:
+        browser = "Chrome"
+    elif "firefox" in ua_lower:
+        browser = "Firefox"
+    elif "safari" in ua_lower and "chrome" not in ua_lower:
+        browser = "Safari"
+    elif "opera" in ua_lower or "opr/" in ua_lower:
+        browser = "Opera"
+
+    device_name = f"{browser} on {os}"
+
+    return {
+        "browser": browser,
+        "os": os,
+        "device_type": device_type,
+        "device_name": device_name,
+    }
+
+
+def get_device_info(request: Request) -> DeviceInfo:
+    """Extract device info from request headers."""
+    user_agent = request.headers.get("user-agent", "")
+    parsed = parse_user_agent(user_agent)
+
+    # Get client IP (handle proxies)
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if forwarded_for:
+        ip_address = forwarded_for.split(",")[0].strip()
+    else:
+        ip_address = request.client.host if request.client else None
+
+    return DeviceInfo(
+        device_name=parsed["device_name"],
+        device_type=parsed["device_type"],
+        browser=parsed["browser"],
+        os=parsed["os"],
+        ip_address=ip_address,
+    )
+
+
 router = APIRouter()
 
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
-    # Check if registration is enabled
     app_settings = appsettings_methods.get_active_app_settings(db)
     if app_settings and not app_settings.enable_sign_up:
         raise HTTPException(
@@ -78,10 +154,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 @router.post("/register-admin")
 def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
     """Register a new admin user - only allowed if no admin exists (admin_count == 0)."""
-    # Check if any admin already exists
-    admin_count = db.exec(
-        select(func.count(User.id)).where(User.role == Role.ADMIN)
-    ).one()
+
+    admin_count = get_admin_count(db)
     if admin_count > 0:
         raise HTTPException(
             status_code=403,
@@ -89,7 +163,6 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
         )
 
     try:
-        # Create admin user with admin role
         user = register_user(
             db,
             request.username,
@@ -99,13 +172,13 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
             request.invite_code,
         )
 
-        # Update user role to admin
-        user.role = Role.ADMIN
-        user.is_active = True  # Admin is active by default
-        db.commit()
-        db.refresh(user)
+        promoted_user = promote_user_to_admin(db, user.id)
+        if not promoted_user:
+            raise HTTPException(
+                status_code=500, detail="Failed to promote user to admin"
+            )
 
-        return {"message": "Admin registered successfully", "user_id": user.id}
+        return {"message": "Admin registered successfully", "user_id": promoted_user.id}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except IntegrityError as e:
@@ -120,11 +193,10 @@ def register_admin(request: RegisterRequest, db: Session = Depends(get_db)):
         )
 
 
-@router.post("/login")
-def login(request: LoginRequest, db: Session = Depends(get_db)):
+@router.post("/login", response_model=LoginResponse)
+def login(request: LoginRequest, http_request: Request, db: Session = Depends(get_db)):
     from src.modules.user.user_methods import get_user_by_username
 
-    # Check if user exists and is banned before attempting login
     user = get_user_by_username(db, request.username)
     if user and not user.is_active:
         raise HTTPException(
@@ -132,10 +204,32 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
             detail="Your account has been banned. Please contact support.",
         )
 
-    result = login_user(db, request.username, request.password)
+    device_info = get_device_info(http_request)
+    result = login_user(db, request.username, request.password, device_info)
     if not result:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return result
+
+
+@router.post("/refresh", response_model=RefreshTokenResponse)
+def refresh_token(request: RefreshTokenRequest, db: Session = Depends(get_db)):
+    """Exchange a refresh token for a new access token."""
+    user = verify_refresh_token(db, request.refresh_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return RefreshTokenResponse(access_token=access_token, token_type="bearer")
+
+
+@router.post("/logout", response_model=LogoutResponse)
+def logout(request: LogoutRequest, db: Session = Depends(get_db)):
+    """Revoke a refresh token (logout)."""
+    revoke_refresh_token(db, request.refresh_token)
+    return LogoutResponse(message="Successfully logged out")
 
 
 @router.get("/github/login", response_model=GitHubAuthUrlResponse)
@@ -152,17 +246,16 @@ async def github_login():
 @router.post("/github/callback", response_model=GitHubLoginResponse)
 async def github_callback(
     request: GitHubLoginRequest,
+    http_request: Request,
     db: Session = Depends(get_db),
 ):
     """Handle GitHub OAuth callback and complete login."""
     try:
-        # Debug logging
         import logging
 
         logger = logging.getLogger(__name__)
         logger.info(f"GitHub callback received with code: {request.code[:10]}...")
 
-        # Check GitHub OAuth configuration
         if not settings.GITHUB_CLIENT_ID or not settings.GITHUB_CLIENT_SECRET:
             logger.error("GitHub OAuth credentials not configured")
             raise HTTPException(
@@ -170,7 +263,6 @@ async def github_callback(
                 detail="GitHub OAuth not properly configured",
             )
 
-        # Handle GitHub OAuth callback
         user, token = await handle_github_callback(db, request.code)
         if not user:
             raise HTTPException(
@@ -178,15 +270,16 @@ async def github_callback(
                 detail="Your account has been banned. Please contact support.",
             )
 
-        from datetime import timedelta
-
+        device_info = get_device_info(http_request)
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
+        refresh_token = create_refresh_token(db, user.id, device_info)
 
         return GitHubLoginResponse(
             access_token=access_token,
+            refresh_token=refresh_token,
             token_type="bearer",
             user_id=user.id,
             username=user.username,
@@ -223,17 +316,16 @@ async def google_login():
 @router.post("/google/callback", response_model=GoogleLoginResponse)
 async def google_callback(
     request: GoogleLoginRequest,
+    http_request: Request,
     db: Session = Depends(get_db),
 ):
     """Handle Google OAuth callback and complete login."""
     try:
-        # Debug logging
         import logging
 
         logger = logging.getLogger(__name__)
         logger.info(f"Google callback received with code: {request.code[:10]}...")
 
-        # Check Google OAuth configuration
         if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
             logger.error("Google OAuth credentials not configured")
             raise HTTPException(
@@ -241,7 +333,6 @@ async def google_callback(
                 detail="Google OAuth not properly configured",
             )
 
-        # Handle Google OAuth callback
         from src.modules.auth.google_methods import handle_google_callback
 
         user, token = await handle_google_callback(db, request.code)
@@ -251,15 +342,16 @@ async def google_callback(
                 detail="Your account has been banned. Please contact support.",
             )
 
-        from datetime import timedelta
-
+        device_info = get_device_info(http_request)
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
+        refresh_token = create_refresh_token(db, user.id, device_info)
 
         return GoogleLoginResponse(
             access_token=access_token,
+            refresh_token=refresh_token,
             token_type="bearer",
             user_id=user.id,
             username=user.username,
