@@ -46,25 +46,25 @@ function EditProfile() {
 					<button
 						type="button"
 						onClick={() => setActiveTab("profile")}
-						className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
+						className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
 							activeTab === "profile"
 								? "bg-primary text-primary-foreground"
 								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
 						}`}
 					>
-						<User className="h-4 w-4" />
+						<User className="h-3.5 w-3.5" />
 						Profile
 					</button>
 					<button
 						type="button"
 						onClick={() => setActiveTab("sessions")}
-						className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
+						className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
 							activeTab === "sessions"
 								? "bg-primary text-primary-foreground"
 								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
 						}`}
 					>
-						<Shield className="h-4 w-4" />
+						<Shield className="h-3.5 w-3.5" />
 						Sessions
 					</button>
 				</div>
