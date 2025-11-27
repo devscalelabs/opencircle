@@ -4,8 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     DB_URL: str = ""
     SECRET_KEY: str = "your-secret-key"
+    REFRESH_TOKEN_SECRET_KEY: str = "your-refresh-secret-key"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     # R2 Cloudflare Settings
     R2_ENDPOINT_URL: str = ""
     R2_ACCESS_KEY_ID: str = ""

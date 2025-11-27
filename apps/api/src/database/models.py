@@ -53,6 +53,12 @@ class EmailVerificationStatus(str, Enum):
     EXPIRED = "expired"
 
 
+class RefreshTokenStatus(str, Enum):
+    ACTIVE = "active"
+    REVOKED = "revoked"
+    EXPIRED = "expired"
+
+
 class PostType(str, Enum):
     POST = "post"
     COMMENT = "comment"
@@ -105,6 +111,25 @@ class EmailVerification(BaseModel, table=True):
     expires_at: str  # ISO datetime string
     user_id: str = Field(foreign_key="user.id")
     user: Mapped["User"] = Relationship(sa_relationship=relationship("User"))
+
+
+class RefreshToken(BaseModel, table=True):
+    __tablename__ = "refresh_token"  # type: ignore
+
+    token_hash: str = Field(index=True, unique=True)
+    user_id: str = Field(foreign_key="user.id")
+    status: RefreshTokenStatus = Field(default=RefreshTokenStatus.ACTIVE)
+    expires_at: str  # ISO datetime string
+    # Device/session info
+    device_name: str | None = Field(default=None)  # e.g., "Chrome on macOS"
+    device_type: str | None = Field(default=None)  # e.g., "desktop", "mobile", "tablet"
+    browser: str | None = Field(default=None)  # e.g., "Chrome 120"
+    os: str | None = Field(default=None)  # e.g., "macOS 14.0"
+    ip_address: str | None = Field(default=None)
+    last_used_at: str | None = Field(default=None)  # ISO datetime string
+    user: Mapped["User"] = Relationship(
+        sa_relationship=relationship("User", back_populates="refresh_tokens")
+    )
 
 
 class User(BaseModel, table=True):
@@ -164,6 +189,9 @@ class User(BaseModel, table=True):
     )
     email_verifications: Mapped[List["EmailVerification"]] = Relationship(
         sa_relationship=relationship("EmailVerification", back_populates="user")
+    )
+    refresh_tokens: Mapped[List["RefreshToken"]] = Relationship(
+        sa_relationship=relationship("RefreshToken", back_populates="user")
     )
 
 

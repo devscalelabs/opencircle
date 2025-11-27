@@ -86,7 +86,25 @@ export interface RegisterResponse {
 
 export interface LoginResponse {
 	access_token: string;
+	refresh_token: string;
 	token_type: string;
+}
+
+export interface RefreshTokenRequest {
+	refresh_token: string;
+}
+
+export interface RefreshTokenResponse {
+	access_token: string;
+	token_type: string;
+}
+
+export interface LogoutRequest {
+	refresh_token: string;
+}
+
+export interface LogoutResponse {
+	message: string;
 }
 
 export interface GitHubAuthUrlResponse {
@@ -100,6 +118,7 @@ export interface GitHubLoginRequest {
 
 export interface GitHubLoginResponse {
 	access_token: string;
+	refresh_token: string;
 	token_type: string;
 	user_id: string;
 	username: string;
@@ -136,6 +155,7 @@ export interface GoogleLoginRequest {
 
 export interface GoogleLoginResponse {
 	access_token: string;
+	refresh_token: string;
 	token_type: string;
 	user_id: string;
 	username: string;
@@ -149,5 +169,24 @@ export interface VerifyEmailRequest {
 }
 
 export interface VerifyEmailResponse {
+	message: string;
+}
+
+export interface Session {
+	id: string;
+	device_name?: string;
+	device_type?: string;
+	browser?: string;
+	os?: string;
+	ip_address?: string;
+	created_at: string;
+	last_used_at?: string;
+}
+
+export interface RevokeSessionRequest {
+	session_id: string;
+}
+
+export interface RevokeSessionResponse {
 	message: string;
 }

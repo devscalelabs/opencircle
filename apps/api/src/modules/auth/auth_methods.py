@@ -1,13 +1,21 @@
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional, TypedDict
 
 import jwt
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from src.core.settings import settings
-from src.database.models import InviteCodeStatus, User, UserSettings
+from src.database.models import (
+    InviteCodeStatus,
+    RefreshToken,
+    RefreshTokenStatus,
+    User,
+    UserSettings,
+)
 from src.modules.auth.email_verification_methods import create_email_verification
 from src.modules.auth.password_reset_methods import create_password_reset
 from src.modules.email.email_service import email_service
@@ -41,11 +49,143 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
     )
     return encoded_jwt
+
+
+def generate_refresh_token() -> str:
+    """Generate a secure random refresh token."""
+    return secrets.token_urlsafe(64)
+
+
+def hash_token(token: str) -> str:
+    """Hash a token for storage."""
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+class DeviceInfo(TypedDict, total=False):
+    device_name: str
+    device_type: str
+    browser: str
+    os: str
+    ip_address: str
+
+
+def create_refresh_token(
+    db: Session, user_id: str, device_info: Optional[DeviceInfo] = None
+) -> str:
+    """Create a refresh token and store it in the database."""
+    token = generate_refresh_token()
+    token_hash = hash_token(token)
+    expires_at = datetime.now(timezone.utc) + timedelta(
+        days=settings.REFRESH_TOKEN_EXPIRE_DAYS
+    )
+
+    refresh_token = RefreshToken(
+        token_hash=token_hash,
+        user_id=user_id,
+        status=RefreshTokenStatus.ACTIVE,
+        expires_at=expires_at.isoformat(),
+        device_name=device_info.get("device_name") if device_info else None,
+        device_type=device_info.get("device_type") if device_info else None,
+        browser=device_info.get("browser") if device_info else None,
+        os=device_info.get("os") if device_info else None,
+        ip_address=device_info.get("ip_address") if device_info else None,
+        last_used_at=datetime.now(timezone.utc).isoformat(),
+    )
+    db.add(refresh_token)
+    db.commit()
+
+    return token
+
+
+def verify_refresh_token(db: Session, token: str) -> Optional[User]:
+    """Verify a refresh token and return the associated user."""
+    token_hash = hash_token(token)
+    statement = select(RefreshToken).where(
+        RefreshToken.token_hash == token_hash,
+        RefreshToken.status == RefreshTokenStatus.ACTIVE,
+    )
+    refresh_token = db.exec(statement).first()
+
+    if not refresh_token:
+        return None
+
+    # Check expiration
+    expires_at = datetime.fromisoformat(refresh_token.expires_at.replace("Z", "+00:00"))
+    if datetime.now(timezone.utc) > expires_at:
+        refresh_token.status = RefreshTokenStatus.EXPIRED
+        db.commit()
+        return None
+
+    # Get user
+    user = db.get(User, refresh_token.user_id)
+    if not user or not user.is_active:
+        return None
+
+    # Update last_used_at
+    refresh_token.last_used_at = datetime.now(timezone.utc).isoformat()
+    db.commit()
+
+    return user
+
+
+def revoke_refresh_token(db: Session, token: str) -> bool:
+    """Revoke a refresh token."""
+    token_hash = hash_token(token)
+    statement = select(RefreshToken).where(RefreshToken.token_hash == token_hash)
+    refresh_token = db.exec(statement).first()
+
+    if not refresh_token:
+        return False
+
+    refresh_token.status = RefreshTokenStatus.REVOKED
+    db.commit()
+    return True
+
+
+def revoke_all_user_refresh_tokens(db: Session, user_id: str) -> int:
+    """Revoke all refresh tokens for a user."""
+    statement = select(RefreshToken).where(
+        RefreshToken.user_id == user_id,
+        RefreshToken.status == RefreshTokenStatus.ACTIVE,
+    )
+    tokens = db.exec(statement).all()
+    count = 0
+    for token in tokens:
+        token.status = RefreshTokenStatus.REVOKED
+        count += 1
+    db.commit()
+    return count
+
+
+def get_user_sessions(db: Session, user_id: str) -> list[RefreshToken]:
+    """Get all active sessions for a user."""
+    statement = select(RefreshToken).where(
+        RefreshToken.user_id == user_id,
+        RefreshToken.status == RefreshTokenStatus.ACTIVE,
+    )
+    return list(db.exec(statement).all())
+
+
+def revoke_session_by_id(db: Session, session_id: str, user_id: str) -> bool:
+    """Revoke a specific session by ID (only if it belongs to the user)."""
+    statement = select(RefreshToken).where(
+        RefreshToken.id == session_id,
+        RefreshToken.user_id == user_id,
+        RefreshToken.status == RefreshTokenStatus.ACTIVE,
+    )
+    refresh_token = db.exec(statement).first()
+
+    if not refresh_token:
+        return False
+
+    refresh_token.status = RefreshTokenStatus.REVOKED
+    db.commit()
+    return True
 
 
 def register_user(
@@ -148,11 +288,17 @@ def authenticate_user(db: Session, username: str, password: str) -> Optional[Use
 
 class Token(TypedDict):
     access_token: str
+    refresh_token: str
     token_type: str
 
 
-def login_user(db: Session, username: str, password: str) -> Optional[Token]:
-    """Login a user and return access token."""
+def login_user(
+    db: Session,
+    username: str,
+    password: str,
+    device_info: Optional[DeviceInfo] = None,
+) -> Optional[Token]:
+    """Login a user and return access and refresh tokens."""
     user = authenticate_user(db, username, password)
     if not user:
         return None
@@ -165,7 +311,12 @@ def login_user(db: Session, username: str, password: str) -> Optional[Token]:
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    refresh_token = create_refresh_token(db, user.id, device_info)
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+    }
 
 
 def reset_password(db: Session, email: str) -> bool:

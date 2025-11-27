@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { HTTPError } from "ky";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
-import { api } from "../../../utils/api";
+import { api, setTokens } from "../../../utils/api";
 
 export const useGitHubAuth = () => {
 	const navigate = useNavigate();
@@ -35,7 +35,7 @@ export const useGitHubAuth = () => {
 			return res;
 		},
 		onSuccess: (data) => {
-			localStorage.setItem("token", data.access_token);
+			setTokens(data.access_token, data.refresh_token);
 			toast.success("Successfully logged in with GitHub!");
 			navigate({ to: "/" });
 		},

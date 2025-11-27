@@ -2,6 +2,7 @@ import type { User } from "@opencircle/core";
 import { Avatar } from "@opencircle/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { DropdownMenu } from "radix-ui";
+import { clearTokens } from "../../../utils/api";
 import { getInitials } from "../../../utils/common";
 
 interface UserCardProps {
@@ -12,7 +13,7 @@ export const UserCard = ({ account }: UserCardProps) => {
 	const navigate = useNavigate();
 
 	function handleLogout() {
-		localStorage.removeItem("token");
+		clearTokens();
 		navigate({ to: "/login" });
 	}
 
