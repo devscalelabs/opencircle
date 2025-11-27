@@ -1,8 +1,9 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Shield, User } from "lucide-react";
+import { Bell, Shield, User } from "lucide-react";
 import { useState } from "react";
 import { METADATA } from "../../constants/metadata";
 import { SessionsTab } from "../../features/auth/components/sessionsTab";
+import { NotificationPreferencesTab } from "../../features/notifications/components/notificationPreferencesTab";
 import { ProfileTab } from "../../features/user/components/profileTab";
 
 export const Route = createFileRoute("/_socialLayout/edit-profile")({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/_socialLayout/edit-profile")({
 	component: EditProfile,
 });
 
-type Tab = "profile" | "sessions";
+type Tab = "profile" | "notifications" | "sessions";
 
 function EditProfile() {
 	const router = useRouter();
@@ -57,6 +58,18 @@ function EditProfile() {
 					</button>
 					<button
 						type="button"
+						onClick={() => setActiveTab("notifications")}
+						className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
+							activeTab === "notifications"
+								? "bg-primary text-primary-foreground"
+								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
+						}`}
+					>
+						<Bell className="h-3.5 w-3.5" />
+						Notifications
+					</button>
+					<button
+						type="button"
 						onClick={() => setActiveTab("sessions")}
 						className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${
 							activeTab === "sessions"
@@ -72,6 +85,7 @@ function EditProfile() {
 			<section className="py-6">
 				<div className="mx-auto max-w-2xl px-4">
 					{activeTab === "profile" && <ProfileTab />}
+					{activeTab === "notifications" && <NotificationPreferencesTab />}
 					{activeTab === "sessions" && <SessionsTab />}
 				</div>
 			</section>
