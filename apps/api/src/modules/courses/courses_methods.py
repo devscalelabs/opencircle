@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from sqlalchemy.orm import selectinload
@@ -15,6 +15,12 @@ from src.database.models import (
 )
 
 
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
+
+
 # Course methods
 def create_course(db: Session, course_data: dict) -> Course:
     """Create a new course."""
@@ -29,7 +35,7 @@ def get_course(db: Session, course_id: str) -> Optional[Course]:
     """Get a course by ID with sections and lessons."""
     statement = (
         select(Course)
-        .where(Course.id == course_id)
+        .where(Course.id == course_id, Course.deleted_at.is_(None))
         .options(selectinload(Course.sections).selectinload(Section.lessons))
     )
     return db.exec(statement).first()
@@ -48,18 +54,18 @@ def update_course(db: Session, course_id: str, update_data: dict) -> Optional[Co
 
 
 def delete_course(db: Session, course_id: str) -> bool:
-    """Delete a course by ID."""
+    """Soft delete a course by ID."""
     course = db.get(Course, course_id)
     if not course:
         return False
 
-    # Delete related enrollments first
+    # Soft delete related enrollments first
     enrollment_statement = select(EnrolledCourse).where(
         EnrolledCourse.course_id == course_id
     )
     enrollment_records = db.exec(enrollment_statement).all()
     for enrollment in enrollment_records:
-        db.delete(enrollment)
+        soft_delete(db, enrollment)
 
     section_statement = select(Section).where(Section.course_id == course_id)
     section_records = db.exec(section_statement).all()
@@ -67,11 +73,11 @@ def delete_course(db: Session, course_id: str) -> bool:
         lesson_statement = select(Lesson).where(Lesson.section_id == section.id)
         lesson_records = db.exec(lesson_statement).all()
         for lesson in lesson_records:
-            db.delete(lesson)
+            soft_delete(db, lesson)
 
-        db.delete(section)
+        soft_delete(db, section)
 
-    db.delete(course)
+    soft_delete(db, course)
     db.commit()
     return True
 
@@ -86,7 +92,11 @@ def get_all_courses(
 ) -> List[Course]:
     """Get all courses with pagination and optional filters."""
     statement = (
-        select(Course).order_by(desc(Course.created_at)).offset(skip).limit(limit)
+        select(Course)
+        .where(Course.deleted_at.is_(None))
+        .order_by(desc(Course.created_at))
+        .offset(skip)
+        .limit(limit)
     )
 
     if instructor_id:
@@ -111,6 +121,7 @@ def get_featured_courses(
         select(Course)
         .where(Course.is_featured)
         .where(Course.status == CourseStatus.PUBLISHED)
+        .where(Course.deleted_at.is_(None))
         .order_by(desc(Course.created_at))
         .offset(skip)
         .limit(limit)
@@ -131,7 +142,8 @@ def create_section(db: Session, section_data: dict) -> Section:
 
 def get_section(db: Session, section_id: str) -> Optional[Section]:
     """Get a section by ID."""
-    return db.get(Section, section_id)
+    statement = select(Section).where(Section.id == section_id, Section.deleted_at.is_(None))
+    return db.exec(statement).first()
 
 
 def update_section(
@@ -149,11 +161,11 @@ def update_section(
 
 
 def delete_section(db: Session, section_id: str) -> bool:
-    """Delete a section by ID."""
+    """Soft delete a section by ID."""
     section = db.get(Section, section_id)
     if not section:
         return False
-    db.delete(section)
+    soft_delete(db, section)
     db.commit()
     return True
 
@@ -162,7 +174,7 @@ def get_all_sections(
     db: Session, skip: int = 0, limit: int = 100, course_id: Optional[str] = None
 ) -> List[Section]:
     """Get all sections with pagination and optional course filter."""
-    statement = select(Section).offset(skip).limit(limit)
+    statement = select(Section).where(Section.deleted_at.is_(None)).offset(skip).limit(limit)
 
     if course_id:
         statement = statement.where(Section.course_id == course_id)
@@ -184,7 +196,7 @@ def get_lesson(db: Session, lesson_id: str) -> Optional[Lesson]:
     """Get a lesson by ID with section and course relationships."""
     statement = (
         select(Lesson)
-        .where(Lesson.id == lesson_id)
+        .where(Lesson.id == lesson_id, Lesson.deleted_at.is_(None))
         .options(selectinload(Lesson.section).selectinload(Section.course))
     )
     return db.exec(statement).first()
@@ -203,11 +215,11 @@ def update_lesson(db: Session, lesson_id: str, update_data: dict) -> Optional[Le
 
 
 def delete_lesson(db: Session, lesson_id: str) -> bool:
-    """Delete a lesson by ID."""
+    """Soft delete a lesson by ID."""
     lesson = db.get(Lesson, lesson_id)
     if not lesson:
         return False
-    db.delete(lesson)
+    soft_delete(db, lesson)
     db.commit()
     return True
 
@@ -220,7 +232,7 @@ def get_all_lessons(
     type: Optional[str] = None,
 ) -> List[Lesson]:
     """Get all lessons with pagination and optional filters."""
-    statement = select(Lesson).offset(skip).limit(limit)
+    statement = select(Lesson).where(Lesson.deleted_at.is_(None)).offset(skip).limit(limit)
 
     if section_id:
         statement = statement.where(Lesson.section_id == section_id)
@@ -249,7 +261,10 @@ def create_enrollment(db: Session, enrollment_data: dict) -> EnrolledCourse:
 
 def get_enrollment(db: Session, enrollment_id: str) -> Optional[EnrolledCourse]:
     """Get an enrollment by ID."""
-    return db.get(EnrolledCourse, enrollment_id)
+    statement = select(EnrolledCourse).where(
+        EnrolledCourse.id == enrollment_id, EnrolledCourse.deleted_at.is_(None)
+    )
+    return db.exec(statement).first()
 
 
 def update_enrollment(
@@ -267,11 +282,11 @@ def update_enrollment(
 
 
 def delete_enrollment(db: Session, enrollment_id: str) -> bool:
-    """Delete an enrollment by ID."""
+    """Soft delete an enrollment by ID."""
     enrollment = db.get(EnrolledCourse, enrollment_id)
     if not enrollment:
         return False
-    db.delete(enrollment)
+    soft_delete(db, enrollment)
     db.commit()
     return True
 
@@ -285,7 +300,9 @@ def get_all_enrollments(
     status: Optional[str] = None,
 ) -> List[EnrolledCourse]:
     """Get all enrollments with pagination and optional filters."""
-    statement = select(EnrolledCourse).offset(skip).limit(limit)
+    statement = (
+        select(EnrolledCourse).where(EnrolledCourse.deleted_at.is_(None)).offset(skip).limit(limit)
+    )
 
     if user_id:
         statement = statement.where(EnrolledCourse.user_id == user_id)

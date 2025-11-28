@@ -1,9 +1,16 @@
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from sqlalchemy.orm import joinedload
 from sqlmodel import Session, desc, select
 
 from src.database.models import Resource
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def filter_private_channel_resources(
@@ -43,7 +50,7 @@ def get_resource(db: Session, resource_id: str) -> Optional[Resource]:
     statement = (
         select(Resource)
         .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .where(Resource.id == resource_id)
+        .where(Resource.id == resource_id, Resource.deleted_at.is_(None))
     )
     resource = db.exec(statement).unique().first()
     return resource
@@ -54,7 +61,7 @@ def get_resources_by_user(db: Session, user_id: str) -> List[Resource]:
     statement = (
         select(Resource)
         .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .where(Resource.user_id == user_id)
+        .where(Resource.user_id == user_id, Resource.deleted_at.is_(None))
         .order_by(desc(Resource.created_at))
     )
     resources = list(db.exec(statement).unique().all())
@@ -66,7 +73,7 @@ def get_resources_by_channel(db: Session, channel_id: str) -> List[Resource]:
     statement = (
         select(Resource)
         .options(joinedload(Resource.user), joinedload(Resource.channel))
-        .where(Resource.channel_id == channel_id)
+        .where(Resource.channel_id == channel_id, Resource.deleted_at.is_(None))
         .order_by(desc(Resource.created_at))
     )
     resources = list(db.exec(statement).unique().all())
@@ -78,6 +85,7 @@ def get_all_resources(db: Session, skip: int = 0, limit: int = 100) -> List[Reso
     statement = (
         select(Resource)
         .options(joinedload(Resource.user), joinedload(Resource.channel))
+        .where(Resource.deleted_at.is_(None))
         .order_by(desc(Resource.created_at))
         .offset(skip)
         .limit(limit)
@@ -101,10 +109,10 @@ def update_resource(
 
 
 def delete_resource(db: Session, resource_id: str) -> bool:
-    """Delete a resource by ID."""
+    """Soft delete a resource by ID."""
     resource = db.get(Resource, resource_id)
     if not resource:
         return False
-    db.delete(resource)
+    soft_delete(db, resource)
     db.commit()
     return True

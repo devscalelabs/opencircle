@@ -33,7 +33,7 @@ def get_user_endpoint(user_id: str, db: Session = Depends(get_db)):
     statement = (
         select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .where(User.id == user_id)
+        .where(User.id == user_id, User.deleted_at.is_(None))
     )
     user = db.exec(statement).first()
     if not user:
@@ -46,7 +46,7 @@ def get_user_by_username_endpoint(username: str, db: Session = Depends(get_db)):
     statement = (
         select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .where(User.username == username)
+        .where(User.username == username, User.deleted_at.is_(None))
     )
     user = db.exec(statement).first()
     if not user:
@@ -75,7 +75,9 @@ def update_user_endpoint(user_id: str, user: UserUpdate, db: Session = Depends(g
 
     # Handle user_social updates
     if user_social_data:
-        statement = select(UserSocial).where(UserSocial.user_id == user_id)
+        statement = select(UserSocial).where(
+            UserSocial.user_id == user_id, UserSocial.deleted_at.is_(None)
+        )
         user_social = db.exec(statement).first()
         if not user_social:
             user_social = UserSocial(user_id=user_id)
@@ -90,7 +92,7 @@ def update_user_endpoint(user_id: str, user: UserUpdate, db: Session = Depends(g
     statement = (
         select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .where(User.id == user_id)
+        .where(User.id == user_id, User.deleted_at.is_(None))
     )
     user_with_relations = db.exec(statement).first()
 
@@ -126,7 +128,9 @@ def update_user_with_file_endpoint(
 
     # Handle user_social updates
     if user_social_data:
-        statement = select(UserSocial).where(UserSocial.user_id == user_id)
+        statement = select(UserSocial).where(
+            UserSocial.user_id == user_id, UserSocial.deleted_at.is_(None)
+        )
         user_social = db.exec(statement).first()
         if not user_social:
             user_social = UserSocial(user_id=user_id)
@@ -141,7 +145,7 @@ def update_user_with_file_endpoint(
     statement = (
         select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .where(User.id == user_id)
+        .where(User.id == user_id, User.deleted_at.is_(None))
     )
     user_with_relations = db.exec(statement).first()
 

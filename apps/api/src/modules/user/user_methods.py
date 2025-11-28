@@ -1,8 +1,15 @@
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlmodel import Session, col, func, select
 
 from src.database.models import Role, User
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def create_user(db: Session, user_data: dict) -> User:
@@ -16,18 +23,19 @@ def create_user(db: Session, user_data: dict) -> User:
 
 def get_user(db: Session, user_id: str) -> Optional[User]:
     """Get a user by ID."""
-    return db.get(User, user_id)
+    statement = select(User).where(User.id == user_id, User.deleted_at.is_(None))
+    return db.exec(statement).first()
 
 
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
     """Get a user by email."""
-    statement = select(User).where(User.email == email)
+    statement = select(User).where(User.email == email, User.deleted_at.is_(None))
     return db.exec(statement).first()
 
 
 def get_user_by_username(db: Session, username: str) -> Optional[User]:
     """Get a user by username."""
-    statement = select(User).where(User.username == username)
+    statement = select(User).where(User.username == username, User.deleted_at.is_(None))
     return db.exec(statement).first()
 
 
@@ -44,7 +52,7 @@ def update_user(db: Session, user_id: str, update_data: dict) -> Optional[User]:
 
 
 def delete_user(db: Session, user_id: str) -> bool:
-    """Delete a user by ID and all related records."""
+    """Soft delete a user by ID and all related records."""
     from src.database.models import (
         Activity,
         ChannelMember,
@@ -68,63 +76,63 @@ def delete_user(db: Session, user_id: str) -> bool:
 
     statement = select(UserPresence).where(UserPresence.user_id == user_id)
     for presence in db.exec(statement).all():
-        db.delete(presence)
+        soft_delete(db, presence)
 
     statement = select(Activity).where(Activity.user_id == user_id)
     for activity in db.exec(statement).all():
-        db.delete(activity)
+        soft_delete(db, activity)
 
     statement = select(Reaction).where(Reaction.user_id == user_id)
     for reaction in db.exec(statement).all():
-        db.delete(reaction)
+        soft_delete(db, reaction)
 
     statement = select(Notification).where(
         (Notification.sender_id == user_id) | (Notification.recipient_id == user_id)
     )
     for notification in db.exec(statement).all():
-        db.delete(notification)
+        soft_delete(db, notification)
 
     statement = select(PasswordReset).where(PasswordReset.user_id == user_id)
     for password_reset in db.exec(statement).all():
-        db.delete(password_reset)
+        soft_delete(db, password_reset)
 
     statement = select(EmailVerification).where(EmailVerification.user_id == user_id)
     for email_verification in db.exec(statement).all():
-        db.delete(email_verification)
+        soft_delete(db, email_verification)
 
     statement = select(EnrolledCourse).where(EnrolledCourse.user_id == user_id)
     for enrolled_course in db.exec(statement).all():
-        db.delete(enrolled_course)
+        soft_delete(db, enrolled_course)
 
     statement = select(Course).where(Course.instructor_id == user_id)
     for course in db.exec(statement).all():
-        db.delete(course)
+        soft_delete(db, course)
 
     statement = select(ChannelMember).where(ChannelMember.user_id == user_id)
     for channel_member in db.exec(statement).all():
-        db.delete(channel_member)
+        soft_delete(db, channel_member)
 
     statement = select(Resource).where(Resource.user_id == user_id)
     for resource in db.exec(statement).all():
-        db.delete(resource)
+        soft_delete(db, resource)
 
     statement = select(Media).where(Media.user_id == user_id)
     for media in db.exec(statement).all():
-        db.delete(media)
+        soft_delete(db, media)
 
     statement = select(Post).where(Post.user_id == user_id)
     for post in db.exec(statement).all():
-        db.delete(post)
+        soft_delete(db, post)
 
     statement = select(UserSettings).where(UserSettings.user_id == user_id)
     for user_settings in db.exec(statement).all():
-        db.delete(user_settings)
+        soft_delete(db, user_settings)
 
     statement = select(UserSocial).where(UserSocial.user_id == user_id)
     for user_social in db.exec(statement).all():
-        db.delete(user_social)
+        soft_delete(db, user_social)
 
-    db.delete(user)
+    soft_delete(db, user)
     db.commit()
     return True
 
@@ -133,7 +141,7 @@ def get_all_users(
     db: Session, skip: int = 0, limit: int = 100, query: Optional[str] = None
 ) -> list[User]:
     """Get all users with pagination and optional query filtering."""
-    statement = select(User)
+    statement = select(User).where(User.deleted_at.is_(None))
     if query:
         statement = statement.where(col(User.username).ilike(f"%{query}%"))
     statement = statement.offset(skip).limit(limit)
@@ -153,7 +161,9 @@ def ban_user(db: Session, user_id: str) -> Optional[User]:
 
 def get_admin_count(db: Session) -> int:
     """Get the count of admin users."""
-    statement = select(func.count(col(User.id))).where(col(User.role) == Role.ADMIN)
+    statement = select(func.count(col(User.id))).where(
+        col(User.role) == Role.ADMIN, User.deleted_at.is_(None)
+    )
     return db.exec(statement).one()
 
 

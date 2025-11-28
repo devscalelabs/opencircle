@@ -32,7 +32,7 @@ def get_notifications_by_user(
     """Get all notifications for a user with pagination."""
     statement = (
         select(Notification)
-        .where(Notification.recipient_id == user_id)
+        .where(Notification.recipient_id == user_id, Notification.deleted_at.is_(None))
         .order_by(desc(Notification.created_at))
         .offset(skip)
         .limit(limit)
@@ -74,7 +74,9 @@ def mark_all_notifications_as_read(db: Session, user_id: str) -> int:
 def get_unread_notification_count(db: Session, user_id: str) -> int:
     """Get the count of unread notifications for a user."""
     statement = select(Notification).where(
-        Notification.recipient_id == user_id, not Notification.is_read
+        Notification.recipient_id == user_id,
+        not Notification.is_read,
+        Notification.deleted_at.is_(None),
     )
     notifications = db.exec(statement).all()
     return len(notifications)

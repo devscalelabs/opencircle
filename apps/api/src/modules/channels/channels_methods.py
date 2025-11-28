@@ -1,8 +1,15 @@
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from sqlmodel import Session, asc, select
 
 from src.database.models import Channel, ChannelMember
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def create_channel(db: Session, channel_data: dict) -> Channel:
@@ -16,12 +23,13 @@ def create_channel(db: Session, channel_data: dict) -> Channel:
 
 def get_channel(db: Session, channel_id: str) -> Optional[Channel]:
     """Get a channel by ID."""
-    return db.get(Channel, channel_id)
+    statement = select(Channel).where(Channel.id == channel_id, Channel.deleted_at.is_(None))
+    return db.exec(statement).first()
 
 
 def get_channel_by_slug(db: Session, slug: str) -> Optional[Channel]:
     """Get a channel by slug."""
-    statement = select(Channel).where(Channel.slug == slug)
+    statement = select(Channel).where(Channel.slug == slug, Channel.deleted_at.is_(None))
     return db.exec(statement).first()
 
 
@@ -40,11 +48,11 @@ def update_channel(
 
 
 def delete_channel(db: Session, channel_id: str) -> bool:
-    """Delete a channel by ID."""
+    """Soft delete a channel by ID."""
     channel = db.get(Channel, channel_id)
     if not channel:
         return False
-    db.delete(channel)
+    soft_delete(db, channel)
     db.commit()
     return True
 
@@ -54,7 +62,11 @@ def get_all_channels(
 ) -> List[Channel]:
     """Get all channels with pagination - all public and private channels."""
     statement = (
-        select(Channel).order_by(asc(Channel.created_at)).offset(skip).limit(limit)
+        select(Channel)
+        .where(Channel.deleted_at.is_(None))
+        .order_by(asc(Channel.created_at))
+        .offset(skip)
+        .limit(limit)
     )
     return list(db.exec(statement).all())
 
@@ -63,7 +75,9 @@ def add_member(db: Session, channel_id: str, user_id: str) -> Optional[ChannelMe
     """Add a member to a channel."""
     existing = db.exec(
         select(ChannelMember).where(
-            ChannelMember.channel_id == channel_id, ChannelMember.user_id == user_id
+            ChannelMember.channel_id == channel_id,
+            ChannelMember.user_id == user_id,
+            ChannelMember.deleted_at.is_(None),
         )
     ).first()
     if existing:
@@ -77,7 +91,7 @@ def add_member(db: Session, channel_id: str, user_id: str) -> Optional[ChannelMe
 
 
 def remove_member(db: Session, channel_id: str, user_id: str) -> bool:
-    """Remove a member from a channel."""
+    """Soft delete a member from a channel."""
     member = db.exec(
         select(ChannelMember).where(
             ChannelMember.channel_id == channel_id, ChannelMember.user_id == user_id
@@ -85,14 +99,16 @@ def remove_member(db: Session, channel_id: str, user_id: str) -> bool:
     ).first()
     if not member:
         return False
-    db.delete(member)
+    soft_delete(db, member)
     db.commit()
     return True
 
 
 def get_channel_members(db: Session, channel_id: str) -> List[ChannelMember]:
     """Get all members of a channel."""
-    statement = select(ChannelMember).where(ChannelMember.channel_id == channel_id)
+    statement = select(ChannelMember).where(
+        ChannelMember.channel_id == channel_id, ChannelMember.deleted_at.is_(None)
+    )
     return list(db.exec(statement).all())
 
 
@@ -101,7 +117,9 @@ def is_member(db: Session, channel_id: str, user_id: str) -> bool:
     return (
         db.exec(
             select(ChannelMember).where(
-                ChannelMember.channel_id == channel_id, ChannelMember.user_id == user_id
+                ChannelMember.channel_id == channel_id,
+                ChannelMember.user_id == user_id,
+                ChannelMember.deleted_at.is_(None),
             )
         ).first()
         is not None

@@ -14,6 +14,12 @@ from src.database.models import (
 )
 
 
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
+
+
 def generate_invite_code(length: int = 8) -> str:
     """Generate a random invite code."""
     alphabet = string.ascii_uppercase + string.digits
@@ -56,12 +62,17 @@ def create_invite_code(
 
 def get_invite_code(db: Session, invite_code_id: str) -> Optional[InviteCode]:
     """Get an invite code by ID."""
-    return db.get(InviteCode, invite_code_id)
+    statement = select(InviteCode).where(
+        InviteCode.id == invite_code_id, InviteCode.deleted_at.is_(None)
+    )
+    return db.exec(statement).first()
 
 
 def get_invite_code_by_code(db: Session, code: str) -> Optional[InviteCode]:
     """Get an invite code by its code string."""
-    statement = select(InviteCode).where(InviteCode.code == code)
+    statement = select(InviteCode).where(
+        InviteCode.code == code, InviteCode.deleted_at.is_(None)
+    )
     return db.exec(statement).first()
 
 
@@ -73,7 +84,7 @@ def get_all_invite_codes(
     created_by: Optional[str] = None,
 ) -> List[InviteCode]:
     """Get all invite codes with optional filtering."""
-    statement = select(InviteCode)
+    statement = select(InviteCode).where(InviteCode.deleted_at.is_(None))
 
     filters = []
     if status:
@@ -108,12 +119,12 @@ def update_invite_code(
 
 
 def delete_invite_code(db: Session, invite_code_id: str) -> bool:
-    """Delete an invite code by ID."""
+    """Soft delete an invite code by ID."""
     invite_code = db.get(InviteCode, invite_code_id)
     if not invite_code:
         return False
 
-    db.delete(invite_code)
+    soft_delete(db, invite_code)
     db.commit()
     return True
 
@@ -209,7 +220,7 @@ def get_invite_codes_by_channel(
     """Get all invite codes for a specific channel."""
     statement = (
         select(InviteCode)
-        .where(InviteCode.auto_join_channel_id == channel_id)
+        .where(InviteCode.auto_join_channel_id == channel_id, InviteCode.deleted_at.is_(None))
         .offset(skip)
         .limit(limit)
         .order_by(desc(inspect(InviteCode).columns.created_at))

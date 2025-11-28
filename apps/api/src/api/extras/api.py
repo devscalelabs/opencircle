@@ -15,7 +15,9 @@ def get_url_preview(
     url: str = Query(..., description="URL to preview"), db: Session = Depends(get_db)
 ):
     # Check if already cached
-    preview = db.exec(select(UrlPreview).where(UrlPreview.url == url)).first()
+    preview = db.exec(
+        select(UrlPreview).where(UrlPreview.url == url, UrlPreview.deleted_at.is_(None))
+    ).first()
     if preview:
         return UrlPreviewResponse(
             url=preview.url,

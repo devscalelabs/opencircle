@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Optional
 
 from sqlalchemy import DateTime, event
 from sqlmodel import Field, SQLModel
@@ -15,6 +16,11 @@ class BaseModel(SQLModel):
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_type=DateTime(timezone=True),
+    )
+    deleted_at: Optional[datetime] = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),
+        description="Timestamp when the record was soft deleted. Null if not deleted."
     )
 
 
