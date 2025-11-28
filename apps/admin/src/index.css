@@ -27,4 +27,10 @@
         height: 100%;
         margin-bottom: 1px;
     }
+
+    .recharts-wrapper,
+    .recharts-wrapper svg,
+    .recharts-surface {
+        outline: none !important;
+    }
 }

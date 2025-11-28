@@ -38,7 +38,7 @@ export const CourseEnrollmentChart = ({
 	const hasData = chartData.some((item) => item.enrollments > 0);
 
 	return (
-		<div className="rounded-lg bg-background-secondary p-6 shadow">
+		<div className="rounded-lg bg-background-secondary p-6 shadow outline-none focus:outline-none">
 			<h3 className="mb-4 font-semibold text-foreground text-lg">
 				Course Enrollment Distribution
 			</h3>

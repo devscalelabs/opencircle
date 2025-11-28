@@ -3,7 +3,6 @@ import type {
 	DashboardStats,
 	UserGrowthData,
 } from "@opencircle/core";
-import { Button } from "@opencircle/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -251,7 +250,7 @@ function RouteComponent() {
 			</div>
 
 			{/* Activity Chart */}
-			<div className="rounded-lg bg-background-secondary p-6 shadow">
+			<div className="rounded-lg bg-background-secondary p-6 shadow outline-none focus:outline-none">
 				<div className="mb-4 flex items-center justify-between">
 					<h3 className="font-semibold text-foreground text-lg">
 						7-Day Activity Overview
@@ -347,91 +346,105 @@ function RouteComponent() {
 				/>
 			</div>
 
-			{/* Quick Stats & Links */}
+			{/* Quick Stats & Actions */}
 			<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 				{/* Activity Stats */}
-				<div className="rounded-lg bg-background-secondary p-6 shadow">
+				<div className="rounded-lg border border-border bg-background-secondary p-6 shadow">
 					<h3 className="mb-4 font-semibold text-foreground text-lg">
 						Activity Stats
 					</h3>
-					<div className="space-y-3">
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Total Sessions</span>
-							<span className="font-medium text-foreground">
+					<div className="grid grid-cols-2 gap-3">
+						<div className="rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{activityStats?.total_sessions || 0}
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">
+								Total Sessions
+							</p>
 						</div>
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Avg Duration</span>
-							<span className="font-medium text-foreground">
+						<div className="rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{Math.round(activityStats?.average_duration_seconds || 0)}s
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">
+								Avg Duration
+							</p>
 						</div>
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Unique Users</span>
-							<span className="font-medium text-foreground">
+						<div className="col-span-2 rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{activityStats?.unique_users || 0}
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">
+								Unique Users
+							</p>
 						</div>
 					</div>
 				</div>
 
 				{/* Content Breakdown */}
-				<div className="rounded-lg bg-background-secondary p-6 shadow">
+				<div className="rounded-lg border border-border bg-background-secondary p-6 shadow">
 					<h3 className="mb-4 font-semibold text-foreground text-lg">
 						Content Breakdown
 					</h3>
-					<div className="space-y-3">
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Articles</span>
-							<span className="font-medium text-foreground">
+					<div className="grid grid-cols-2 gap-3">
+						<div className="rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{articles.length}
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">Articles</p>
 						</div>
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Resources</span>
-							<span className="font-medium text-foreground">
+						<div className="rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{resources.length}
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">
+								Resources
+							</p>
 						</div>
-						<div className="flex justify-between">
-							<span className="text-foreground-secondary">Total Courses</span>
-							<span className="font-medium text-foreground">
+						<div className="col-span-2 rounded-lg border border-border bg-background p-4 text-center">
+							<p className="font-bold text-2xl text-foreground">
 								{dashboardStats?.totalCourses || 0}
-							</span>
+							</p>
+							<p className="mt-1 text-foreground-secondary text-xs">
+								Total Courses
+							</p>
 						</div>
 					</div>
 				</div>
 
 				{/* Quick Actions */}
-				<div className="rounded-lg bg-background-secondary p-6 shadow">
+				<div className="rounded-lg border border-border bg-background-secondary p-6 shadow">
 					<h3 className="mb-4 font-semibold text-foreground text-lg">
 						Quick Actions
 					</h3>
-					<div className="space-y-2">
-						<Link to="/courses/new" className="block">
-							<Button variant="secondary" className="w-full justify-start">
-								<BookOpen size={16} />
-								<span>Create Course</span>
-							</Button>
+					<div className="grid grid-cols-2 gap-3">
+						<Link
+							to="/courses/new"
+							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
+						>
+							<BookOpen size={20} className="text-foreground" />
+							<span className="text-foreground text-xs">New Course</span>
 						</Link>
-						<Link to="/channels" className="block">
-							<Button variant="secondary" className="w-full justify-start">
-								<Hash size={16} />
-								<span>Manage Channels</span>
-							</Button>
+						<Link
+							to="/channels"
+							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
+						>
+							<Hash size={20} className="text-foreground" />
+							<span className="text-foreground text-xs">Channels</span>
 						</Link>
-						<Link to="/invite-codes/new" className="block">
-							<Button variant="secondary" className="w-full justify-start">
-								<Zap size={16} />
-								<span>Generate Invite</span>
-							</Button>
+						<Link
+							to="/invite-codes/new"
+							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
+						>
+							<Zap size={20} className="text-foreground" />
+							<span className="text-foreground text-xs">Invite Code</span>
 						</Link>
-						<Link to="/app-settings" className="block">
-							<Button variant="secondary" className="w-full justify-start">
-								<LinkIcon size={16} />
-								<span>App Settings</span>
-							</Button>
+						<Link
+							to="/app-settings"
+							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
+						>
+							<LinkIcon size={20} className="text-foreground" />
+							<span className="text-foreground text-xs">Settings</span>
 						</Link>
 					</div>
 				</div>
