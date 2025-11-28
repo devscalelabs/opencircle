@@ -26,12 +26,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 	} = useWebSocket({
 		userId: account?.id || "",
 		onMessage: () => {},
-		onConnect: () => {
-			console.info("[WebSocket] Connected - User presence tracking active");
-		},
-		onDisconnect: () => {
-			console.info("[WebSocket] Disconnected - User presence tracking stopped");
-		},
+		onConnect: () => {},
+		onDisconnect: () => {},
 		onError: () => {
 			console.warn("[WebSocket] Connection error");
 		},

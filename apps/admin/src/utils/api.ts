@@ -16,7 +16,7 @@ async function refreshAccessToken(retryCount = 0): Promise<string | null> {
 
 	try {
 		const response = await ky
-			.post(`${API_URL}/auth/refresh`, {
+			.post(`${API_URL}/refresh`, {
 				json: { refresh_token: refreshToken },
 			})
 			.json<{ access_token: string; token_type: string }>();
@@ -55,6 +55,20 @@ async function getValidAccessToken(): Promise<string | null> {
 	return token;
 }
 
+const kyClient = ky.create({
+	prefixUrl: API_URL,
+	hooks: {
+		beforeRequest: [
+			(request) => {
+				const token = localStorage.getItem("token");
+				if (token) {
+					request.headers.set("Authorization", `Bearer ${token}`);
+				}
+			},
+		],
+	},
+});
+
 export const api = createApi(API_URL, {
 	beforeRequest: [
 		(request) => {
@@ -67,13 +81,22 @@ export const api = createApi(API_URL, {
 	],
 	afterResponse: [
 		async (request, _options, response) => {
-			if (response.status === 401 && !request.url.includes("/auth/refresh")) {
+			if (response.status === 401 && !request.url.includes("/refresh")) {
 				const newToken = await getValidAccessToken();
 				if (newToken) {
-					request.headers.set("Authorization", `Bearer ${newToken}`);
-					return ky(request);
+					const url = request.url.replace(API_URL + "/", "");
+					return kyClient(url, {
+						method: request.method,
+						headers: {
+							Authorization: `Bearer ${newToken}`,
+						},
+						body:
+							request.method !== "GET" && request.method !== "HEAD"
+								? request.body
+								: undefined,
+					});
 				}
-				window.location.href = "/";
+				clearTokens();
 			}
 			return response;
 		},
