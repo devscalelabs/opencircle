@@ -1,6 +1,6 @@
 import type { Notification } from "@opencircle/core";
 import { Avatar, Button } from "@opencircle/ui";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import moment from "moment";
 import { renderContent } from "../../posts/utils/contentRendering";
 import { useMarkNotificationAsRead } from "../hooks/useNotifications";
@@ -27,16 +27,16 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 		}
 	};
 
-	const getNotificationMessage = () => {
+	const getNotificationAction = () => {
 		switch (notification.type) {
 			case "mention":
-				return `${notification.sender.username} mentioned you`;
+				return "mentioned you";
 			case "like":
-				return `${notification.sender.username} liked your post`;
+				return "liked your post";
 			case "reply":
-				return `${notification.sender.username} replied to your post`;
+				return "replied to your post";
 			default:
-				return `${notification.sender.username} sent you a notification`;
+				return "sent you a notification";
 		}
 	};
 
@@ -54,21 +54,35 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 	const isContentNotification = ["mention", "reply"].includes(
 		notification.type,
 	);
-	const hasPostId = Boolean(notification.data?.post_id);
 
 	return (
-		<main>
-			<div
-				className="flex gap-3 p-3 transition-colors duration-150 hover:bg-accent"
-				style={{ opacity: notification.is_read ? "50%" : "100%" }}
-			>
-				<Avatar
-					image_url={notification.sender.avatar_url || ""}
-					initials={notification.sender.username.charAt(0).toUpperCase()}
-				/>
+		<main
+			className="cursor-pointer transition-colors duration-150 hover:bg-accent"
+			style={{ opacity: notification.is_read ? "50%" : "100%" }}
+			onClick={handleViewPost}
+		>
+			<div className="flex gap-3 p-3">
+				<Link
+					to="/$username"
+					params={{ username: notification.sender.username }}
+					onClick={(e) => e.stopPropagation()}
+				>
+					<Avatar
+						image_url={notification.sender.avatar_url || ""}
+						initials={notification.sender.username.charAt(0).toUpperCase()}
+					/>
+				</Link>
 				<div className="min-w-0 flex-1 space-y-1">
 					<p className="truncate text-foreground text-sm">
-						{getNotificationMessage()}
+						<Link
+							to="/$username"
+							params={{ username: notification.sender.username }}
+							className="font-medium hover:underline"
+							onClick={(e) => e.stopPropagation()}
+						>
+							{notification.sender.username}
+						</Link>{" "}
+						{getNotificationAction()}
 					</p>
 
 					<p className="text-muted-foreground text-xs">
@@ -76,22 +90,15 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 					</p>
 				</div>
 				<div className="flex items-start gap-2">
-					{hasPostId && (
-						<Button
-							variant="secondary"
-							size="sm"
-							onClick={handleViewPost}
-							className="text-xs"
-						>
-							View
-						</Button>
-					)}
 					{!notification.is_read && (
 						<>
 							<Button
 								variant="secondary"
 								size="sm"
-								onClick={handleMarkAsRead}
+								onClick={(e) => {
+									e.stopPropagation();
+									handleMarkAsRead();
+								}}
 								disabled={isMarkingAsRead}
 								className="text-xs"
 							>
