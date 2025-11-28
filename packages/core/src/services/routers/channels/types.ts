@@ -31,3 +31,11 @@ export interface ChannelUpdate {
 	type?: ChannelType;
 	emoji?: string;
 }
+
+export interface ChannelMember {
+	id: string;
+	channel_id: string;
+	user_id: string;
+	created_at: string;
+	updated_at: string;
+}
