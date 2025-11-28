@@ -1,4 +1,5 @@
 from collections import Counter
+from datetime import datetime, timezone
 from typing import List, Optional, cast
 
 from fastapi import UploadFile
@@ -9,6 +10,12 @@ from sqlmodel import Session, select
 from src.database.models import Channel, Media, Post, Reaction, User
 from src.modules.channels.channels_methods import is_member
 from src.modules.storages.storage_methods import upload_file
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def filter_private_channel_posts(
@@ -63,7 +70,7 @@ def get_post(db: Session, post_id: str) -> Optional[Post]:
         .options(
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )
-        .where(Post.id == post_id)
+        .where(Post.id == post_id, Post.deleted_at.is_(None))
     )  # type: ignore
     post = db.exec(statement).unique().first()
     return post
@@ -82,7 +89,7 @@ def update_post(db: Session, post_id: str, update_data: dict) -> Optional[Post]:
 
 
 def delete_post(db: Session, post_id: str) -> bool:
-    """Delete a post by ID."""
+    """Soft delete a post by ID."""
     post = db.get(Post, post_id)
     if not post:
         return False
@@ -92,19 +99,19 @@ def delete_post(db: Session, post_id: str) -> bool:
     media_statement = select(Media).where(Media.post_id == post_id)
     media_records = db.exec(media_statement).all()
     for media in media_records:
-        db.delete(media)
+        soft_delete(db, media)
 
     reaction_statement = select(Reaction).where(Reaction.post_id == post_id)
     reaction_records = db.exec(reaction_statement).all()
     for reaction in reaction_records:
-        db.delete(reaction)
+        soft_delete(db, reaction)
 
     replies_statement = select(Post).where(Post.parent_id == post_id)
     replies_records = db.exec(replies_statement).all()
     for reply in replies_records:
         delete_post(db, reply.id)
 
-    db.delete(post)
+    soft_delete(db, post)
     db.commit()
     return True
 
@@ -118,7 +125,7 @@ def get_posts_by_user(
         .options(
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )
-        .where(Post.user_id == user_id)
+        .where(Post.user_id == user_id, Post.deleted_at.is_(None))
         .order_by(desc(Post.created_at))
     )  # type: ignore
     all_posts = list(db.exec(statement).unique().all())
@@ -134,7 +141,7 @@ def get_posts_by_type(
         .options(
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )
-        .where(Post.type == post_type)
+        .where(Post.type == post_type, Post.deleted_at.is_(None))
         .order_by(desc(Post.created_at))
     )  # type: ignore
     all_posts = list(db.exec(statement).all())
@@ -148,7 +155,7 @@ def get_posts_by_parent_id(db: Session, parent_id: str) -> list[Post]:
         .options(
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )
-        .where(Post.parent_id == parent_id)
+        .where(Post.parent_id == parent_id, Post.deleted_at.is_(None))
         .order_by(desc(Post.is_pinned), desc(Post.created_at))  # type: ignore
     )
     posts = list(db.exec(statement).all())
@@ -158,6 +165,7 @@ def get_posts_by_parent_id(db: Session, parent_id: str) -> list[Post]:
 def get_all_nested_posts_by_parent_id(
     db: Session, parent_id: str, current_user_id: Optional[str] = None
 ) -> list[Post]:
+    """Get all nested posts by parent ID."""
     from src.database.models import PostType, Role
 
     sql = """
@@ -167,20 +175,21 @@ def get_all_nested_posts_by_parent_id(
                CAST((CASE WHEN p.is_pinned THEN 1 ELSE 0 END) AS TEXT) || '/' ||
                CAST(2147483647 - EXTRACT(EPOCH FROM p.created_at) AS TEXT) as sort_path
         FROM post p
-        WHERE p.parent_id = :parent_id
+        WHERE p.parent_id = :parent_id AND p.deleted_at IS NULL
         UNION ALL
         -- Recursive case: Get replies to any reply in the tree
         SELECT p.id, p.parent_id, p.created_at, p.is_pinned, p.updated_at, p.content, p.type, p.user_id, p.channel_id, rt.depth + 1,
                rt.sort_path || '/' || CAST(EXTRACT(EPOCH FROM p.created_at) AS TEXT)
         FROM post p
         INNER JOIN reply_tree rt ON p.parent_id = rt.id
+        WHERE p.deleted_at IS NULL
     )
     SELECT rt.*,
            u.id as user_id, u.username, u.name, u.bio, u.email, u.is_active, u.is_verified, u.avatar_url, u.role, u.created_at as user_created_at, u.updated_at as user_updated_at,
            m.id as media_id, m.url as media_url, m.user_id as media_user_id, m.created_at as media_created_at, m.updated_at as media_updated_at
     FROM reply_tree rt
-    LEFT JOIN "user" u ON rt.user_id = u.id
-    LEFT JOIN media m ON rt.id = m.post_id
+    LEFT JOIN "user" u ON rt.user_id = u.id AND u.deleted_at IS NULL
+    LEFT JOIN media m ON rt.id = m.post_id AND m.deleted_at IS NULL
     ORDER BY rt.sort_path ASC;
     """
     result = db.exec(text(sql).bindparams(parent_id=parent_id))
@@ -244,7 +253,7 @@ def get_posts_by_channel_slug(db: Session, channel_slug: str) -> list[Post]:
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )  # type: ignore
         .join(Channel)
-        .where(Channel.slug == channel_slug)
+        .where(Channel.slug == channel_slug, Post.deleted_at.is_(None))
         .order_by(desc(Post.is_pinned), desc(Post.created_at))
     )
     posts = list(db.exec(statement).unique().all())
@@ -260,7 +269,7 @@ def get_all_posts(
         .options(
             joinedload(Post.user), joinedload(Post.channel), joinedload(Post.medias)
         )  # type: ignore
-        .where(Post.type == "post")
+        .where(Post.type == "post", Post.deleted_at.is_(None))
         .order_by(desc(Post.is_pinned), desc(Post.created_at))
         .offset(skip)
         .limit(limit)
@@ -273,7 +282,9 @@ def get_reactions_summary(
     db: Session, post_id: str, current_user_id: Optional[str] = None
 ) -> dict:
     """Get reactions summary for a post."""
-    reactions = db.exec(select(Reaction).where(Reaction.post_id == post_id)).all()
+    reactions = db.exec(
+        select(Reaction).where(Reaction.post_id == post_id, Reaction.deleted_at.is_(None))
+    ).all()
     emoji_counts = Counter(r.emoji for r in reactions)
     user_reactions = {r.emoji for r in reactions if r.user_id == current_user_id}
 
@@ -297,9 +308,9 @@ def get_comment_summary(
     """Get comment summary for a post."""
     sql = """
     WITH RECURSIVE rt AS (
-        SELECT id, user_id FROM post WHERE parent_id = :post_id
+        SELECT id, user_id FROM post WHERE parent_id = :post_id AND deleted_at IS NULL
         UNION ALL
-        SELECT p.id, p.user_id FROM post p INNER JOIN rt ON p.parent_id = rt.id
+        SELECT p.id, p.user_id FROM post p INNER JOIN rt ON p.parent_id = rt.id WHERE p.deleted_at IS NULL
     )
     SELECT DISTINCT user_id FROM rt WHERE user_id IS NOT NULL
     """

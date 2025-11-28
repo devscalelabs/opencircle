@@ -1,9 +1,16 @@
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from sqlalchemy import column, desc
 from sqlmodel import Session, select
 
 from src.database.models import Post, PostType
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def create_article(db: Session, article_data: dict) -> Post:
@@ -23,7 +30,9 @@ def create_article(db: Session, article_data: dict) -> Post:
 
 def get_article(db: Session, article_id: str) -> Optional[Post]:
     """Get an article by ID."""
-    statement = select(Post).where(Post.id == article_id, Post.type == PostType.ARTICLE)
+    statement = select(Post).where(
+        Post.id == article_id, Post.type == PostType.ARTICLE, Post.deleted_at.is_(None)
+    )
     result = db.exec(statement).first()
     return result
 
@@ -32,7 +41,7 @@ def get_all_articles(db: Session, skip: int = 0, limit: int = 100) -> List[Post]
     """Get all articles with pagination."""
     statement = (
         select(Post)
-        .where(Post.type == PostType.ARTICLE)
+        .where(Post.type == PostType.ARTICLE, Post.deleted_at.is_(None))
         .order_by(desc(column("created_at")))
         .offset(skip)
         .limit(limit)
@@ -47,7 +56,7 @@ def get_articles_by_user(
     """Get all articles by a specific user."""
     statement = (
         select(Post)
-        .where(Post.type == PostType.ARTICLE, Post.user_id == user_id)
+        .where(Post.type == PostType.ARTICLE, Post.user_id == user_id, Post.deleted_at.is_(None))
         .order_by(desc(column("created_at")))
         .offset(skip)
         .limit(limit)
@@ -74,13 +83,13 @@ def update_article(db: Session, article_id: str, update_data: dict) -> Optional[
 
 
 def delete_article(db: Session, article_id: str) -> bool:
-    """Delete an article."""
+    """Soft delete an article."""
     statement = select(Post).where(Post.id == article_id, Post.type == PostType.ARTICLE)
     article = db.exec(statement).first()
 
     if not article:
         return False
 
-    db.delete(article)
+    soft_delete(db, article)
     db.commit()
     return True

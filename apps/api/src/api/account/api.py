@@ -80,7 +80,7 @@ def get_account(
     statement = (
         select(User)
         .options(joinedload(User.user_settings), joinedload(User.user_social))
-        .where(User.id == current_user.id)
+        .where(User.id == current_user.id, User.deleted_at.is_(None))
     )
     user_with_data = db.exec(statement).first()
 
@@ -102,7 +102,7 @@ def get_account(
             statement = (
                 select(User)
                 .options(joinedload(User.user_settings), joinedload(User.user_social))
-                .where(User.id == current_user.id)
+                .where(User.id == current_user.id, User.deleted_at.is_(None))
             )
             user_with_data = db.exec(statement).first()
 
@@ -124,7 +124,7 @@ def get_account(
             statement = (
                 select(User)
                 .options(joinedload(User.user_settings), joinedload(User.user_social))
-                .where(User.id == current_user.id)
+                .where(User.id == current_user.id, User.deleted_at.is_(None))
             )
             user_with_data = db.exec(statement).first()
 

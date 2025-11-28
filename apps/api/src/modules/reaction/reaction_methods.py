@@ -1,10 +1,17 @@
 from collections import defaultdict
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy.orm import joinedload
 from sqlmodel import Session, select
 
 from src.database.models import Reaction
+
+
+def soft_delete(db: Session, record) -> None:
+    """Soft delete a record by setting deleted_at timestamp."""
+    record.deleted_at = datetime.now(timezone.utc)
+    db.add(record)
 
 
 def create_reaction(db: Session, reaction_data: dict) -> Optional[Reaction]:
@@ -19,7 +26,7 @@ def create_reaction(db: Session, reaction_data: dict) -> Optional[Reaction]:
 
     if existing:
         if existing.emoji == emoji:
-            db.delete(existing)
+            soft_delete(db, existing)
             db.commit()
             return None
         else:
@@ -36,7 +43,7 @@ def create_reaction(db: Session, reaction_data: dict) -> Optional[Reaction]:
 
 
 def delete_reaction(db: Session, user_id: str, post_id: str, emoji: str) -> bool:
-    """Delete a specific reaction."""
+    """Soft delete a specific reaction."""
     existing = db.exec(
         select(Reaction).where(
             Reaction.user_id == user_id,
@@ -46,7 +53,7 @@ def delete_reaction(db: Session, user_id: str, post_id: str, emoji: str) -> bool
     ).first()
 
     if existing:
-        db.delete(existing)
+        soft_delete(db, existing)
         db.commit()
         return True
     return False
@@ -57,7 +64,7 @@ def get_reactions_by_post(db: Session, post_id: str) -> list[dict]:
     reactions = (
         db.exec(
             select(Reaction)
-            .where(Reaction.post_id == post_id)
+            .where(Reaction.post_id == post_id, Reaction.deleted_at.is_(None))
             .options(joinedload(Reaction.user))
         )
         .unique()
