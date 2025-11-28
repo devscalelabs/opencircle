@@ -95,7 +95,7 @@ function RouteComponent() {
 		<main>
 			<div className="mb-6">
 				<Link to="/broadcast">
-					<Button variant="ghost" size="sm">
+					<Button variant="outline" size="sm">
 						<ArrowLeft size={16} className="mr-2" />
 						Back to Broadcasts
 					</Button>

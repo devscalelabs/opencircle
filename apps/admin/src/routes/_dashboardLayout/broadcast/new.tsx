@@ -2,7 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { METADATA } from "../../../constants/metadata";
 import { BroadcastEditor } from "../../../features/broadcast/components/broadcastEditor";
 import { useBroadcastSubmission } from "../../../features/broadcast/hooks/useBroadcastSubmission";
-import type { BroadcastCreate } from "../../../features/broadcast/utils/types";
+import type {
+	BroadcastCreate,
+	BroadcastUpdate,
+} from "../../../features/broadcast/utils/types";
 
 export const Route = createFileRoute("/_dashboardLayout/broadcast/new")({
 	head: () => ({
@@ -29,8 +32,8 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const { createBroadcast, isCreating } = useBroadcastSubmission();
 
-	const handleSave = async (data: BroadcastCreate) => {
-		createBroadcast(data, {
+	const handleSave = async (data: BroadcastCreate | BroadcastUpdate) => {
+		createBroadcast(data as BroadcastCreate, {
 			onSuccess: (broadcast) => {
 				navigate({ to: "/broadcast/$id", params: { id: broadcast.id } });
 			},
