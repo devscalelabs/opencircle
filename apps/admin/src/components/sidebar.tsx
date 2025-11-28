@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import {
 	Activity,
 	BookOpen,
+	ChevronDown,
 	ExternalLink,
 	FileText,
 	Hash,
@@ -14,6 +15,7 @@ import {
 	Users,
 	Zap,
 } from "lucide-react";
+import { Accordion } from "radix-ui";
 import { useAccount } from "../features/auth/hooks/useAccount";
 import { clearTokens } from "../utils/api";
 
@@ -32,6 +34,31 @@ const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 			{icon}
 			<span className="ml-3">{label}</span>
 		</Link>
+	);
+};
+
+interface MenuGroupProps {
+	value: string;
+	label: string;
+	children: React.ReactNode;
+}
+
+const MenuGroup = ({ value, label, children }: MenuGroupProps) => {
+	return (
+		<Accordion.Item value={value} className="border-none">
+			<Accordion.Header>
+				<Accordion.Trigger className="group flex w-full items-center justify-between rounded-lg p-2 font-medium text-foreground/70 text-sm transition duration-150 hover:bg-primary hover:text-foreground">
+					<span>{label}</span>
+					<ChevronDown
+						size={16}
+						className="transition-transform duration-200 group-data-[state=open]:rotate-180"
+					/>
+				</Accordion.Trigger>
+			</Accordion.Header>
+			<Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+				<div className="ml-2 space-y-1 pt-1">{children}</div>
+			</Accordion.Content>
+		</Accordion.Item>
 	);
 };
 
@@ -54,49 +81,65 @@ export const Sidebar = () => {
 						<h2 className="font-medium">Opencircle</h2>
 					</Link>
 				</section>
-				<nav className="mt-8 space-y-2">
-					<MenuItem
-						icon={<Activity size={20} />}
-						label="Activity"
-						to="/activity"
-					/>
-					<MenuItem icon={<Users size={20} />} label="Users" to="/users" />
-					<MenuItem icon={<Hash size={20} />} label="Channels" to="/channels" />
-					<MenuItem
-						icon={<Key size={20} />}
-						label="Invite Codes"
-						to="/invite-codes"
-					/>
-					<MenuItem
-						icon={<BookOpen size={20} />}
-						label="Courses"
-						to="/courses"
-					/>
-					<MenuItem
-						icon={<UserCheck size={20} />}
-						label="Enrollments"
-						to="/enrollments"
-					/>
-					<MenuItem
-						icon={<FileText size={20} />}
-						label="Articles"
-						to="/articles"
-					/>
-					<MenuItem
-						icon={<LinkIcon size={20} />}
-						label="Resources"
-						to="/resources"
-					/>
-					<MenuItem
-						icon={<ExternalLink size={20} />}
-						label="App Links"
-						to="/app-links"
-					/>
-					<MenuItem
-						icon={<Settings size={20} />}
-						label="App Settings"
-						to="/app-settings"
-					/>
+				<nav className="mt-8">
+					<Accordion.Root
+						type="multiple"
+						defaultValue={["community", "content", "settings"]}
+						className="space-y-2"
+					>
+						<MenuGroup value="community" label="Community">
+							<MenuItem
+								icon={<Activity size={18} />}
+								label="Activity"
+								to="/activity"
+							/>
+							<MenuItem icon={<Users size={18} />} label="Users" to="/users" />
+							<MenuItem
+								icon={<Hash size={18} />}
+								label="Channels"
+								to="/channels"
+							/>
+							<MenuItem
+								icon={<Key size={18} />}
+								label="Invite Codes"
+								to="/invite-codes"
+							/>
+						</MenuGroup>
+						<MenuGroup value="content" label="Content">
+							<MenuItem
+								icon={<BookOpen size={18} />}
+								label="Courses"
+								to="/courses"
+							/>
+							<MenuItem
+								icon={<UserCheck size={18} />}
+								label="Enrollments"
+								to="/enrollments"
+							/>
+							<MenuItem
+								icon={<FileText size={18} />}
+								label="Articles"
+								to="/articles"
+							/>
+							<MenuItem
+								icon={<LinkIcon size={18} />}
+								label="Resources"
+								to="/resources"
+							/>
+						</MenuGroup>
+						<MenuGroup value="settings" label="Settings">
+							<MenuItem
+								icon={<ExternalLink size={18} />}
+								label="App Links"
+								to="/app-links"
+							/>
+							<MenuItem
+								icon={<Settings size={18} />}
+								label="App Settings"
+								to="/app-settings"
+							/>
+						</MenuGroup>
+					</Accordion.Root>
 				</nav>
 				<section className="mt-8 p-2">
 					{account && (

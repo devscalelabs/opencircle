@@ -36,7 +36,7 @@ export const UserGrowthChart = ({ data, isLoading }: UserGrowthChartProps) => {
 	const hasData = chartData.length > 0;
 
 	return (
-		<div className="rounded-lg bg-background-secondary p-6 shadow">
+		<div className="rounded-lg bg-background-secondary p-6 shadow outline-none focus:outline-none">
 			<h3 className="mb-4 font-semibold text-foreground text-lg">
 				User Growth Over Time
 			</h3>
