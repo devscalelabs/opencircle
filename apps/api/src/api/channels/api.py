@@ -7,7 +7,7 @@ from sqlmodel import Session
 from src.api.account.api import get_current_user
 from src.api.resources.serializer import ResourceResponse
 from src.database.engine import get_session as get_db
-from src.database.models import User
+from src.database.models import Role, User
 from src.modules.channels.channels_methods import (
     create_channel,
     delete_channel,
@@ -77,11 +77,14 @@ def get_channel_endpoint(
 
     # Check if user has access to this channel
     # Public channels are accessible to everyone
-    # Private channels require membership
+    # Private channels require membership (admins can access all)
     if channel.type == "private":
         from src.modules.channels.channels_methods import is_member
 
-        if not current_user or not is_member(db, channel_id, current_user.id):
+        is_admin = current_user and current_user.role == Role.ADMIN
+        if not is_admin and (
+            not current_user or not is_member(db, channel_id, current_user.id)
+        ):
             raise HTTPException(
                 status_code=403, detail="Access denied to private channel"
             )
@@ -115,7 +118,8 @@ def update_channel_endpoint(
     if existing_channel.type == "private":
         from src.modules.channels.channels_methods import is_member
 
-        if not is_member(db, channel_id, current_user.id):
+        is_admin = current_user.role == Role.ADMIN
+        if not is_admin and not is_member(db, channel_id, current_user.id):
             raise HTTPException(
                 status_code=403, detail="Access denied to private channel"
             )
@@ -141,7 +145,8 @@ def delete_channel_endpoint(
     if existing_channel.type == "private":
         from src.modules.channels.channels_methods import is_member
 
-        if not is_member(db, channel_id, current_user.id):
+        is_admin = current_user.role == Role.ADMIN
+        if not is_admin and not is_member(db, channel_id, current_user.id):
             raise HTTPException(
                 status_code=403, detail="Access denied to private channel"
             )
@@ -166,7 +171,10 @@ def get_resources_by_channel_endpoint(
         raise HTTPException(status_code=404, detail="Channel not found")
 
     if channel.type == "private":
-        if not current_user or not is_member(db, channel.id, current_user.id):
+        is_admin = current_user and current_user.role == Role.ADMIN
+        if not is_admin and (
+            not current_user or not is_member(db, channel.id, current_user.id)
+        ):
             raise HTTPException(
                 status_code=403, detail="Access denied to private channel"
             )

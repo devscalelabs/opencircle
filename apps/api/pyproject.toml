@@ -12,6 +12,7 @@ dependencies = [
  "celery>=5.5.3",
  "faker>=37.11.0",
  "fastapi>=0.119.0",
+ "markdown>=3.7",
  "passlib>=1.7.4",
  "psycopg2-binary>=2.9.11",
  "pydantic-settings>=2.11.0",

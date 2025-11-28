@@ -6,6 +6,7 @@ export {
 } from "./routers/appsettings";
 export { ArticlesRouter } from "./routers/articles";
 export { AuthRouter } from "./routers/auth";
+export { BroadcastsRouter } from "./routers/broadcasts";
 export { ChannelsRouter } from "./routers/channels";
 export {
 	CoursesRouter,

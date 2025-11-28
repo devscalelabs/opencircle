@@ -9,6 +9,7 @@ celery_app = Celery(
     backend=settings.CELERY_RESULT_BACKEND,
     include=[
         "src.modules.notifications.notification_tasks",
+        "src.modules.broadcast.broadcast_tasks",
     ],
 )
 

@@ -44,11 +44,11 @@ jobs:
           echo "=== GIT STATUS ==="
           git log --oneline -5 || echo "No git history available"
 
-          # Try to get previous version from git history
+          # Try to get previous version from git history (use HEAD^ to get the parent commit)
           PREVIOUS_VERSION=""
           echo "=== CHECKING PREVIOUS PACKAGE.JSON ==="
-          if git show origin/main:package.json >/dev/null 2>&1; then
-            PREVIOUS_VERSION=$(git show origin/main:package.json | node -p "JSON.parse(require('fs').readFileSync(0)).version")
+          if git show HEAD^:package.json >/dev/null 2>&1; then
+            PREVIOUS_VERSION=$(git show HEAD^:package.json | node -p "JSON.parse(require('fs').readFileSync(0)).version")
             echo "Previous version: $PREVIOUS_VERSION"
           else
             echo "No previous version found in git history"
