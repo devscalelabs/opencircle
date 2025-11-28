@@ -1,12 +1,14 @@
 import { createApi } from "@opencircle/core";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
-async function refreshAccessToken(): Promise<string | null> {
+const MAX_REFRESH_RETRIES = 2;
+
+async function refreshAccessToken(retryCount = 0): Promise<string | null> {
 	const refreshToken = localStorage.getItem("refreshToken");
 	if (!refreshToken) {
 		return null;
@@ -21,9 +23,21 @@ async function refreshAccessToken(): Promise<string | null> {
 
 		localStorage.setItem("token", response.access_token);
 		return response.access_token;
-	} catch {
+	} catch (error) {
+		if (error instanceof HTTPError && error.response.status === 401) {
+			localStorage.removeItem("token");
+			localStorage.removeItem("refreshToken");
+			return null;
+		}
+
+		if (retryCount < MAX_REFRESH_RETRIES) {
+			await new Promise((resolve) =>
+				setTimeout(resolve, 1000 * (retryCount + 1)),
+			);
+			return refreshAccessToken(retryCount + 1);
+		}
+
 		localStorage.removeItem("token");
-		localStorage.removeItem("refreshToken");
 		return null;
 	}
 }
