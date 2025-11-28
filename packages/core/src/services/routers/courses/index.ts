@@ -2,6 +2,7 @@ import { BaseRouter } from "../../../utils/baseRouter";
 import type {
 	Course,
 	CourseCreate,
+	CourseEnrollmentDistribution,
 	CourseUpdate,
 	DashboardStats,
 	EnrolledCourse,
@@ -14,6 +15,7 @@ import type {
 	Section,
 	SectionCreate,
 	SectionUpdate,
+	UserGrowthData,
 } from "../../types";
 
 export class CoursesRouter extends BaseRouter {
@@ -267,6 +269,93 @@ export class CoursesRouter extends BaseRouter {
 				(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
 			) as EnrollmentChartData[];
 	}
+
+	async getCourseEnrollmentDistribution(
+		limit = 5,
+	): Promise<CourseEnrollmentDistribution[]> {
+		const [courses, enrollments] = await Promise.all([
+			this.getAllCourses(0, 1000),
+			this.getAllEnrollments(undefined, undefined, undefined, 0, 10000),
+		]);
+
+		const courseEnrollmentMap = new Map<
+			string,
+			{ title: string; count: number }
+		>();
+		courses.forEach((course) => {
+			courseEnrollmentMap.set(course.id, { title: course.title, count: 0 });
+		});
+
+		enrollments.forEach((enrollment) => {
+			const courseData = courseEnrollmentMap.get(enrollment.course_id);
+			if (courseData) {
+				courseData.count += 1;
+			}
+		});
+
+		return Array.from(courseEnrollmentMap.entries())
+			.map(([courseId, data]) => ({
+				courseId,
+				courseTitle: data.title,
+				enrollmentCount: data.count,
+			}))
+			.sort((a, b) => b.enrollmentCount - a.enrollmentCount)
+			.slice(0, limit);
+	}
+
+	async getUserGrowthData(days = 30): Promise<UserGrowthData[]> {
+		const users =
+			await this.client.get<{ id: string; created_at: string }[]>(
+				"users/?limit=10000",
+			);
+
+		const endDate = new Date();
+		const startDate = new Date();
+		startDate.setDate(endDate.getDate() - days);
+
+		const dateMap = new Map<string, number>();
+		for (
+			let d = new Date(startDate);
+			d <= endDate;
+			d.setDate(d.getDate() + 1)
+		) {
+			const dateStr = d.toISOString().split("T")[0];
+			dateMap.set(dateStr, 0);
+		}
+
+		users.forEach((user) => {
+			if (user.created_at) {
+				const createdDate = new Date(user.created_at)
+					.toISOString()
+					.split("T")[0];
+				if (dateMap.has(createdDate)) {
+					const currentCount = dateMap.get(createdDate) || 0;
+					dateMap.set(createdDate, currentCount + 1);
+				}
+			}
+		});
+
+		let cumulative = users.filter((u) => {
+			const createdDate = new Date(u.created_at);
+			return createdDate < startDate;
+		}).length;
+
+		return Array.from(dateMap.entries())
+			.sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
+			.map(([date, newUsers]) => {
+				cumulative += newUsers;
+				return {
+					date,
+					newUsers,
+					cumulativeUsers: cumulative,
+				};
+			});
+	}
 }
 
-export type { DashboardStats, EnrollmentChartData } from "./types";
+export type {
+	CourseEnrollmentDistribution,
+	DashboardStats,
+	EnrollmentChartData,
+	UserGrowthData,
+} from "./types";

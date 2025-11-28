@@ -161,3 +161,15 @@ export interface EnrollmentChartData {
 	date: string;
 	total: number;
 }
+
+export interface CourseEnrollmentDistribution {
+	courseId: string;
+	courseTitle: string;
+	enrollmentCount: number;
+}
+
+export interface UserGrowthData {
+	date: string;
+	newUsers: number;
+	cumulativeUsers: number;
+}
