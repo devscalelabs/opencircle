@@ -220,7 +220,10 @@ def get_invite_codes_by_channel(
     """Get all invite codes for a specific channel."""
     statement = (
         select(InviteCode)
-        .where(InviteCode.auto_join_channel_id == channel_id, InviteCode.deleted_at.is_(None))
+        .where(
+            InviteCode.auto_join_channel_id == channel_id,
+            InviteCode.deleted_at.is_(None),
+        )
         .offset(skip)
         .limit(limit)
         .order_by(desc(inspect(InviteCode).columns.created_at))

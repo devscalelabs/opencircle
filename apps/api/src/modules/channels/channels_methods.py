@@ -23,13 +23,17 @@ def create_channel(db: Session, channel_data: dict) -> Channel:
 
 def get_channel(db: Session, channel_id: str) -> Optional[Channel]:
     """Get a channel by ID."""
-    statement = select(Channel).where(Channel.id == channel_id, Channel.deleted_at.is_(None))
+    statement = select(Channel).where(
+        Channel.id == channel_id, Channel.deleted_at.is_(None)
+    )
     return db.exec(statement).first()
 
 
 def get_channel_by_slug(db: Session, slug: str) -> Optional[Channel]:
     """Get a channel by slug."""
-    statement = select(Channel).where(Channel.slug == slug, Channel.deleted_at.is_(None))
+    statement = select(Channel).where(
+        Channel.slug == slug, Channel.deleted_at.is_(None)
+    )
     return db.exec(statement).first()
 
 

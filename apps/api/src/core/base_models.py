@@ -20,7 +20,7 @@ class BaseModel(SQLModel):
     deleted_at: Optional[datetime] = Field(
         default=None,
         sa_type=DateTime(timezone=True),
-        description="Timestamp when the record was soft deleted. Null if not deleted."
+        description="Timestamp when the record was soft deleted. Null if not deleted.",
     )
 
 

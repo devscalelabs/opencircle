@@ -51,17 +51,23 @@ def delete_media(db: Session, media_id: str) -> bool:
 
 def get_medias_by_post(db: Session, post_id: str) -> list[Media]:
     """Get all medias for a post."""
-    statement = select(Media).where(Media.post_id == post_id, Media.deleted_at.is_(None))
+    statement = select(Media).where(
+        Media.post_id == post_id, Media.deleted_at.is_(None)
+    )
     return list(db.exec(statement).all())
 
 
 def get_medias_by_user(db: Session, user_id: str) -> list[Media]:
     """Get all medias for a user."""
-    statement = select(Media).where(Media.user_id == user_id, Media.deleted_at.is_(None))
+    statement = select(Media).where(
+        Media.user_id == user_id, Media.deleted_at.is_(None)
+    )
     return list(db.exec(statement).all())
 
 
 def get_all_medias(db: Session, skip: int = 0, limit: int = 100) -> list[Media]:
     """Get all medias with pagination."""
-    statement = select(Media).where(Media.deleted_at.is_(None)).offset(skip).limit(limit)
+    statement = (
+        select(Media).where(Media.deleted_at.is_(None)).offset(skip).limit(limit)
+    )
     return list(db.exec(statement).all())

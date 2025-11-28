@@ -1,7 +1,15 @@
-import { Button } from "@opencircle/ui";
+import { Badge, Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Hash, Trash2, Type } from "lucide-react";
+import {
+	ArrowLeft,
+	Calendar,
+	Clock,
+	Hash,
+	Pencil,
+	Trash2,
+	Type,
+} from "lucide-react";
 import { useState } from "react";
 import { useChannel } from "../../../features/channels/hooks/useChannel";
 import { useDeleteChannel } from "../../../features/channels/hooks/useDeleteChannel";
@@ -18,170 +26,211 @@ function RouteComponent() {
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
 	if (isChannelLoading) {
-		return <div>Loading...</div>;
+		return (
+			<div className="flex h-full items-center justify-center">
+				<div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+			</div>
+		);
 	}
 
 	if (!channel) {
-		return <div>Channel not found</div>;
+		return (
+			<div className="flex h-[50vh] flex-col items-center justify-center gap-4">
+				<h2 className="font-bold text-2xl">Channel not found</h2>
+				<Link to="/channels">
+					<Button variant="outline">Back to Channels</Button>
+				</Link>
+			</div>
+		);
 	}
 
 	return (
-		<div className="mx-auto max-w-4xl space-y-6">
-			{/* Header Actions */}
-			<div className="flex items-center justify-between">
-				<Link to="/channels">
-					<Button size="sm">
+		<div className="mx-auto max-w-5xl space-y-8 p-6">
+			{/* Header Section */}
+			<div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+				<div className="space-y-4">
+					<Link
+						to="/channels"
+						className="flex items-center text-muted-foreground text-sm transition-colors hover:text-foreground"
+					>
 						<ArrowLeft size={16} className="mr-2" />
 						Back to Channels
-					</Button>
-				</Link>
-				<div className="flex gap-2">
+					</Link>
+					<div className="flex items-center gap-4">
+						<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/50 text-4xl shadow-sm">
+							{channel.emoji}
+						</div>
+						<div>
+							<h1 className="font-bold text-3xl tracking-tight">
+								{channel.name}
+							</h1>
+							<div className="mt-1 flex items-center gap-2 text-muted-foreground text-sm">
+								<Hash size={14} />
+								<span className="font-mono">{channel.slug}</span>
+								<span>•</span>
+								<Badge
+									variant={channel.type === "public" ? "primary" : "secondary"}
+									className="capitalize"
+								>
+									{channel.type}
+								</Badge>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="flex gap-3">
+					<Link to="/channels/edit/$id" params={{ id }}>
+						<Button variant="outline" className="gap-2">
+							<Pencil size={16} />
+							Edit Channel
+						</Button>
+					</Link>
 					<Button
 						variant="destructive"
 						onClick={() => setShowDeleteConfirm(true)}
 						disabled={isDeleting}
+						className="gap-2"
 					>
-						<Trash2 size={16} className="mr-2" />
-						{isDeleting ? "Deleting..." : "Delete Channel"}
+						<Trash2 size={16} />
+						Delete
 					</Button>
 				</div>
 			</div>
 
-			{/* Channel Header */}
-			<div className="space-y-4">
-				<div className="flex items-center gap-2">
-					<span
-						className={`rounded-full px-3 py-1 font-medium text-sm ${
-							channel.type === "public"
-								? "bg-green-100 text-green-800"
-								: "bg-blue-100 text-blue-800"
-						}`}
-					>
-						{channel.type}
-					</span>
-				</div>
-
-				<div className="flex items-center gap-4">
-					<span className="text-4xl">{channel.emoji}</span>
-					<h1 className="font-bold text-4xl">{channel.name}</h1>
-				</div>
-
-				{/* Channel Meta */}
-				<div className="flex flex-wrap items-center gap-6 text-sm">
-					<div className="flex items-center gap-2">
-						<Hash size={16} />
-						<span>{channel.slug}</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<Calendar size={16} />
-						<span>
-							Created {format(new Date(channel.created_at), "MMM dd, yyyy")}
-						</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<Clock size={16} />
-						<span>
-							Updated {format(new Date(channel.updated_at), "MMM dd, yyyy")}
-						</span>
-					</div>
-				</div>
-			</div>
-
-			{/* Channel Details */}
-			<div className="rounded-lg border border-border bg-background shadow-sm">
-				<div className="border-border border-b px-6 py-4">
-					<h2 className="font-semibold text-lg">Channel Information</h2>
-				</div>
-				<div className="space-y-4 p-6">
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Channel ID
-							</label>
-							<p className="mt-1 text-sm">{channel.id}</p>
+			<div className="grid gap-6 md:grid-cols-3">
+				{/* Main Content - Left Column */}
+				<div className="space-y-6 md:col-span-2">
+					{/* Overview Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">Overview</h3>
 						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Name
-							</label>
-							<p className="mt-1 text-sm">{channel.name}</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Slug
-							</label>
-							<p className="mt-1 text-sm">{channel.slug}</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Type
-							</label>
-							<p className="mt-1 flex items-center gap-2 text-sm capitalize">
-								<Type size={14} />
-								{channel.type}
-							</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Emoji
-							</label>
-							<p className="mt-1 text-2xl">{channel.emoji}</p>
+						<div className="p-6">
+							<div className="space-y-4">
+								<div>
+									<label className="font-medium text-muted-foreground text-xs uppercase">
+										Description
+									</label>
+									<p className="mt-2 text-foreground/90 leading-relaxed">
+										{channel.description || (
+											<span className="text-muted-foreground italic">
+												No description provided
+											</span>
+										)}
+									</p>
+								</div>
+							</div>
 						</div>
 					</div>
 
-					{channel.description && (
-						<div className="pt-4">
-							<label className="block font-medium text-foreground/60 text-sm">
-								Description
-							</label>
-							<p className="mt-1 text-sm">{channel.description}</p>
+					{/* System Info Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">System Information</h3>
 						</div>
-					)}
+						<div className="grid gap-6 p-6 sm:grid-cols-2">
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Hash size={14} /> Channel ID
+								</label>
+								<p className="mt-2 font-mono text-sm">{channel.id}</p>
+							</div>
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Type size={14} /> Type
+								</label>
+								<p className="mt-2 text-sm capitalize">{channel.type}</p>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
 
-			{/* Channel Footer */}
-			<div className="border-t pt-6">
-				<div className="flex items-center justify-between">
-					<div className="text-sm">
-						Channel created on {format(new Date(channel.created_at), "PPP")}
+				{/* Sidebar - Right Column */}
+				<div className="space-y-6">
+					{/* Metadata Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">Metadata</h3>
+						</div>
+						<div className="space-y-4 p-6">
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Calendar size={14} /> Created At
+								</label>
+								<p className="mt-1 text-sm">
+									{format(new Date(channel.created_at), "PPP")}
+								</p>
+								<p className="text-muted-foreground text-xs">
+									{format(new Date(channel.created_at), "p")}
+								</p>
+							</div>
+							<div className="border-border border-t pt-4">
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Clock size={14} /> Last Updated
+								</label>
+								<p className="mt-1 text-sm">
+									{format(new Date(channel.updated_at), "PPP")}
+								</p>
+								<p className="text-muted-foreground text-xs">
+									{format(new Date(channel.updated_at), "p")}
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			{/* Delete Confirmation Dialog */}
 			{showDeleteConfirm && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
-						<h3 className="mb-4 font-semibold text-lg text-red-600">
-							Delete Channel
-						</h3>
-						<p className="mb-6 text-foreground/80 text-sm">
-							Are you sure you want to permanently delete{" "}
-							<span className="font-semibold">{channel.name}</span>? This action
-							cannot be undone and will remove the channel from the system.
-						</p>
-						<div className="flex justify-end gap-3">
-							<Button
-								variant="secondary"
-								onClick={() => setShowDeleteConfirm(false)}
-								disabled={isDeleting}
-							>
-								Cancel
-							</Button>
-							<Button
-								variant="destructive"
-								onClick={() => {
-									deleteChannel(id, {
-										onSuccess: () => {
-											navigate({ to: "/channels" });
-										},
-									});
-								}}
-								disabled={isDeleting}
-							>
-								{isDeleting ? "Deleting..." : "Delete Channel"}
-							</Button>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+					<div className="fade-in zoom-in-95 mx-4 w-full max-w-md animate-in overflow-hidden rounded-xl border border-border bg-background shadow-2xl duration-200">
+						<div className="bg-destructive/10 p-6 pb-4">
+							<div className="flex items-center gap-4">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
+									<Trash2 size={24} />
+								</div>
+								<div>
+									<h3 className="font-semibold text-destructive text-lg">
+										Delete Channel
+									</h3>
+									<p className="text-destructive/80 text-sm">
+										This action cannot be undone.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="p-6 pt-4">
+							<p className="mb-6 text-muted-foreground text-sm leading-relaxed">
+								Are you sure you want to permanently delete{" "}
+								<span className="font-semibold text-foreground">
+									{channel.name}
+								</span>
+								? This will remove the channel and all associated data from the
+								system immediately.
+							</p>
+							<div className="flex justify-end gap-3">
+								<Button
+									variant="outline"
+									onClick={() => setShowDeleteConfirm(false)}
+									disabled={isDeleting}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="destructive"
+									onClick={() => {
+										deleteChannel(id, {
+											onSuccess: () => {
+												navigate({ to: "/channels" });
+											},
+										});
+									}}
+									disabled={isDeleting}
+								>
+									{isDeleting ? "Deleting..." : "Delete Channel"}
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>

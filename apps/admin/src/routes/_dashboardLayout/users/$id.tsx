@@ -1,4 +1,4 @@
-import { Button } from "@opencircle/ui";
+import { Badge, Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import {
@@ -6,6 +6,7 @@ import {
 	Ban,
 	Calendar,
 	Clock,
+	Hash,
 	Mail,
 	Shield,
 	Trash2,
@@ -36,31 +37,73 @@ function RouteComponent() {
 	const [showPromoteConfirm, setShowPromoteConfirm] = useState(false);
 
 	if (isUserLoading) {
-		return <div>Loading...</div>;
+		return (
+			<div className="flex h-full items-center justify-center">
+				<div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+			</div>
+		);
 	}
 
 	if (!user) {
-		return <div>User not found</div>;
+		return (
+			<div className="flex h-[50vh] flex-col items-center justify-center gap-4">
+				<h2 className="font-bold text-2xl">User not found</h2>
+				<Link to="/users">
+					<Button variant="outline">Back to Users</Button>
+				</Link>
+			</div>
+		);
 	}
 
 	return (
-		<div className="mx-auto max-w-4xl space-y-6">
-			{/* Header Actions */}
-			<div className="flex items-center justify-between">
-				<Link to="/users">
-					<Button size="sm">
+		<div className="mx-auto max-w-5xl space-y-8 p-6">
+			{/* Header Section */}
+			<div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+				<div className="space-y-4">
+					<Link
+						to="/users"
+						className="flex items-center text-muted-foreground text-sm transition-colors hover:text-foreground"
+					>
 						<ArrowLeft size={16} className="mr-2" />
 						Back to Users
-					</Button>
-				</Link>
-				<div className="flex gap-2">
+					</Link>
+					<div className="flex items-center gap-4">
+						<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/50 text-4xl shadow-sm">
+							<UserIcon size={32} className="text-foreground/70" />
+						</div>
+						<div>
+							<h1 className="font-bold text-3xl tracking-tight">
+								{user.name || user.username}
+							</h1>
+							<div className="mt-1 flex items-center gap-2 text-muted-foreground text-sm">
+								<UserIcon size={14} />
+								<span className="font-mono">@{user.username}</span>
+								<span>•</span>
+								<Badge
+									variant={user.is_active ? "primary" : "destructive"}
+									className="capitalize"
+								>
+									{user.is_active ? "Active" : "Inactive"}
+								</Badge>
+								{user.role === "admin" && (
+									<Badge variant="secondary" className="capitalize">
+										Admin
+									</Badge>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="flex flex-wrap gap-3">
 					{user.role !== "admin" && (
 						<Button
-							variant="primary"
+							variant="outline"
 							onClick={() => setShowPromoteConfirm(true)}
 							disabled={isPromoting}
+							className="gap-2"
 						>
-							<Shield size={16} className="mr-2" />
+							<Shield size={16} />
 							{isPromoting ? "Promoting..." : "Raise to Admin"}
 						</Button>
 					)}
@@ -69,8 +112,9 @@ function RouteComponent() {
 							variant="destructive"
 							onClick={() => setShowBanConfirm(true)}
 							disabled={isBanning}
+							className="gap-2"
 						>
-							<Ban size={16} className="mr-2" />
+							<Ban size={16} />
 							{isBanning ? "Banning..." : "Ban User"}
 						</Button>
 					) : (
@@ -78,7 +122,9 @@ function RouteComponent() {
 							variant="secondary"
 							onClick={() => setShowUnbanConfirm(true)}
 							disabled={isUnbanning}
+							className="gap-2"
 						>
+							<Shield size={16} />
 							{isUnbanning ? "Unbanning..." : "Unban User"}
 						</Button>
 					)}
@@ -86,161 +132,165 @@ function RouteComponent() {
 						variant="destructive"
 						onClick={() => setShowDeleteConfirm(true)}
 						disabled={isDeleting}
+						className="gap-2"
 					>
-						<Trash2 size={16} className="mr-2" />
-						{isDeleting ? "Deleting..." : "Delete User"}
+						<Trash2 size={16} />
+						{isDeleting ? "Deleting..." : "Delete"}
 					</Button>
 				</div>
 			</div>
 
-			{/* User Header */}
-			<div className="space-y-4">
-				<div className="flex items-center gap-2">
-					<span
-						className={`rounded-full px-3 py-1 font-medium text-sm ${
-							user.is_active
-								? "bg-green-100 text-green-800"
-								: "bg-red-100 text-red-800"
-						}`}
-					>
-						{user.is_active ? "Active" : "Inactive"}
-					</span>
-					<span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-800 text-sm capitalize">
-						{user.role}
-					</span>
+			<div className="grid gap-6 md:grid-cols-3">
+				{/* Main Content - Left Column */}
+				<div className="space-y-6 md:col-span-2">
+					{/* Overview Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">Overview</h3>
+						</div>
+						<div className="p-6">
+							<div className="space-y-4">
+								<div>
+									<label className="font-medium text-muted-foreground text-xs uppercase">
+										Bio
+									</label>
+									<p className="mt-2 text-foreground/90 leading-relaxed">
+										{user.bio || (
+											<span className="text-muted-foreground italic">
+												No bio provided
+											</span>
+										)}
+									</p>
+								</div>
+								<div className="grid gap-4 sm:grid-cols-2">
+									<div>
+										<label className="font-medium text-muted-foreground text-xs uppercase">
+											Full Name
+										</label>
+										<p className="mt-1 text-sm">
+											{user.name || "Not provided"}
+										</p>
+									</div>
+									<div>
+										<label className="font-medium text-muted-foreground text-xs uppercase">
+											Email
+										</label>
+										<div className="mt-1 flex items-center gap-2 text-sm">
+											<Mail size={14} className="text-muted-foreground" />
+											{user.email}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* System Info Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">System Information</h3>
+						</div>
+						<div className="grid gap-6 p-6 sm:grid-cols-2">
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Hash size={14} /> User ID
+								</label>
+								<p className="mt-2 font-mono text-sm">{user.id}</p>
+							</div>
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Shield size={14} /> Role
+								</label>
+								<p className="mt-2 text-sm capitalize">{user.role}</p>
+							</div>
+						</div>
+					</div>
 				</div>
 
-				<h1 className="font-bold text-4xl">{user.name || user.username}</h1>
-
-				{/* User Meta */}
-				<div className="flex flex-wrap items-center gap-6 text-sm">
-					<div className="flex items-center gap-2">
-						<UserIcon size={16} />
-						<span>@{user.username}</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<Mail size={16} />
-						<span>{user.email}</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<Calendar size={16} />
-						<span>
-							Joined {format(new Date(user.created_at), "MMM dd, yyyy")}
-						</span>
-					</div>
-					<div className="flex items-center gap-2">
-						<Clock size={16} />
-						<span>
-							Updated {format(new Date(user.updated_at), "MMM dd, yyyy")}
-						</span>
-					</div>
-				</div>
-			</div>
-
-			{/* User Details */}
-			<div className="rounded-lg border border-border bg-background shadow-sm">
-				<div className="border-border border-b px-6 py-4">
-					<h2 className="font-semibold text-lg">User Information</h2>
-				</div>
-				<div className="space-y-4 p-6">
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								User ID
-							</label>
-							<p className="mt-1 text-sm">{user.id}</p>
+				{/* Sidebar - Right Column */}
+				<div className="space-y-6">
+					{/* Metadata Card */}
+					<div className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+						<div className="border-border border-b bg-muted/40 px-6 py-4">
+							<h3 className="font-semibold">Metadata</h3>
 						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Username
-							</label>
-							<p className="mt-1 text-sm">@{user.username}</p>
+						<div className="space-y-4 p-6">
+							<div>
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Calendar size={14} /> Joined At
+								</label>
+								<p className="mt-1 text-sm">
+									{format(new Date(user.created_at), "PPP")}
+								</p>
+								<p className="text-muted-foreground text-xs">
+									{format(new Date(user.created_at), "p")}
+								</p>
+							</div>
+							<div className="border-border border-t pt-4">
+								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
+									<Clock size={14} /> Last Updated
+								</label>
+								<p className="mt-1 text-sm">
+									{format(new Date(user.updated_at), "PPP")}
+								</p>
+								<p className="text-muted-foreground text-xs">
+									{format(new Date(user.updated_at), "p")}
+								</p>
+							</div>
 						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Full Name
-							</label>
-							<p className="mt-1 text-sm">{user.name || "Not provided"}</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Email
-							</label>
-							<p className="mt-1 text-sm">{user.email}</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Role
-							</label>
-							<p className="mt-1 flex items-center gap-2 text-sm capitalize">
-								<Shield size={14} />
-								{user.role}
-							</p>
-						</div>
-						<div>
-							<label className="block font-medium text-foreground/60 text-sm">
-								Status
-							</label>
-							<p className="mt-1 text-sm">
-								{user.is_active ? "Active" : "Inactive"}
-							</p>
-						</div>
-					</div>
-
-					{user.bio && (
-						<div className="pt-4">
-							<label className="block font-medium text-foreground/60 text-sm">
-								Bio
-							</label>
-							<p className="mt-1 text-sm">{user.bio}</p>
-						</div>
-					)}
-				</div>
-			</div>
-
-			{/* User Footer */}
-			<div className="border-t pt-6">
-				<div className="flex items-center justify-between">
-					<div className="text-sm">
-						Account created on {format(new Date(user.created_at), "PPP")}
 					</div>
 				</div>
 			</div>
 
 			{/* Ban Confirmation Dialog */}
 			{showBanConfirm && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
-						<h3 className="mb-4 font-semibold text-lg">Ban User</h3>
-						<p className="mb-6 text-foreground/80 text-sm">
-							Are you sure you want to ban{" "}
-							<span className="font-semibold">
-								{user.name || user.username}
-							</span>
-							? This will deactivate their account and they won't be able to
-							access the platform.
-						</p>
-						<div className="flex justify-end gap-3">
-							<Button
-								variant="secondary"
-								onClick={() => setShowBanConfirm(false)}
-								disabled={isBanning}
-							>
-								Cancel
-							</Button>
-							<Button
-								variant="destructive"
-								onClick={() => {
-									banUser(id, {
-										onSuccess: () => {
-											setShowBanConfirm(false);
-										},
-									});
-								}}
-								disabled={isBanning}
-							>
-								{isBanning ? "Banning..." : "Ban User"}
-							</Button>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+					<div className="fade-in zoom-in-95 mx-4 w-full max-w-md animate-in overflow-hidden rounded-xl border border-border bg-background shadow-2xl duration-200">
+						<div className="bg-destructive/10 p-6 pb-4">
+							<div className="flex items-center gap-4">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
+									<Ban size={24} />
+								</div>
+								<div>
+									<h3 className="font-semibold text-destructive text-lg">
+										Ban User
+									</h3>
+									<p className="text-destructive/80 text-sm">
+										This will deactivate their account.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="p-6 pt-4">
+							<p className="mb-6 text-muted-foreground text-sm leading-relaxed">
+								Are you sure you want to ban{" "}
+								<span className="font-semibold text-foreground">
+									{user.name || user.username}
+								</span>
+								? They will not be able to access the platform until unbanned.
+							</p>
+							<div className="flex justify-end gap-3">
+								<Button
+									variant="outline"
+									onClick={() => setShowBanConfirm(false)}
+									disabled={isBanning}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="destructive"
+									onClick={() => {
+										banUser(id, {
+											onSuccess: () => {
+												setShowBanConfirm(false);
+											},
+										});
+									}}
+									disabled={isBanning}
+								>
+									{isBanning ? "Banning..." : "Ban User"}
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -248,37 +298,50 @@ function RouteComponent() {
 
 			{/* Unban Confirmation Dialog */}
 			{showUnbanConfirm && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
-						<h3 className="mb-4 font-semibold text-lg">Unban User</h3>
-						<p className="mb-6 text-foreground/80 text-sm">
-							Are you sure you want to unban{" "}
-							<span className="font-semibold">
-								{user.name || user.username}
-							</span>
-							? This will reactivate their account and they will be able to
-							access the platform again.
-						</p>
-						<div className="flex justify-end gap-3">
-							<Button
-								variant="secondary"
-								onClick={() => setShowUnbanConfirm(false)}
-								disabled={isUnbanning}
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={() => {
-									unbanUser(id, {
-										onSuccess: () => {
-											setShowUnbanConfirm(false);
-										},
-									});
-								}}
-								disabled={isUnbanning}
-							>
-								{isUnbanning ? "Unbanning..." : "Unban User"}
-							</Button>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+					<div className="fade-in zoom-in-95 mx-4 w-full max-w-md animate-in overflow-hidden rounded-xl border border-border bg-background shadow-2xl duration-200">
+						<div className="bg-secondary/10 p-6 pb-4">
+							<div className="flex items-center gap-4">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/20 text-secondary-foreground">
+									<Shield size={24} />
+								</div>
+								<div>
+									<h3 className="font-semibold text-lg">Unban User</h3>
+									<p className="text-muted-foreground text-sm">
+										Reactivate their account.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="p-6 pt-4">
+							<p className="mb-6 text-muted-foreground text-sm leading-relaxed">
+								Are you sure you want to unban{" "}
+								<span className="font-semibold text-foreground">
+									{user.name || user.username}
+								</span>
+								? They will regain access to the platform.
+							</p>
+							<div className="flex justify-end gap-3">
+								<Button
+									variant="outline"
+									onClick={() => setShowUnbanConfirm(false)}
+									disabled={isUnbanning}
+								>
+									Cancel
+								</Button>
+								<Button
+									onClick={() => {
+										unbanUser(id, {
+											onSuccess: () => {
+												setShowUnbanConfirm(false);
+											},
+										});
+									}}
+									disabled={isUnbanning}
+								>
+									{isUnbanning ? "Unbanning..." : "Unban User"}
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -286,40 +349,53 @@ function RouteComponent() {
 
 			{/* Delete Confirmation Dialog */}
 			{showDeleteConfirm && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
-						<h3 className="mb-4 font-semibold text-lg text-red-600">
-							Delete User
-						</h3>
-						<p className="mb-6 text-foreground/80 text-sm">
-							Are you sure you want to permanently delete{" "}
-							<span className="font-semibold">
-								{user.name || user.username}
-							</span>
-							? This action cannot be undone and will remove all user data from
-							the system.
-						</p>
-						<div className="flex justify-end gap-3">
-							<Button
-								variant="secondary"
-								onClick={() => setShowDeleteConfirm(false)}
-								disabled={isDeleting}
-							>
-								Cancel
-							</Button>
-							<Button
-								variant="destructive"
-								onClick={() => {
-									deleteUser(id, {
-										onSuccess: () => {
-											navigate({ to: "/users" });
-										},
-									});
-								}}
-								disabled={isDeleting}
-							>
-								{isDeleting ? "Deleting..." : "Delete User"}
-							</Button>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+					<div className="fade-in zoom-in-95 mx-4 w-full max-w-md animate-in overflow-hidden rounded-xl border border-border bg-background shadow-2xl duration-200">
+						<div className="bg-destructive/10 p-6 pb-4">
+							<div className="flex items-center gap-4">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
+									<Trash2 size={24} />
+								</div>
+								<div>
+									<h3 className="font-semibold text-destructive text-lg">
+										Delete User
+									</h3>
+									<p className="text-destructive/80 text-sm">
+										This action cannot be undone.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="p-6 pt-4">
+							<p className="mb-6 text-muted-foreground text-sm leading-relaxed">
+								Are you sure you want to permanently delete{" "}
+								<span className="font-semibold text-foreground">
+									{user.name || user.username}
+								</span>
+								? This will remove all user data from the system immediately.
+							</p>
+							<div className="flex justify-end gap-3">
+								<Button
+									variant="outline"
+									onClick={() => setShowDeleteConfirm(false)}
+									disabled={isDeleting}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="destructive"
+									onClick={() => {
+										deleteUser(id, {
+											onSuccess: () => {
+												navigate({ to: "/users" });
+											},
+										});
+									}}
+									disabled={isDeleting}
+								>
+									{isDeleting ? "Deleting..." : "Delete User"}
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -327,38 +403,52 @@ function RouteComponent() {
 
 			{/* Promote to Admin Confirmation Dialog */}
 			{showPromoteConfirm && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="mx-4 w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg">
-						<h3 className="mb-4 font-semibold text-lg">Promote to Admin</h3>
-						<p className="mb-6 text-foreground/80 text-sm">
-							Are you sure you want to promote{" "}
-							<span className="font-semibold">
-								{user.name || user.username}
-							</span>{" "}
-							to admin? This will grant them full administrative privileges
-							including access to the admin dashboard and all management
-							features.
-						</p>
-						<div className="flex justify-end gap-3">
-							<Button
-								variant="secondary"
-								onClick={() => setShowPromoteConfirm(false)}
-								disabled={isPromoting}
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={() => {
-									promoteToAdmin(id, {
-										onSuccess: () => {
-											setShowPromoteConfirm(false);
-										},
-									});
-								}}
-								disabled={isPromoting}
-							>
-								{isPromoting ? "Promoting..." : "Promote to Admin"}
-							</Button>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+					<div className="fade-in zoom-in-95 mx-4 w-full max-w-md animate-in overflow-hidden rounded-xl border border-border bg-background shadow-2xl duration-200">
+						<div className="bg-primary/10 p-6 pb-4">
+							<div className="flex items-center gap-4">
+								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 text-primary">
+									<Shield size={24} />
+								</div>
+								<div>
+									<h3 className="font-semibold text-lg text-primary">
+										Promote to Admin
+									</h3>
+									<p className="text-primary/80 text-sm">
+										Grant administrative privileges.
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="p-6 pt-4">
+							<p className="mb-6 text-muted-foreground text-sm leading-relaxed">
+								Are you sure you want to promote{" "}
+								<span className="font-semibold text-foreground">
+									{user.name || user.username}
+								</span>{" "}
+								to admin? They will have full access to the admin dashboard.
+							</p>
+							<div className="flex justify-end gap-3">
+								<Button
+									variant="outline"
+									onClick={() => setShowPromoteConfirm(false)}
+									disabled={isPromoting}
+								>
+									Cancel
+								</Button>
+								<Button
+									onClick={() => {
+										promoteToAdmin(id, {
+											onSuccess: () => {
+												setShowPromoteConfirm(false);
+											},
+										});
+									}}
+									disabled={isPromoting}
+								>
+									{isPromoting ? "Promoting..." : "Promote to Admin"}
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>

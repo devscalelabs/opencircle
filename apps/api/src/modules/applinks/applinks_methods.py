@@ -23,7 +23,9 @@ def create_app_link(db: Session, app_link_data: dict) -> AppLink:
 
 def get_app_link(db: Session, app_link_id: str) -> Optional[AppLink]:
     """Get an app link by ID."""
-    statement = select(AppLink).where(AppLink.id == app_link_id, AppLink.deleted_at.is_(None))
+    statement = select(AppLink).where(
+        AppLink.id == app_link_id, AppLink.deleted_at.is_(None)
+    )
     app_link = db.exec(statement).first()
     return app_link
 
