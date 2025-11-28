@@ -1,4 +1,8 @@
-import type { DashboardStats } from "@opencircle/core";
+import type {
+	CourseEnrollmentDistribution,
+	DashboardStats,
+	UserGrowthData,
+} from "@opencircle/core";
 import { Button } from "@opencircle/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -23,6 +27,8 @@ import {
 	YAxis,
 } from "recharts";
 import { METADATA } from "../../../constants/metadata";
+import { CourseEnrollmentChart } from "../../../features/dashboard/courseEnrollmentChart";
+import { UserGrowthChart } from "../../../features/dashboard/userGrowthChart";
 import { api } from "../../../utils/api";
 
 export const Route = createFileRoute("/_dashboardLayout/dashboard/")({
@@ -96,6 +102,21 @@ function RouteComponent() {
 				"day",
 			);
 		},
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const { data: courseEnrollmentData, isLoading: courseEnrollmentLoading } =
+		useQuery<CourseEnrollmentDistribution[]>({
+			queryKey: ["dashboard", "course-enrollment-distribution"],
+			queryFn: () => api.courses.getCourseEnrollmentDistribution(5),
+			staleTime: 5 * 60 * 1000,
+		});
+
+	const { data: userGrowthData, isLoading: userGrowthLoading } = useQuery<
+		UserGrowthData[]
+	>({
+		queryKey: ["dashboard", "user-growth"],
+		queryFn: () => api.courses.getUserGrowthData(30),
 		staleTime: 5 * 60 * 1000,
 	});
 
@@ -312,6 +333,18 @@ function RouteComponent() {
 						No activity data available
 					</div>
 				)}
+			</div>
+
+			{/* Course Enrollment & User Growth Charts */}
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+				<CourseEnrollmentChart
+					data={courseEnrollmentData || []}
+					isLoading={courseEnrollmentLoading}
+				/>
+				<UserGrowthChart
+					data={userGrowthData || []}
+					isLoading={userGrowthLoading}
+				/>
 			</div>
 
 			{/* Quick Stats & Links */}

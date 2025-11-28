@@ -84,7 +84,7 @@ export const api = createApi(API_URL, {
 			if (response.status === 401 && !request.url.includes("/refresh")) {
 				const newToken = await getValidAccessToken();
 				if (newToken) {
-					const url = request.url.replace(API_URL + "/", "");
+					const url = request.url.replace(`${API_URL}/`, "");
 					return kyClient(url, {
 						method: request.method,
 						headers: {
