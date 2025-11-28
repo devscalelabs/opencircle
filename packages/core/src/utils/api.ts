@@ -74,6 +74,7 @@ export type {
 	ArticleUpdate,
 	Channel,
 	ChannelCreate,
+	ChannelMember,
 	ChannelType,
 	ChannelUpdate,
 	Course,
