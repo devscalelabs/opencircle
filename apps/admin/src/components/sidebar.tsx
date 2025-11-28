@@ -15,6 +15,7 @@ import {
 	Zap,
 } from "lucide-react";
 import { useAccount } from "../features/auth/hooks/useAccount";
+import { clearTokens } from "../utils/api";
 
 interface MenuItemProps {
 	icon: React.ReactNode;
@@ -38,7 +39,7 @@ export const Sidebar = () => {
 	const { account } = useAccount();
 
 	const handleLogout = () => {
-		localStorage.removeItem("token");
+		clearTokens();
 		window.location.href = "/";
 	};
 
