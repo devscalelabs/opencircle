@@ -56,7 +56,11 @@ def get_articles_by_user(
     """Get all articles by a specific user."""
     statement = (
         select(Post)
-        .where(Post.type == PostType.ARTICLE, Post.user_id == user_id, Post.deleted_at.is_(None))
+        .where(
+            Post.type == PostType.ARTICLE,
+            Post.user_id == user_id,
+            Post.deleted_at.is_(None),
+        )
         .order_by(desc(column("created_at")))
         .offset(skip)
         .limit(limit)

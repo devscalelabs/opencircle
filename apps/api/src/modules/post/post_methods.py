@@ -283,7 +283,9 @@ def get_reactions_summary(
 ) -> dict:
     """Get reactions summary for a post."""
     reactions = db.exec(
-        select(Reaction).where(Reaction.post_id == post_id, Reaction.deleted_at.is_(None))
+        select(Reaction).where(
+            Reaction.post_id == post_id, Reaction.deleted_at.is_(None)
+        )
     ).all()
     emoji_counts = Counter(r.emoji for r in reactions)
     user_reactions = {r.emoji for r in reactions if r.user_id == current_user_id}

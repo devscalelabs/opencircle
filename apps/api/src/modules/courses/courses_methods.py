@@ -142,7 +142,9 @@ def create_section(db: Session, section_data: dict) -> Section:
 
 def get_section(db: Session, section_id: str) -> Optional[Section]:
     """Get a section by ID."""
-    statement = select(Section).where(Section.id == section_id, Section.deleted_at.is_(None))
+    statement = select(Section).where(
+        Section.id == section_id, Section.deleted_at.is_(None)
+    )
     return db.exec(statement).first()
 
 
@@ -174,7 +176,9 @@ def get_all_sections(
     db: Session, skip: int = 0, limit: int = 100, course_id: Optional[str] = None
 ) -> List[Section]:
     """Get all sections with pagination and optional course filter."""
-    statement = select(Section).where(Section.deleted_at.is_(None)).offset(skip).limit(limit)
+    statement = (
+        select(Section).where(Section.deleted_at.is_(None)).offset(skip).limit(limit)
+    )
 
     if course_id:
         statement = statement.where(Section.course_id == course_id)
@@ -232,7 +236,9 @@ def get_all_lessons(
     type: Optional[str] = None,
 ) -> List[Lesson]:
     """Get all lessons with pagination and optional filters."""
-    statement = select(Lesson).where(Lesson.deleted_at.is_(None)).offset(skip).limit(limit)
+    statement = (
+        select(Lesson).where(Lesson.deleted_at.is_(None)).offset(skip).limit(limit)
+    )
 
     if section_id:
         statement = statement.where(Lesson.section_id == section_id)
@@ -301,7 +307,10 @@ def get_all_enrollments(
 ) -> List[EnrolledCourse]:
     """Get all enrollments with pagination and optional filters."""
     statement = (
-        select(EnrolledCourse).where(EnrolledCourse.deleted_at.is_(None)).offset(skip).limit(limit)
+        select(EnrolledCourse)
+        .where(EnrolledCourse.deleted_at.is_(None))
+        .offset(skip)
+        .limit(limit)
     )
 
     if user_id:
