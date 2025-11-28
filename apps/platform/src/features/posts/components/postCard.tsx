@@ -45,7 +45,7 @@ export const PostCard = ({ post }: PostCardProps) => {
 		<main className="relative max-w-2xl space-y-2 border-border border-b p-4">
 			<div className="absolute top-4 right-4 flex items-center justify-center gap-2">
 				{post.is_pinned && <PinIcon className="h-3 w-3 fill-foreground" />}
-				{post.user_id === account?.id && (
+				{(post.user_id === account?.id || account?.role === "admin") && (
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild>
 							<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-background-secondary">
@@ -57,12 +57,14 @@ export const PostCard = ({ post }: PostCardProps) => {
 							align="end"
 							className="min-w-[80px] overflow-hidden rounded-lg border border-border bg-background-secondary font-medium text-xs shadow-2xl"
 						>
-							<DropdownMenu.Item
-								className="p-3 focus-within:outline-none hover:bg-primary"
-								onClick={() => setIsEditing(true)}
-							>
-								Edit
-							</DropdownMenu.Item>
+							{post.user_id === account?.id && (
+								<DropdownMenu.Item
+									className="p-3 focus-within:outline-none hover:bg-primary"
+									onClick={() => setIsEditing(true)}
+								>
+									Edit
+								</DropdownMenu.Item>
+							)}
 							<DropdownMenu.Item
 								className="p-3 focus-within:outline-none hover:bg-primary"
 								onClick={() => deletePost(post.id)}
@@ -157,8 +159,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 									navigate({ to: "/posts/$id", params: { id: post.id } }),
 								)}
 							</p>
-							<UrlPreview content={post.content} />
 						</div>
+						<UrlPreview content={post.content} />
 						<MediaGallery media={post.medias} />
 					</>
 				)}
