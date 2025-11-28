@@ -201,6 +201,15 @@ class EmailService:
 
         return self._send_email(to_email, subject, html_content)
 
+    def send_broadcast_email(
+        self,
+        to_email: str,
+        subject: str,
+        html_content: str,
+    ) -> bool:
+        """Send broadcast email with custom subject and HTML content."""
+        return self._send_email(to_email, subject, html_content)
+
 
 # Create a singleton instance
 email_service = EmailService()

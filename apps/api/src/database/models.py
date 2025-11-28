@@ -3,7 +3,8 @@ from __future__ import annotations
 from enum import Enum
 from typing import List, Optional
 
-from sqlalchemy import JSON
+from sqlalchemy import JSON, Column
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, relationship
 from sqlmodel import Field, Relationship
@@ -526,3 +527,83 @@ class PendingNotificationEmail(BaseModel, table=True):
     notification: Mapped["Notification"] = Relationship(
         sa_relationship=relationship("Notification")
     )
+
+
+class BroadcastStatus(str, Enum):
+    DRAFT = "draft"
+    SENDING = "sending"
+    SENT = "sent"
+    FAILED = "failed"
+
+
+class BroadcastRecipientType(str, Enum):
+    ALL_USERS = "all_users"
+    TEST_EMAIL = "test_email"
+    CHANNEL_MEMBERS = "channel_members"
+
+
+class Broadcast(BaseModel, table=True):
+    __tablename__ = "broadcast"  # type: ignore
+
+    subject: str = Field(index=True)
+    content: str  # Markdown/HTML content from WYSIWYG
+    recipient_type: BroadcastRecipientType = Field(
+        default=BroadcastRecipientType.TEST_EMAIL,
+        sa_column=Column(
+            SAEnum(
+                BroadcastRecipientType, values_callable=lambda x: [e.value for e in x]
+            ),
+            default=BroadcastRecipientType.TEST_EMAIL,
+        ),
+    )
+    test_email: str | None = Field(default=None)
+    channel_id: str | None = Field(foreign_key="channel.id", default=None)
+    status: BroadcastStatus = Field(
+        default=BroadcastStatus.DRAFT,
+        sa_column=Column(
+            SAEnum(BroadcastStatus, values_callable=lambda x: [e.value for e in x]),
+            default=BroadcastStatus.DRAFT,
+        ),
+    )
+    sent_at: str | None = Field(default=None)  # ISO datetime string
+    sent_count: int = Field(default=0)
+    failed_count: int = Field(default=0)
+    created_by: str = Field(foreign_key="user.id")
+    creator: Mapped["User"] = Relationship(
+        sa_relationship=relationship("User", foreign_keys="Broadcast.created_by")
+    )
+    channel: Mapped[Optional["Channel"]] = Relationship(
+        sa_relationship=relationship("Channel")
+    )
+    recipients: Mapped[List["BroadcastRecipient"]] = Relationship(
+        sa_relationship=relationship("BroadcastRecipient", back_populates="broadcast")
+    )
+
+
+class BroadcastRecipientStatus(str, Enum):
+    PENDING = "pending"
+    SENT = "sent"
+    FAILED = "failed"
+
+
+class BroadcastRecipient(BaseModel, table=True):
+    __tablename__ = "broadcast_recipient"  # type: ignore
+
+    broadcast_id: str = Field(foreign_key="broadcast.id", index=True)
+    user_id: str | None = Field(foreign_key="user.id", default=None, index=True)
+    email: str = Field(index=True)
+    status: BroadcastRecipientStatus = Field(
+        default=BroadcastRecipientStatus.PENDING,
+        sa_column=Column(
+            SAEnum(
+                BroadcastRecipientStatus, values_callable=lambda x: [e.value for e in x]
+            ),
+            default=BroadcastRecipientStatus.PENDING,
+        ),
+    )
+    sent_at: str | None = Field(default=None)  # ISO datetime string
+    error_message: str | None = Field(default=None)
+    broadcast: Mapped["Broadcast"] = Relationship(
+        sa_relationship=relationship("Broadcast", back_populates="recipients")
+    )
+    user: Mapped[Optional["User"]] = Relationship(sa_relationship=relationship("User"))

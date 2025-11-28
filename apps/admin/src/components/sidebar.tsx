@@ -10,6 +10,7 @@ import {
 	Key,
 	Link as LinkIcon,
 	LogOut,
+	Mail,
 	Settings,
 	UserCheck,
 	Users,
@@ -103,6 +104,11 @@ export const Sidebar = () => {
 								icon={<Key size={18} />}
 								label="Invite Codes"
 								to="/invite-codes"
+							/>
+							<MenuItem
+								icon={<Mail size={18} />}
+								label="Broadcast"
+								to="/broadcast"
 							/>
 						</MenuGroup>
 						<MenuGroup value="content" label="Content">

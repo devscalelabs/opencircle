@@ -4,6 +4,7 @@ import { AppLinksRouter } from "../services/routers/applinks";
 import { AppSettingsRouter } from "../services/routers/appsettings";
 import { ArticlesRouter } from "../services/routers/articles";
 import { AuthRouter } from "../services/routers/auth";
+import { BroadcastsRouter } from "../services/routers/broadcasts";
 import { ChannelsRouter } from "../services/routers/channels";
 import { CoursesRouter } from "../services/routers/courses";
 import { ExtrasRouter } from "../services/routers/extras";
@@ -21,6 +22,7 @@ export class Api {
 	public auth: AuthRouter;
 	public appSettings: AppSettingsRouter;
 	public appLinks: AppLinksRouter;
+	public broadcasts: BroadcastsRouter;
 	public channels: ChannelsRouter;
 	public posts: PostsRouter;
 	public media: MediaRouter;
@@ -39,6 +41,7 @@ export class Api {
 		this.auth = new AuthRouter(baseUrl, hooks);
 		this.appSettings = new AppSettingsRouter(baseUrl, hooks);
 		this.appLinks = new AppLinksRouter(baseUrl, hooks);
+		this.broadcasts = new BroadcastsRouter(baseUrl, hooks);
 		this.channels = new ChannelsRouter(baseUrl, hooks);
 		this.posts = new PostsRouter(baseUrl, hooks);
 		this.media = new MediaRouter(baseUrl, hooks);

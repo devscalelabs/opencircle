@@ -4,6 +4,7 @@ export * from "./routers/applinks/types";
 export * from "./routers/appsettings/types";
 export * from "./routers/articles/types";
 export * from "./routers/auth/types";
+export * from "./routers/broadcasts/types";
 export * from "./routers/channels/types";
 export * from "./routers/courses/types";
 export * from "./routers/extras/types";
