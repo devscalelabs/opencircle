@@ -1,6 +1,11 @@
+import {
+	AtIcon,
+	Comment01Icon,
+	FavouriteIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { NotificationFrequency } from "@opencircle/core";
 import { Select, SelectItem } from "@opencircle/ui";
-import { AtSign, Heart, MessageCircle } from "lucide-react";
 import { useNotificationPreferences } from "../hooks/useNotificationPreferences";
 
 const FREQUENCY_OPTIONS: { value: NotificationFrequency; label: string }[] = [
@@ -85,7 +90,7 @@ export const NotificationPreferencesTab = () => {
 
 			<div className="space-y-3">
 				<PreferenceRow
-					icon={<AtSign className="h-5 w-5" />}
+					icon={<HugeiconsIcon icon={AtIcon} size={20} />}
 					title="Mentions"
 					description="When someone mentions you in a post"
 					value={preferences?.mention_email || "immediate"}
@@ -94,7 +99,7 @@ export const NotificationPreferencesTab = () => {
 				/>
 
 				<PreferenceRow
-					icon={<MessageCircle className="h-5 w-5" />}
+					icon={<HugeiconsIcon icon={Comment01Icon} size={20} />}
 					title="Replies"
 					description="When someone replies to your post"
 					value={preferences?.reply_email || "immediate"}
@@ -103,7 +108,7 @@ export const NotificationPreferencesTab = () => {
 				/>
 
 				<PreferenceRow
-					icon={<Heart className="h-5 w-5" />}
+					icon={<HugeiconsIcon icon={FavouriteIcon} size={20} />}
 					title="Likes"
 					description="When someone likes your post"
 					value={preferences?.like_email || "daily"}

@@ -1,21 +1,20 @@
+import {
+	Activity01Icon,
+	ArrowDown01Icon,
+	Book01Icon,
+	Key01Icon,
+	LinkSquare02Icon,
+	Logout01Icon,
+	Mail01Icon,
+	News01Icon,
+	Settings01Icon,
+	UserCheck01Icon,
+	UserMultiple02Icon,
+	ZapIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Avatar } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
-import {
-	Activity,
-	BookOpen,
-	ChevronDown,
-	ExternalLink,
-	FileText,
-	Hash,
-	Key,
-	Link as LinkIcon,
-	LogOut,
-	Mail,
-	Settings,
-	UserCheck,
-	Users,
-	Zap,
-} from "lucide-react";
 import { Accordion } from "radix-ui";
 import { useAccount } from "../features/auth/hooks/useAccount";
 import { clearTokens } from "../utils/api";
@@ -50,7 +49,8 @@ const MenuGroup = ({ value, label, children }: MenuGroupProps) => {
 			<Accordion.Header>
 				<Accordion.Trigger className="group flex w-full items-center justify-between rounded-lg p-2 font-medium text-foreground/70 text-sm transition duration-150 hover:bg-primary hover:text-foreground">
 					<span>{label}</span>
-					<ChevronDown
+					<HugeiconsIcon
+						icon={ArrowDown01Icon}
 						size={16}
 						className="transition-transform duration-200 group-data-[state=open]:rotate-180"
 					/>
@@ -76,7 +76,7 @@ export const Sidebar = () => {
 			<div>
 				<section className="ml-2 flex gap-2">
 					<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
-						<Zap size={12} fill="currentColor" />
+						<HugeiconsIcon icon={ZapIcon} size={12} />
 					</div>
 					<Link to="/dashboard">
 						<h2 className="font-medium">Opencircle</h2>
@@ -90,57 +90,61 @@ export const Sidebar = () => {
 					>
 						<MenuGroup value="community" label="Community">
 							<MenuItem
-								icon={<Activity size={18} />}
+								icon={<HugeiconsIcon icon={Activity01Icon} size={18} />}
 								label="Activity"
 								to="/activity"
 							/>
-							<MenuItem icon={<Users size={18} />} label="Users" to="/users" />
 							<MenuItem
-								icon={<Hash size={18} />}
+								icon={<HugeiconsIcon icon={UserMultiple02Icon} size={18} />}
+								label="Users"
+								to="/users"
+							/>
+							<MenuItem
+								icon={<span className="text-lg">#</span>}
 								label="Channels"
 								to="/channels"
 							/>
 							<MenuItem
-								icon={<Key size={18} />}
+								icon={<HugeiconsIcon icon={Key01Icon} size={18} />}
 								label="Invite Codes"
 								to="/invite-codes"
 							/>
 							<MenuItem
-								icon={<Mail size={18} />}
+								icon={<HugeiconsIcon icon={Mail01Icon} size={18} />}
 								label="Broadcast"
 								to="/broadcast"
 							/>
 						</MenuGroup>
 						<MenuGroup value="content" label="Content">
 							<MenuItem
-								icon={<BookOpen size={18} />}
+								icon={<HugeiconsIcon icon={Book01Icon} size={18} />}
 								label="Courses"
 								to="/courses"
 							/>
 							<MenuItem
-								icon={<UserCheck size={18} />}
+								icon={<HugeiconsIcon icon={UserCheck01Icon} size={18} />}
 								label="Enrollments"
 								to="/enrollments"
 							/>
 							<MenuItem
-								icon={<FileText size={18} />}
+								icon={<HugeiconsIcon icon={News01Icon} size={18} />}
 								label="Articles"
 								to="/articles"
 							/>
 							<MenuItem
-								icon={<LinkIcon size={18} />}
+								icon={<HugeiconsIcon icon={LinkSquare02Icon} size={18} />}
 								label="Resources"
 								to="/resources"
 							/>
 						</MenuGroup>
 						<MenuGroup value="settings" label="Settings">
 							<MenuItem
-								icon={<ExternalLink size={18} />}
+								icon={<HugeiconsIcon icon={LinkSquare02Icon} size={18} />}
 								label="App Links"
 								to="/app-links"
 							/>
 							<MenuItem
-								icon={<Settings size={18} />}
+								icon={<HugeiconsIcon icon={Settings01Icon} size={18} />}
 								label="App Settings"
 								to="/app-settings"
 							/>
@@ -207,7 +211,7 @@ export const Sidebar = () => {
 					onClick={handleLogout}
 					className="flex w-full items-center gap-2 rounded-lg p-2 text-foreground/70 text-sm hover:bg-primary hover:text-foreground"
 				>
-					<LogOut size={16} />
+					<HugeiconsIcon icon={Logout01Icon} size={16} />
 					<span>Logout</span>
 				</button>
 			</section>

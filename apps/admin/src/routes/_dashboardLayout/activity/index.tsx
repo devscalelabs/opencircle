@@ -1,8 +1,14 @@
+import {
+	Activity01Icon,
+	AnalyticsUpIcon,
+	Clock01Icon,
+	UserMultiple02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format, subDays } from "date-fns";
-import { Activity, Clock, TrendingUp, Users } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import {
 	Area,
@@ -122,7 +128,10 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div>
-							<Activity className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={Activity01Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</div>
@@ -139,7 +148,10 @@ function RouteComponent() {
 							</div>
 						</div>
 						<div>
-							<Users className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={UserMultiple02Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</div>
@@ -154,7 +166,10 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div>
-							<TrendingUp className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={AnalyticsUpIcon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</div>
@@ -169,7 +184,10 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div>
-							<Clock className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={Clock01Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</div>

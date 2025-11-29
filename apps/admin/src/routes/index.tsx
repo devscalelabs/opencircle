@@ -1,6 +1,7 @@
+import { ZapIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, Input } from "@opencircle/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { Zap } from "lucide-react";
 import { METADATA } from "../constants/metadata";
 import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { useLogin } from "../features/auth/hooks/useLogin";
@@ -73,7 +74,7 @@ function RouteComponent() {
 					<section className="space-y-8 text-center">
 						<section className="ml-2 flex items-center justify-center gap-2">
 							<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
-								<Zap size={12} fill="currentColor" />
+								<HugeiconsIcon icon={ZapIcon} size={12} fill="currentColor" />
 							</div>
 							<h2 className="font-medium">Opencircle</h2>
 						</section>
@@ -92,7 +93,7 @@ function RouteComponent() {
 				<section className="space-y-8 text-center">
 					<section className="ml-2 flex items-center justify-center gap-2">
 						<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
-							<Zap size={12} fill="currentColor" />
+							<HugeiconsIcon icon={ZapIcon} size={12} fill="currentColor" />
 						</div>
 						<h2 className="font-medium">Opencircle</h2>
 					</section>

@@ -1,6 +1,11 @@
+import {
+	Cancel01Icon,
+	Image01Icon,
+	SmileIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { Image, Smile, X } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "../../auth/hooks/useAccount";
@@ -133,7 +138,7 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 								onClick={() => removeFile(index)}
 								className="text-muted-foreground hover:text-foreground"
 							>
-								<X size={16} />
+								<HugeiconsIcon icon={Cancel01Icon} size={16} />
 							</button>
 						</div>
 					))}
@@ -155,11 +160,11 @@ export const ReplyForm = ({ parentId, onReply }: ReplyFormProps) => {
 						onClick={() => fileInputRef.current?.click()}
 						className="text-muted-foreground hover:text-foreground"
 					>
-						<Image strokeWidth={1.5} size={18} />
+						<HugeiconsIcon icon={Image01Icon} strokeWidth={1.5} size={18} />
 					</button>
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
-							<Smile strokeWidth={1.5} size={18} />
+							<HugeiconsIcon icon={SmileIcon} strokeWidth={1.5} size={18} />
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content side="right">
 							<EmojiPicker

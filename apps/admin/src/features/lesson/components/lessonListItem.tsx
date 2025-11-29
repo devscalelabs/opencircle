@@ -1,9 +1,14 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+	Delete01Icon,
+	Edit02Icon,
+	Menu02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Lesson } from "@opencircle/core";
 import { Button } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
-import { Edit2, GripVertical, Trash2 } from "lucide-react";
 
 interface LessonListItemProps {
 	lesson: Lesson;
@@ -46,7 +51,7 @@ export const LessonListItem = ({
 					{...attributes}
 					{...listeners}
 				>
-					<GripVertical className="h-4 w-4" />
+					<HugeiconsIcon icon={Menu02Icon} size={16} className="h-4 w-4" />
 				</button>
 				<div>
 					<h5 className="font-medium">{lesson.title}</h5>
@@ -65,7 +70,7 @@ export const LessonListItem = ({
 						})
 					}
 				>
-					<Edit2 size={14} />
+					<HugeiconsIcon icon={Edit02Icon} size={14} />
 				</Button>
 				<Button
 					type="button"
@@ -74,7 +79,7 @@ export const LessonListItem = ({
 					onClick={() => onDelete(lesson.id)}
 					disabled={isDeleting}
 				>
-					<Trash2 size={14} />
+					<HugeiconsIcon icon={Delete01Icon} size={14} />
 				</Button>
 			</div>
 		</div>

@@ -1,5 +1,6 @@
+import { LockIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, Input } from "@opencircle/ui";
-import { LockIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "../../../features/auth/hooks/useAccount";
 import { api } from "../../../utils/api";
@@ -80,7 +81,7 @@ export const PostsList = () => {
 		return (
 			<div className="flex h-90 flex-col items-center justify-center gap-4">
 				<div className="rounded-xl bg-background-secondary p-4">
-					<LockIcon className="text-foreground" />
+					<HugeiconsIcon icon={LockIcon} className="text-foreground" />
 				</div>
 				<div className="text-balance">
 					You are not eligible to access this content.

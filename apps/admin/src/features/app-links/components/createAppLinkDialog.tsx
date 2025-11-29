@@ -1,3 +1,5 @@
+import { Add01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
 	Button,
 	Dialog,
@@ -9,7 +11,6 @@ import {
 	DialogTrigger,
 	Input,
 } from "@opencircle/ui";
-import { Plus } from "lucide-react";
 import { useId, useState } from "react";
 import { useAppLinksCreation } from "../hooks/useAppLinksCreation";
 import type { AppLinksFormData } from "../utils/types";
@@ -57,7 +58,7 @@ export const CreateAppLinkDialog = ({ children }: CreateAppLinkDialogProps) => {
 			<DialogTrigger asChild>
 				{children || (
 					<Button size="sm">
-						<Plus className="mr-2 h-4 w-4" />
+						<HugeiconsIcon icon={Add01Icon} className="mr-2 h-4 w-4" />
 						Add App Link
 					</Button>
 				)}

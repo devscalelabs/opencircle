@@ -1,7 +1,13 @@
+import {
+	BashIcon,
+	Mail01Icon,
+	SentIcon,
+	UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Badge, Button, Input } from "@opencircle/ui";
 import MDEditor from "@uiw/react-md-editor";
 import { format } from "date-fns";
-import { Hash, Mail, Send, Users } from "lucide-react";
 import { useState } from "react";
 import type { Broadcast, BroadcastStatus } from "../utils/types";
 
@@ -72,7 +78,7 @@ export const BroadcastView = ({
 						<>
 							<div className="rounded-lg border border-border bg-background p-4">
 								<h3 className="mb-3 flex items-center gap-2 font-semibold text-sm">
-									<Mail size={16} />
+									<HugeiconsIcon icon={Mail01Icon} size={16} />
 									Send Test Email
 								</h3>
 								<div className="space-y-3">
@@ -87,7 +93,7 @@ export const BroadcastView = ({
 										onClick={handleSendTest}
 										disabled={!testEmail.trim() || isSendingTest}
 									>
-										<Send size={14} className="mr-2" />
+										<HugeiconsIcon icon={SentIcon} size={14} className="mr-2" />
 										{isSendingTest ? "Sending..." : "Send Test"}
 									</Button>
 								</div>
@@ -96,9 +102,9 @@ export const BroadcastView = ({
 							<div className="rounded-lg border border-border bg-background p-4">
 								<h3 className="mb-3 flex items-center gap-2 font-semibold text-sm">
 									{broadcast.recipient_type === "channel_members" ? (
-										<Hash size={16} />
+										<HugeiconsIcon icon={BashIcon} size={16} />
 									) : (
-										<Users size={16} />
+										<HugeiconsIcon icon={UserIcon} size={16} />
 									)}
 									{broadcast.recipient_type === "channel_members"
 										? `Send to ${broadcast.channel?.name || "Channel"} Members`
@@ -110,7 +116,7 @@ export const BroadcastView = ({
 									onClick={onSend}
 									disabled={isSending}
 								>
-									<Send size={14} className="mr-2" />
+									<HugeiconsIcon icon={SentIcon} size={14} className="mr-2" />
 									{isSending ? "Sending..." : "Send Broadcast"}
 								</Button>
 								<p className="mt-2 text-foreground/60 text-xs">

@@ -1,5 +1,6 @@
+import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Resource } from "@opencircle/core";
-import { ExternalLink } from "lucide-react";
 
 interface ResourceCardProps {
 	resource: Resource;
@@ -17,7 +18,8 @@ export const ResourceCard = ({ resource }: ResourceCardProps) => {
 						className="group mb-2 flex items-center gap-2 text-primary hover:underline"
 					>
 						<span className="truncate font-medium text-sm">{resource.url}</span>
-						<ExternalLink
+						<HugeiconsIcon
+							icon={LinkSquare02Icon}
 							size={14}
 							className="flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
 						/>

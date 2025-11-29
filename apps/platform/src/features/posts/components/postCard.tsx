@@ -1,7 +1,13 @@
+import {
+	Cancel01Icon,
+	Comment01Icon,
+	MoreVerticalIcon,
+	PinIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Post } from "@opencircle/core";
 import { Avatar, Button } from "@opencircle/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { EllipsisVertical, MessageCircle, PinIcon, X } from "lucide-react";
 import moment from "moment";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
@@ -44,12 +50,14 @@ export const PostCard = ({ post }: PostCardProps) => {
 	return (
 		<main className="relative max-w-2xl space-y-2 border-border border-b p-4">
 			<div className="absolute top-4 right-4 flex items-center justify-center gap-2">
-				{post.is_pinned && <PinIcon className="h-3 w-3 fill-foreground" />}
+				{post.is_pinned && (
+					<HugeiconsIcon icon={PinIcon} size={12} fill="currentColor" />
+				)}
 				{(post.user_id === account?.id || account?.role === "admin") && (
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild>
 							<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-background-secondary">
-								<EllipsisVertical size={12} className="" />
+								<HugeiconsIcon icon={MoreVerticalIcon} size={12} />
 							</div>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content
@@ -135,7 +143,7 @@ export const PostCard = ({ post }: PostCardProps) => {
 								onClick={handleCancelEdit}
 								className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm hover:bg-background-secondary"
 							>
-								<X size={16} />
+								<HugeiconsIcon icon={Cancel01Icon} size={16} />
 								Cancel
 							</button>
 							<Button
@@ -179,7 +187,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 						<section className="flex items-center gap-4">
 							<PostCardReactions post={post} />
 							<div className="flex items-center gap-2 text-sm">
-								<MessageCircle
+								<HugeiconsIcon
+									icon={Comment01Icon}
 									size={18}
 									onClick={() =>
 										navigate({ to: "/posts/$id", params: { id: post.id } })

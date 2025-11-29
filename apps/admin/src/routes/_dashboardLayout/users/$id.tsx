@@ -1,17 +1,18 @@
+import {
+	ArrowLeft01Icon,
+	BlockedIcon,
+	Calendar01Icon,
+	Clock01Icon,
+	Delete01Icon,
+	GridIcon,
+	Mail01Icon,
+	SecurityCheckIcon,
+	UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Badge, Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-	ArrowLeft,
-	Ban,
-	Calendar,
-	Clock,
-	Hash,
-	Mail,
-	Shield,
-	Trash2,
-	User as UserIcon,
-} from "lucide-react";
 import { useState } from "react";
 import { useBanUser } from "../../../features/user/hooks/useBanUser";
 import { useDeleteUser } from "../../../features/user/hooks/useDeleteUser";
@@ -64,19 +65,23 @@ function RouteComponent() {
 						to="/users"
 						className="flex items-center text-muted-foreground text-sm transition-colors hover:text-foreground"
 					>
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Users
 					</Link>
 					<div className="flex items-center gap-4">
 						<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/50 text-4xl shadow-sm">
-							<UserIcon size={32} className="text-foreground/70" />
+							<HugeiconsIcon
+								icon={UserIcon}
+								size={32}
+								className="text-foreground/70"
+							/>
 						</div>
 						<div>
 							<h1 className="font-bold text-3xl tracking-tight">
 								{user.name || user.username}
 							</h1>
 							<div className="mt-1 flex items-center gap-2 text-muted-foreground text-sm">
-								<UserIcon size={14} />
+								<HugeiconsIcon icon={UserIcon} size={14} />
 								<span className="font-mono">@{user.username}</span>
 								<span>•</span>
 								<Badge
@@ -103,7 +108,7 @@ function RouteComponent() {
 							disabled={isPromoting}
 							className="gap-2"
 						>
-							<Shield size={16} />
+							<HugeiconsIcon icon={SecurityCheckIcon} size={16} />
 							{isPromoting ? "Promoting..." : "Raise to Admin"}
 						</Button>
 					)}
@@ -114,7 +119,7 @@ function RouteComponent() {
 							disabled={isBanning}
 							className="gap-2"
 						>
-							<Ban size={16} />
+							<HugeiconsIcon icon={BlockedIcon} size={16} />
 							{isBanning ? "Banning..." : "Ban User"}
 						</Button>
 					) : (
@@ -124,7 +129,7 @@ function RouteComponent() {
 							disabled={isUnbanning}
 							className="gap-2"
 						>
-							<Shield size={16} />
+							<HugeiconsIcon icon={SecurityCheckIcon} size={16} />
 							{isUnbanning ? "Unbanning..." : "Unban User"}
 						</Button>
 					)}
@@ -134,7 +139,7 @@ function RouteComponent() {
 						disabled={isDeleting}
 						className="gap-2"
 					>
-						<Trash2 size={16} />
+						<HugeiconsIcon icon={Delete01Icon} size={16} />
 						{isDeleting ? "Deleting..." : "Delete"}
 					</Button>
 				</div>
@@ -176,7 +181,11 @@ function RouteComponent() {
 											Email
 										</label>
 										<div className="mt-1 flex items-center gap-2 text-sm">
-											<Mail size={14} className="text-muted-foreground" />
+											<HugeiconsIcon
+												icon={Mail01Icon}
+												size={14}
+												className="text-muted-foreground"
+											/>
 											{user.email}
 										</div>
 									</div>
@@ -193,13 +202,13 @@ function RouteComponent() {
 						<div className="grid gap-6 p-6 sm:grid-cols-2">
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Hash size={14} /> User ID
+									<HugeiconsIcon icon={GridIcon} size={14} /> User ID
 								</label>
 								<p className="mt-2 font-mono text-sm">{user.id}</p>
 							</div>
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Shield size={14} /> Role
+									<HugeiconsIcon icon={SecurityCheckIcon} size={14} /> Role
 								</label>
 								<p className="mt-2 text-sm capitalize">{user.role}</p>
 							</div>
@@ -217,7 +226,7 @@ function RouteComponent() {
 						<div className="space-y-4 p-6">
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Calendar size={14} /> Joined At
+									<HugeiconsIcon icon={Calendar01Icon} size={14} /> Joined At
 								</label>
 								<p className="mt-1 text-sm">
 									{format(new Date(user.created_at), "PPP")}
@@ -228,7 +237,7 @@ function RouteComponent() {
 							</div>
 							<div className="border-border border-t pt-4">
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Clock size={14} /> Last Updated
+									<HugeiconsIcon icon={Clock01Icon} size={14} /> Last Updated
 								</label>
 								<p className="mt-1 text-sm">
 									{format(new Date(user.updated_at), "PPP")}
@@ -249,7 +258,7 @@ function RouteComponent() {
 						<div className="bg-destructive/10 p-6 pb-4">
 							<div className="flex items-center gap-4">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
-									<Ban size={24} />
+									<HugeiconsIcon icon={BlockedIcon} size={24} />
 								</div>
 								<div>
 									<h3 className="font-semibold text-destructive text-lg">
@@ -303,7 +312,7 @@ function RouteComponent() {
 						<div className="bg-secondary/10 p-6 pb-4">
 							<div className="flex items-center gap-4">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/20 text-secondary-foreground">
-									<Shield size={24} />
+									<HugeiconsIcon icon={SecurityCheckIcon} size={24} />
 								</div>
 								<div>
 									<h3 className="font-semibold text-lg">Unban User</h3>
@@ -354,7 +363,7 @@ function RouteComponent() {
 						<div className="bg-destructive/10 p-6 pb-4">
 							<div className="flex items-center gap-4">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
-									<Trash2 size={24} />
+									<HugeiconsIcon icon={Delete01Icon} size={24} />
 								</div>
 								<div>
 									<h3 className="font-semibold text-destructive text-lg">
@@ -408,7 +417,7 @@ function RouteComponent() {
 						<div className="bg-primary/10 p-6 pb-4">
 							<div className="flex items-center gap-4">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 text-primary">
-									<Shield size={24} />
+									<HugeiconsIcon icon={SecurityCheckIcon} size={24} />
 								</div>
 								<div>
 									<h3 className="font-semibold text-lg text-primary">

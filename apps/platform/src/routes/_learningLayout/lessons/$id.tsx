@@ -1,6 +1,7 @@
+import { ArrowLeft01Icon, ZapIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import MDEditor from "@uiw/react-md-editor";
-import { ArrowLeft, Zap } from "lucide-react";
 import { METADATA } from "../../../constants/metadata";
 import { CourseSidebar } from "../../../features/courses/components/courseSidebar";
 import { useCourse } from "../../../features/courses/hooks/useCourse";
@@ -92,7 +93,7 @@ function RouteComponent() {
 				<div className="flex items-center justify-between">
 					<section className="ml-2 flex items-center gap-2">
 						<div className="flex h-6 w-6 items-center justify-center rounded-lg bg-foreground text-background">
-							<Zap size={12} fill="currentColor" />
+							<HugeiconsIcon icon={ZapIcon} size={12} fill="currentColor" />
 						</div>
 						<h2 className="font-medium">Opencircle</h2>
 					</section>
@@ -103,7 +104,7 @@ function RouteComponent() {
 						}
 						className="flex items-center gap-2 text-xs"
 					>
-						<ArrowLeft size={14} />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={14} />
 						<div>Back</div>
 					</button>
 				</div>

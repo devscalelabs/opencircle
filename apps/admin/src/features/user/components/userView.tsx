@@ -1,15 +1,16 @@
+import {
+	ArrowLeft01Icon,
+	Calendar01Icon,
+	Clock01Icon,
+	Mail01Icon,
+	SecurityCheckIcon,
+	UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { User } from "@opencircle/core";
 import { Button } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-	ArrowLeft,
-	Calendar,
-	Clock,
-	Mail,
-	Shield,
-	User as UserIcon,
-} from "lucide-react";
 
 interface UserViewProps {
 	user: User;
@@ -23,7 +24,7 @@ export const UserView = ({ user, onBan }: UserViewProps) => {
 			<div className="flex items-center justify-between">
 				<Link to="/users">
 					<Button size="sm">
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Users
 					</Button>
 				</Link>
@@ -58,21 +59,21 @@ export const UserView = ({ user, onBan }: UserViewProps) => {
 				{/* User Meta */}
 				<div className="flex flex-wrap items-center gap-6 text-sm">
 					<div className="flex items-center gap-2">
-						<UserIcon size={16} />
+						<HugeiconsIcon icon={UserIcon} size={16} />
 						<span>@{user.username}</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Mail size={16} />
+						<HugeiconsIcon icon={Mail01Icon} size={16} />
 						<span>{user.email}</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Calendar size={16} />
+						<HugeiconsIcon icon={Calendar01Icon} size={16} />
 						<span>
 							Joined {format(new Date(user.created_at), "MMM dd, yyyy")}
 						</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Clock size={16} />
+						<HugeiconsIcon icon={Clock01Icon} size={16} />
 						<span>
 							Updated {format(new Date(user.updated_at), "MMM dd, yyyy")}
 						</span>
@@ -116,7 +117,7 @@ export const UserView = ({ user, onBan }: UserViewProps) => {
 								Role
 							</label>
 							<p className="mt-1 flex items-center gap-2 text-sm capitalize">
-								<Shield size={14} />
+								<HugeiconsIcon icon={SecurityCheckIcon} size={14} />
 								{user.role}
 							</p>
 						</div>

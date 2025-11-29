@@ -1,7 +1,12 @@
+import {
+	ArrowLeft01Icon,
+	Delete01Icon,
+	PencilEdit01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { useInviteCode } from "../hooks/useInviteCode";
 
 interface InviteCodeViewProps {
@@ -54,7 +59,11 @@ export const InviteCodeView = ({
 				<div className="flex items-center gap-4">
 					<Link to="/invite-codes">
 						<Button variant="secondary" size="sm">
-							<ArrowLeft size={16} className="mr-2" />
+							<HugeiconsIcon
+								icon={ArrowLeft01Icon}
+								size={16}
+								className="mr-2"
+							/>
 							Back
 						</Button>
 					</Link>
@@ -63,7 +72,11 @@ export const InviteCodeView = ({
 				<div className="flex gap-2">
 					{onEdit && (
 						<Button variant="secondary" onClick={onEdit}>
-							<Edit size={16} className="mr-2" />
+							<HugeiconsIcon
+								icon={PencilEdit01Icon}
+								size={16}
+								className="mr-2"
+							/>
 							Edit
 						</Button>
 					)}
@@ -73,7 +86,7 @@ export const InviteCodeView = ({
 							onClick={handleDelete}
 							disabled={isDeleting}
 						>
-							<Trash2 size={16} className="mr-2" />
+							<HugeiconsIcon icon={Delete01Icon} size={16} className="mr-2" />
 							{isDeleting ? "Deleting..." : "Delete"}
 						</Button>
 					)}

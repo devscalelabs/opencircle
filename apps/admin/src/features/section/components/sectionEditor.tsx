@@ -13,6 +13,13 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+	Add01Icon,
+	Cancel01Icon,
+	DragDropVerticalIcon,
+	FloppyDiskIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type {
 	LessonCreate,
 	LessonUpdate,
@@ -20,7 +27,6 @@ import type {
 	SectionUpdate,
 } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
-import { GripVertical, Plus, Save, X } from "lucide-react";
 import { useState } from "react";
 import { useLessons } from "../../../features/lesson/hooks/useLessons";
 import { LessonEditor } from "../../lesson/components/lessonEditor";
@@ -160,13 +166,20 @@ export const SectionEditor = ({
 				<div className="space-y-4">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
-							<GripVertical className="h-5 w-5 cursor-move text-muted-foreground" />
+							<HugeiconsIcon
+								icon={DragDropVerticalIcon}
+								className="h-5 w-5 cursor-move text-muted-foreground"
+							/>
 							<h3 className="font-semibold text-lg">Section Editor</h3>
 						</div>
 						<div className="flex gap-2">
 							{onCancel && (
 								<Button type="button" onClick={onCancel}>
-									<X size={16} className="mr-2" />
+									<HugeiconsIcon
+										icon={Cancel01Icon}
+										size={16}
+										className="mr-2"
+									/>
 									Cancel
 								</Button>
 							)}
@@ -175,7 +188,11 @@ export const SectionEditor = ({
 								onClick={handleSubmit}
 								disabled={loading || !title.trim()}
 							>
-								<Save size={16} className="mr-2" />
+								<HugeiconsIcon
+									icon={FloppyDiskIcon}
+									size={16}
+									className="mr-2"
+								/>
 								{loading ? "Saving..." : "Save"}
 							</Button>
 						</div>
@@ -219,7 +236,7 @@ export const SectionEditor = ({
 								size="sm"
 								onClick={() => setShowLessonForm(true)}
 							>
-								<Plus size={14} className="mr-2" />
+								<HugeiconsIcon icon={Add01Icon} size={14} className="mr-2" />
 								Add Lesson
 							</Button>
 						</div>
@@ -289,7 +306,10 @@ export const SectionEditor = ({
 			>
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<GripVertical className="h-5 w-5 text-muted-foreground" />
+						<HugeiconsIcon
+							icon={DragDropVerticalIcon}
+							className="h-5 w-5 text-muted-foreground"
+						/>
 						<h3 className="font-medium">{title || "New Section"}</h3>
 						{description && (
 							<p className="line-clamp-1 text-muted-foreground text-sm">
@@ -357,7 +377,11 @@ export const SectionEditor = ({
 						<div className="flex gap-2">
 							{onCancel && (
 								<Button type="button" onClick={onCancel}>
-									<X size={16} className="mr-2" />
+									<HugeiconsIcon
+										icon={Cancel01Icon}
+										size={16}
+										className="mr-2"
+									/>
 									Cancel
 								</Button>
 							)}
@@ -366,7 +390,11 @@ export const SectionEditor = ({
 								onClick={handleSubmit}
 								disabled={loading || !title.trim()}
 							>
-								<Save size={16} className="mr-2" />
+								<HugeiconsIcon
+									icon={FloppyDiskIcon}
+									size={16}
+									className="mr-2"
+								/>
 								{loading ? "Saving..." : "Save Section"}
 							</Button>
 						</div>

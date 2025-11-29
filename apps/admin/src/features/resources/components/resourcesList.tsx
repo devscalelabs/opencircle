@@ -1,3 +1,12 @@
+import {
+	ArrowDown01Icon,
+	ArrowUp01Icon,
+	ArrowUpDownIcon,
+	Delete01Icon,
+	Link01Icon,
+	Search01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Resource } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
 import {
@@ -10,14 +19,6 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	ExternalLink,
-	Search,
-	Trash2,
-} from "lucide-react";
 import { useMemo, useState } from "react";
 
 interface ResourcesListProps {
@@ -45,11 +46,15 @@ export const ResourcesList = ({
 					>
 						URL
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -64,7 +69,11 @@ export const ResourcesList = ({
 						className="flex items-center gap-2 text-primary text-sm hover:underline"
 					>
 						<span className="max-w-xs truncate">{url}</span>
-						<ExternalLink size={14} className="flex-shrink-0" />
+						<HugeiconsIcon
+							icon={Link01Icon}
+							size={14}
+							className="flex-shrink-0"
+						/>
 					</a>
 				);
 			},
@@ -92,11 +101,15 @@ export const ResourcesList = ({
 					>
 						Channel
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -134,11 +147,15 @@ export const ResourcesList = ({
 					>
 						Created
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -169,7 +186,7 @@ export const ResourcesList = ({
 								variant="secondary"
 								onClick={() => onDelete(resource.id)}
 							>
-								<Trash2 size={14} />
+								<HugeiconsIcon icon={Delete01Icon} size={14} />
 								Delete
 							</Button>
 						)}
@@ -238,7 +255,11 @@ export const ResourcesList = ({
 			{/* Search Input */}
 			<div className="relative">
 				<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-					<Search size={16} className="text-foreground/40" />
+					<HugeiconsIcon
+						icon={Search01Icon}
+						size={16}
+						className="text-foreground/40"
+					/>
 				</div>
 				<Input
 					type="text"

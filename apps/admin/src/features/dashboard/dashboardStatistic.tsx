@@ -1,7 +1,13 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: The index errors is fine since for skeleton! */
 
+import {
+	Activity01Icon,
+	Book01Icon,
+	CheckmarkCircle02Icon,
+	UserMultiple02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { DashboardStats } from "@opencircle/core";
-import { Activity, BookOpen, CheckCircle, Users } from "lucide-react";
 import { StatCardSkeleton } from "./statCardSkeleton";
 
 interface DashboardStatsProps {
@@ -17,25 +23,25 @@ export const DashboardStatsCards = ({
 		{
 			title: "Total Users",
 			value: stats.totalUsers,
-			icon: Users,
+			icon: UserMultiple02Icon,
 			color: "text-foreground",
 		},
 		{
 			title: "Total Courses",
 			value: stats.totalCourses,
-			icon: BookOpen,
+			icon: Book01Icon,
 			color: "text-foreground",
 		},
 		{
 			title: "Active Enrollments",
 			value: stats.activeEnrollments,
-			icon: Activity,
+			icon: Activity01Icon,
 			color: "text-foreground",
 		},
 		{
 			title: "Total Enrollments",
 			value: stats.totalEnrollments,
-			icon: CheckCircle,
+			icon: CheckmarkCircle02Icon,
 			color: "text-foreground",
 		},
 	];
@@ -63,7 +69,10 @@ export const DashboardStatsCards = ({
 								</p>
 							</div>
 							<div className="rounded-lg p-3">
-								<Icon className={`h-6 w-6 ${card.color}`} />
+								<HugeiconsIcon
+									icon={Icon}
+									className={`h-6 w-6 ${card.color}`}
+								/>
 							</div>
 						</div>
 					</div>

@@ -1,3 +1,11 @@
+import {
+	ArrowDown01Icon,
+	ArrowUp01Icon,
+	ArrowUpDownIcon,
+	Search01Icon,
+	ViewIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { InviteCode } from "@opencircle/core";
 import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
@@ -11,7 +19,6 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowDown, ArrowUp, ArrowUpDown, Eye, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 interface InviteCodeListProps {
@@ -45,11 +52,15 @@ export const InviteCodeList = ({
 					>
 						Code
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -98,11 +109,15 @@ export const InviteCodeList = ({
 					>
 						Status
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -131,11 +146,15 @@ export const InviteCodeList = ({
 					>
 						Expires
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -176,11 +195,15 @@ export const InviteCodeList = ({
 					>
 						Created
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -211,7 +234,7 @@ export const InviteCodeList = ({
 								router.navigate({ to: `/invite-codes/${inviteCode.id}` });
 							}}
 						>
-							<Eye size={14} />
+							<HugeiconsIcon icon={ViewIcon} size={14} />
 							View Details
 						</Button>
 					</div>
@@ -277,7 +300,11 @@ export const InviteCodeList = ({
 			{/* Search Input */}
 			<div className="relative">
 				<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-					<Search size={16} className="text-foreground/40" />
+					<HugeiconsIcon
+						icon={Search01Icon}
+						size={16}
+						className="text-foreground/40"
+					/>
 				</div>
 				<Input
 					type="text"

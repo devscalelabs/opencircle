@@ -1,7 +1,14 @@
+import {
+	ArrowLeft01Icon,
+	Calendar01Icon,
+	Clock01Icon,
+	Delete01Icon,
+	UserMultiple02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { useInviteCode } from "../../../features/inviteCode/hooks/useInviteCode";
 
@@ -36,7 +43,7 @@ function RouteComponent() {
 			<div className="flex items-center justify-between">
 				<Link to="/invite-codes">
 					<Button size="sm">
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Invite Codes
 					</Button>
 				</Link>
@@ -46,7 +53,7 @@ function RouteComponent() {
 						onClick={() => setShowDeleteConfirm(true)}
 						disabled={isDeleting}
 					>
-						<Trash2 size={16} className="mr-2" />
+						<HugeiconsIcon icon={Delete01Icon} size={16} className="mr-2" />
 						{isDeleting ? "Deleting..." : "Delete Invite Code"}
 					</Button>
 				</div>
@@ -71,21 +78,21 @@ function RouteComponent() {
 				{/* Invite Code Meta */}
 				<div className="flex flex-wrap items-center gap-6 text-sm">
 					<div className="flex items-center gap-2">
-						<Users size={16} />
+						<HugeiconsIcon icon={UserMultiple02Icon} size={16} />
 						<span>
 							{inviteCode.used_count} /{" "}
 							{inviteCode.max_uses === 0 ? "∞" : inviteCode.max_uses} uses
 						</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Calendar size={16} />
+						<HugeiconsIcon icon={Calendar01Icon} size={16} />
 						<span>
 							Created {format(new Date(inviteCode.created_at), "MMM dd, yyyy")}
 						</span>
 					</div>
 					{inviteCode.expires_at && (
 						<div className="flex items-center gap-2">
-							<Clock size={16} />
+							<HugeiconsIcon icon={Clock01Icon} size={16} />
 							<span>
 								Expires{" "}
 								{format(new Date(inviteCode.expires_at), "MMM dd, yyyy")}

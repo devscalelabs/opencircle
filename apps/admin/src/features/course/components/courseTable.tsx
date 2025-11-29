@@ -1,3 +1,11 @@
+import {
+	ArrowDown01Icon,
+	ArrowUp01Icon,
+	ArrowUpDownIcon,
+	PencilEdit01Icon,
+	Search01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Course } from "@opencircle/core";
 import { Badge, Button, Input } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
@@ -10,7 +18,6 @@ import {
 	type SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, Edit, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { TableSkeleton } from "./tableSkeleton";
 
@@ -66,11 +73,15 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 					>
 						Title
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -102,11 +113,15 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 					>
 						Status
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -135,11 +150,15 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 					>
 						Price
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -186,11 +205,15 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 					>
 						Created
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -211,7 +234,7 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 							router.navigate({ to: `/courses/edit/${row.original.id}` });
 						}}
 					>
-						<Edit size={14} />
+						<HugeiconsIcon icon={PencilEdit01Icon} size={14} />
 						Edit
 					</Button>
 				</div>
@@ -258,7 +281,11 @@ export const CourseTable = ({ courses, isLoading }: CourseTableProps) => {
 			{/* Search Input */}
 			<div className="relative">
 				<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-					<Search size={16} className="text-foreground/40" />
+					<HugeiconsIcon
+						icon={Search01Icon}
+						size={16}
+						className="text-foreground/40"
+					/>
 				</div>
 				<Input
 					type="text"

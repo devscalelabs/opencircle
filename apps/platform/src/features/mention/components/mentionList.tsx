@@ -1,6 +1,7 @@
+import { Tick01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { User } from "@opencircle/core";
 import { Avatar } from "@opencircle/ui";
-import { Check } from "lucide-react";
 import { getInitials } from "../../../utils/common";
 
 interface MentionListProps {
@@ -91,7 +92,11 @@ export const MentionList = ({
 						</div>
 					</div>
 					{index === selectedIndex && (
-						<Check size={16} className="text-muted-foreground" />
+						<HugeiconsIcon
+							icon={Tick01Icon}
+							size={16}
+							className="text-muted-foreground"
+						/>
 					)}
 				</button>
 			))}

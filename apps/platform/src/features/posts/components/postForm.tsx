@@ -1,8 +1,14 @@
+import {
+	ArrowDown01Icon,
+	GridIcon,
+	Image01Icon,
+	SmileIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { ChevronDown, Hash, Image, Smile } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
@@ -196,11 +202,11 @@ export const PostForm = () => {
 						disabled={files.length >= 4}
 						className="text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						<Image strokeWidth={1.5} size={18} />
+						<HugeiconsIcon icon={Image01Icon} strokeWidth={1.5} size={18} />
 					</button>
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
-							<Smile strokeWidth={1.5} size={18} />
+							<HugeiconsIcon icon={SmileIcon} strokeWidth={1.5} size={18} />
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content side="right">
 							<EmojiPicker
@@ -216,11 +222,15 @@ export const PostForm = () => {
 					</DropdownMenu.Root>
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
-							<Hash strokeWidth={1.5} size={18} />
+							<HugeiconsIcon icon={GridIcon} strokeWidth={1.5} size={18} />
 							<span className="text-sm">
 								{selectedChannelName || "No channel"}
 							</span>
-							<ChevronDown strokeWidth={1.5} size={14} />
+							<HugeiconsIcon
+								icon={ArrowDown01Icon}
+								strokeWidth={1.5}
+								size={14}
+							/>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content
 							sideOffset={10}
