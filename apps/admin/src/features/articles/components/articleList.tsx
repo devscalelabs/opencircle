@@ -1,3 +1,12 @@
+import {
+	ArrowDown01Icon,
+	ArrowUp01Icon,
+	ArrowUpDownIcon,
+	Edit02Icon,
+	Search01Icon,
+	ViewIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, Input } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import {
@@ -10,14 +19,6 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	Edit,
-	Eye,
-	Search,
-} from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Article } from "../utils/types";
 import { TableSkeleton } from "./tableSkeleton";
@@ -43,11 +44,15 @@ export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 					>
 						Title
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -81,11 +86,15 @@ export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 					>
 						Created
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -114,11 +123,15 @@ export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 					>
 						Updated
 						{column.getIsSorted() === "asc" ? (
-							<ArrowUp size={14} />
+							<HugeiconsIcon icon={ArrowUp01Icon} size={14} />
 						) : column.getIsSorted() === "desc" ? (
-							<ArrowDown size={14} />
+							<HugeiconsIcon icon={ArrowDown01Icon} size={14} />
 						) : (
-							<ArrowUpDown size={14} className="opacity-50" />
+							<HugeiconsIcon
+								icon={ArrowUpDownIcon}
+								size={14}
+								className="opacity-50"
+							/>
 						)}
 					</button>
 				);
@@ -150,13 +163,13 @@ export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 									console.log("View article:", article);
 								}}
 							>
-								<Eye size={14} />
+								<HugeiconsIcon icon={ViewIcon} size={14} />
 								View
 							</Button>
 						</Link>
 						<Link to="/articles/edit/$id" params={{ id: article.id }}>
 							<Button size="sm" variant="secondary">
-								<Edit size={14} />
+								<HugeiconsIcon icon={Edit02Icon} size={14} />
 								Edit
 							</Button>
 						</Link>
@@ -201,7 +214,11 @@ export const ArticleList = ({ articles, loading }: ArticleListProps) => {
 			{/* Search Input */}
 			<div className="relative">
 				<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-					<Search size={16} className="text-foreground/40" />
+					<HugeiconsIcon
+						icon={Search01Icon}
+						size={16}
+						className="text-foreground/40"
+					/>
 				</div>
 				<Input
 					type="text"

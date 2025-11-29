@@ -1,6 +1,11 @@
+import {
+	FloppyDiskIcon,
+	ViewIcon,
+	ViewOffIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, Input } from "@opencircle/ui";
 import MDEditor from "@uiw/react-md-editor";
-import { Eye, EyeOff, Save } from "lucide-react";
 import { useState } from "react";
 import type {
 	CreateArticleRequest,
@@ -66,7 +71,7 @@ export const ArticleEditor = ({
 						type="submit"
 						disabled={loading || !title.trim() || !content.trim()}
 					>
-						<Save size={16} className="mr-2" />
+						<HugeiconsIcon icon={FloppyDiskIcon} size={16} className="mr-2" />
 						{loading ? "Saving..." : "Save"}
 					</Button>
 				</div>
@@ -97,9 +102,13 @@ export const ArticleEditor = ({
 								onClick={() => setShowPreview(!showPreview)}
 							>
 								{showPreview ? (
-									<EyeOff size={14} className="mr-1" />
+									<HugeiconsIcon
+										icon={ViewOffIcon}
+										size={14}
+										className="mr-1"
+									/>
 								) : (
-									<Eye size={14} className="mr-1" />
+									<HugeiconsIcon icon={ViewIcon} size={14} className="mr-1" />
 								)}
 								{showPreview ? "Edit" : "Preview"}
 							</Button>

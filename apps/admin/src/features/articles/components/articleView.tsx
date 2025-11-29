@@ -1,7 +1,14 @@
+import {
+	ArrowLeft01Icon,
+	Calendar01Icon,
+	Clock01Icon,
+	Edit02Icon,
+	User02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Edit, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -24,14 +31,14 @@ export const ArticleView = ({
 			<div className="flex items-center justify-between">
 				<Link to="/articles">
 					<Button size="sm">
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Articles
 					</Button>
 				</Link>
 				<div className="flex gap-2">
 					{onEdit && (
 						<Button onClick={onEdit}>
-							<Edit size={16} className="mr-2" />
+							<HugeiconsIcon icon={Edit02Icon} size={16} className="mr-2" />
 							Edit
 						</Button>
 					)}
@@ -52,19 +59,19 @@ export const ArticleView = ({
 				{/* Article Meta */}
 				<div className="flex flex-wrap items-center gap-6 text-sm">
 					<div className="flex items-center gap-2">
-						<User size={16} />
+						<HugeiconsIcon icon={User02Icon} size={16} />
 						<span>
 							{article.user?.name || article.user?.username || "Unknown Author"}
 						</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Calendar size={16} />
+						<HugeiconsIcon icon={Calendar01Icon} size={16} />
 						<span>
 							Created {format(new Date(article.created_at), "MMM dd, yyyy")}
 						</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<Clock size={16} />
+						<HugeiconsIcon icon={Clock01Icon} size={16} />
 						<span>
 							Updated {format(new Date(article.updated_at), "MMM dd, yyyy")}
 						</span>
@@ -94,7 +101,7 @@ export const ArticleView = ({
 						{onEdit && (
 							<Link to="/articles/edit/$id" params={{ id: article.id }}>
 								<Button>
-									<Edit size={16} className="mr-2" />
+									<HugeiconsIcon icon={Edit02Icon} size={16} className="mr-2" />
 									Edit Article
 								</Button>
 							</Link>

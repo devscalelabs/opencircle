@@ -1,6 +1,7 @@
+import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { METADATA } from "../../../constants/metadata";
 import { BroadcastView } from "../../../features/broadcast/components/broadcastView";
 import { useBroadcastSubmission } from "../../../features/broadcast/hooks/useBroadcastSubmission";
@@ -96,7 +97,7 @@ function RouteComponent() {
 			<div className="mb-6">
 				<Link to="/broadcast">
 					<Button variant="outline" size="sm">
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Broadcasts
 					</Button>
 				</Link>

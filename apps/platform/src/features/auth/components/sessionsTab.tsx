@@ -1,24 +1,25 @@
-import { Button } from "@opencircle/ui";
 import {
-	Globe,
-	Laptop,
-	Monitor,
-	Smartphone,
-	Tablet,
-	Trash2,
-} from "lucide-react";
+	ComputerIcon,
+	Delete01Icon,
+	GlobeIcon,
+	LaptopIcon,
+	SmartPhone01Icon,
+	Tablet01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Button } from "@opencircle/ui";
 import { useSessions } from "../hooks/useSessions";
 
 const getDeviceIcon = (deviceType?: string) => {
 	switch (deviceType) {
 		case "mobile":
-			return <Smartphone className="h-5 w-5" />;
+			return <HugeiconsIcon icon={SmartPhone01Icon} size={20} />;
 		case "tablet":
-			return <Tablet className="h-5 w-5" />;
+			return <HugeiconsIcon icon={Tablet01Icon} size={20} />;
 		case "desktop":
-			return <Monitor className="h-5 w-5" />;
+			return <HugeiconsIcon icon={ComputerIcon} size={20} />;
 		default:
-			return <Laptop className="h-5 w-5" />;
+			return <HugeiconsIcon icon={LaptopIcon} size={20} />;
 	}
 };
 
@@ -89,7 +90,7 @@ export const SessionsTab = () => {
 								<div className="flex items-center gap-2 text-foreground/50 text-xs">
 									{session.ip_address && (
 										<span className="flex items-center gap-1">
-											<Globe className="h-3 w-3" />
+											<HugeiconsIcon icon={GlobeIcon} size={12} />
 											{session.ip_address}
 										</span>
 									)}
@@ -110,7 +111,7 @@ export const SessionsTab = () => {
 							onClick={() => revokeSession(session.id)}
 							disabled={isRevoking}
 						>
-							<Trash2 className="mr-1 h-4 w-4" />
+							<HugeiconsIcon icon={Delete01Icon} size={16} className="mr-1" />
 							Revoke
 						</Button>
 					</div>

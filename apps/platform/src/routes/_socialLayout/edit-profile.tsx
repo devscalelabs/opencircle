@@ -1,5 +1,10 @@
+import {
+	Notification03Icon,
+	SecurityCheckIcon,
+	UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Bell, Shield, User } from "lucide-react";
 import { useState } from "react";
 import { METADATA } from "../../constants/metadata";
 import { SessionsTab } from "../../features/auth/components/sessionsTab";
@@ -53,7 +58,7 @@ function EditProfile() {
 								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
 						}`}
 					>
-						<User className="h-3.5 w-3.5" />
+						<HugeiconsIcon icon={UserIcon} size={14} />
 						Profile
 					</button>
 					<button
@@ -65,7 +70,7 @@ function EditProfile() {
 								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
 						}`}
 					>
-						<Bell className="h-3.5 w-3.5" />
+						<HugeiconsIcon icon={Notification03Icon} size={14} />
 						Notifications
 					</button>
 					<button
@@ -77,7 +82,7 @@ function EditProfile() {
 								: "text-foreground/50 hover:bg-background-secondary hover:text-foreground"
 						}`}
 					>
-						<Shield className="h-3.5 w-3.5" />
+						<HugeiconsIcon icon={SecurityCheckIcon} size={14} />
 						Sessions
 					</button>
 				</div>

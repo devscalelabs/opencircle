@@ -1,7 +1,12 @@
+import {
+	FloppyDiskIcon,
+	ViewIcon,
+	ViewOffSlashIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { LessonCreate, LessonType, LessonUpdate } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
 import MDEditor from "@uiw/react-md-editor";
-import { Eye, EyeOff, Save } from "lucide-react";
 import { useState } from "react";
 
 interface LessonEditorProps {
@@ -66,7 +71,7 @@ export const LessonEditor = ({
 						</Button>
 					)}
 					<Button type="submit" disabled={loading || !title.trim()}>
-						<Save size={16} className="mr-2" />
+						<HugeiconsIcon icon={FloppyDiskIcon} size={16} className="mr-2" />
 						{loading ? "Saving..." : "Save Lesson"}
 					</Button>
 				</div>
@@ -127,9 +132,13 @@ export const LessonEditor = ({
 								onClick={() => setShowPreview(!showPreview)}
 							>
 								{showPreview ? (
-									<EyeOff size={14} className="mr-1" />
+									<HugeiconsIcon
+										icon={ViewOffSlashIcon}
+										size={14}
+										className="mr-1"
+									/>
 								) : (
-									<Eye size={14} className="mr-1" />
+									<HugeiconsIcon icon={ViewIcon} size={14} className="mr-1" />
 								)}
 								{showPreview ? "Edit" : "Preview"}
 							</Button>

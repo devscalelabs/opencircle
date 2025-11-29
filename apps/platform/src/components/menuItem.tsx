@@ -1,7 +1,8 @@
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { Link } from "@tanstack/react-router";
 
 interface MenuItemProps {
-	icon: React.ReactNode;
+	icon: IconSvgElement;
 	label: string;
 	to?: string;
 }
@@ -9,7 +10,7 @@ interface MenuItemProps {
 export const MenuItem = ({ icon, label, to }: MenuItemProps) => {
 	const content = (
 		<>
-			{icon}
+			<HugeiconsIcon icon={icon} size={16} />
 			<span className="ml-3">{label}</span>
 		</>
 	);

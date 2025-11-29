@@ -1,3 +1,11 @@
+import {
+	Book01Icon,
+	LinkSquare02Icon,
+	News01Icon,
+	UserMultiple02Icon,
+	ZapIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type {
 	CourseEnrollmentDistribution,
 	DashboardStats,
@@ -6,14 +14,6 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-	BookOpen,
-	FileText,
-	Hash,
-	Link as LinkIcon,
-	Users,
-	Zap,
-} from "lucide-react";
 import { useId } from "react";
 import {
 	Area,
@@ -184,7 +184,10 @@ function RouteComponent() {
 							)}
 						</div>
 						<div className="p-3">
-							<Users className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={UserMultiple02Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</Link>
@@ -204,7 +207,10 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div className="p-3">
-							<BookOpen className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={Book01Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</Link>
@@ -224,7 +230,7 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div className="p-3">
-							<Hash className="h-6 w-6 text-foreground" />
+							<span className="text-2xl">#</span>
 						</div>
 					</div>
 				</Link>
@@ -243,7 +249,10 @@ function RouteComponent() {
 							</p>
 						</div>
 						<div className="p-3">
-							<FileText className="h-6 w-6 text-foreground" />
+							<HugeiconsIcon
+								icon={News01Icon}
+								className="h-6 w-6 text-foreground"
+							/>
 						</div>
 					</div>
 				</div>
@@ -422,28 +431,40 @@ function RouteComponent() {
 							to="/courses/new"
 							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
 						>
-							<BookOpen size={20} className="text-foreground" />
+							<HugeiconsIcon
+								icon={Book01Icon}
+								size={20}
+								className="text-foreground"
+							/>
 							<span className="text-foreground text-xs">New Course</span>
 						</Link>
 						<Link
 							to="/channels"
 							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
 						>
-							<Hash size={20} className="text-foreground" />
+							<span className="text-xl">#</span>
 							<span className="text-foreground text-xs">Channels</span>
 						</Link>
 						<Link
 							to="/invite-codes/new"
 							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
 						>
-							<Zap size={20} className="text-foreground" />
+							<HugeiconsIcon
+								icon={ZapIcon}
+								size={20}
+								className="text-foreground"
+							/>
 							<span className="text-foreground text-xs">Invite Code</span>
 						</Link>
 						<Link
 							to="/app-settings"
 							className="flex flex-col items-center gap-2 rounded-lg border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
 						>
-							<LinkIcon size={20} className="text-foreground" />
+							<HugeiconsIcon
+								icon={LinkSquare02Icon}
+								size={20}
+								className="text-foreground"
+							/>
 							<span className="text-foreground text-xs">Settings</span>
 						</Link>
 					</div>

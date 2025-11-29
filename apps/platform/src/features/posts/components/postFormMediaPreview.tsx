@@ -1,4 +1,5 @@
-import { X } from "lucide-react";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 interface PostFormMediaPreviewProps {
 	files: File[];
@@ -30,7 +31,7 @@ export const PostFormMediaPreview = ({
 						onClick={() => onRemoveFile(index)}
 						className="absolute top-2 right-2 rounded-full bg-background/80 p-1.5 text-foreground opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100"
 					>
-						<X size={14} />
+						<HugeiconsIcon icon={Cancel01Icon} size={14} />
 					</button>
 				</div>
 			))}

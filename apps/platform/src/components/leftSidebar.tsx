@@ -1,5 +1,11 @@
+import {
+	Book03FreeIcons,
+	Notification03Icon,
+	Video02FreeIcons,
+	ZapIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@tanstack/react-router";
-import { Bell, List, Paperclip, Video } from "lucide-react";
 import { useAppLinks } from "../features/appLinks/hooks/useAppLinks";
 import { useAppSettings } from "../features/appSettings/hooks/useAppSettings";
 import { ChannelList } from "../features/channels/components/channelList";
@@ -18,18 +24,14 @@ export const LeftSidebar = () => {
 					<Brand className="ml-2 w-[60%]" />
 				</Link>
 				<section className="font-medium">
-					<MenuItem icon={<List size={16} />} label="Timeline" to="/" />
-					<MenuItem
-						icon={<Paperclip size={16} />}
-						label="Articles"
-						to="/articles"
-					/>
-					<MenuItem icon={<Video size={16} />} label="Courses" to="/courses" />
+					<MenuItem icon={ZapIcon} label="Timeline" to="/" />
+					<MenuItem icon={Book03FreeIcons} label="Articles" to="/articles" />
+					<MenuItem icon={Video02FreeIcons} label="Courses" to="/courses" />
 					<Link
 						to="/notifications"
 						className="flex cursor-pointer items-center rounded-lg p-2 text-sm transition duration-150 hover:bg-primary"
 					>
-						<Bell size={16} />
+						<HugeiconsIcon icon={Notification03Icon} size={16} />
 						<span className="ml-3">Notifications</span>
 						<NotificationNumbers />
 					</Link>

@@ -1,5 +1,12 @@
+import {
+	AttachmentIcon,
+	Menu01Icon,
+	Notification03Icon,
+	UserIcon,
+	Video01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "@tanstack/react-router";
-import { Bell, List, Paperclip, User, Video } from "lucide-react";
 import { useAccount } from "../features/auth/hooks/useAccount";
 
 interface MobileNavItem {
@@ -10,22 +17,22 @@ interface MobileNavItem {
 
 const mobileNavItems: MobileNavItem[] = [
 	{
-		icon: <List size={20} />,
+		icon: <HugeiconsIcon icon={Menu01Icon} size={20} />,
 		label: "Timeline",
 		to: "/",
 	},
 	{
-		icon: <Paperclip size={20} />,
+		icon: <HugeiconsIcon icon={AttachmentIcon} size={20} />,
 		label: "Articles",
 		to: "/articles",
 	},
 	{
-		icon: <Video size={20} />,
+		icon: <HugeiconsIcon icon={Video01Icon} size={20} />,
 		label: "Courses",
 		to: "/courses",
 	},
 	{
-		icon: <Bell size={20} />,
+		icon: <HugeiconsIcon icon={Notification03Icon} size={20} />,
 		label: "Notifications",
 		to: "/notifications",
 	},
@@ -36,7 +43,7 @@ export const MobileBottomNav = () => {
 
 	const profileItem = account
 		? {
-				icon: <User size={20} />,
+				icon: <HugeiconsIcon icon={UserIcon} size={20} />,
 				label: "Profile",
 				to: `/${account.username}`,
 			}

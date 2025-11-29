@@ -12,6 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hugeicons/core-free-icons": "^2.0.0",
+    "@hugeicons/react": "^1.1.1",
     "@opencircle/core": "workspace:*",
     "@opencircle/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.14",

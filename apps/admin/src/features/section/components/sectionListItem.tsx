@@ -1,9 +1,10 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { DragDropVerticalIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Section } from "@opencircle/core";
 import { Button } from "@opencircle/ui";
 import { useRouter } from "@tanstack/react-router";
-import { GripVertical } from "lucide-react";
 
 interface SectionListItemProps {
 	section: Section;
@@ -47,7 +48,7 @@ export const SectionListItem = ({
 						{...attributes}
 						{...listeners}
 					>
-						<GripVertical size={20} />
+						<HugeiconsIcon icon={DragDropVerticalIcon} size={20} />
 					</button>
 					<div>
 						<h3 className="font-medium">{section.title}</h3>

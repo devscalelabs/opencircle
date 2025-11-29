@@ -1,7 +1,12 @@
+import {
+	FloppyDiskIcon,
+	ViewIcon,
+	ViewOffSlashIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, Input } from "@opencircle/ui";
 import { useQuery } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
-import { Eye, EyeOff, Save } from "lucide-react";
 import { useId, useState } from "react";
 import { api } from "../../../utils/api";
 import type {
@@ -86,7 +91,7 @@ export const BroadcastEditor = ({
 						type="submit"
 						disabled={loading || !subject.trim() || !content.trim()}
 					>
-						<Save size={16} className="mr-2" />
+						<HugeiconsIcon icon={FloppyDiskIcon} size={16} className="mr-2" />
 						{loading ? "Saving..." : "Save Draft"}
 					</Button>
 				</div>
@@ -117,9 +122,13 @@ export const BroadcastEditor = ({
 								onClick={() => setShowPreview(!showPreview)}
 							>
 								{showPreview ? (
-									<EyeOff size={14} className="mr-1" />
+									<HugeiconsIcon
+										icon={ViewOffSlashIcon}
+										size={14}
+										className="mr-1"
+									/>
 								) : (
-									<Eye size={14} className="mr-1" />
+									<HugeiconsIcon icon={ViewIcon} size={14} className="mr-1" />
 								)}
 								{showPreview ? "Edit" : "Preview"}
 							</Button>

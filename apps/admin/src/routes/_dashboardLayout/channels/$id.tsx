@@ -1,15 +1,16 @@
+import {
+	ArrowLeft01Icon,
+	Calendar01Icon,
+	Clock01Icon,
+	Delete01Icon,
+	GridIcon,
+	PencilEdit01Icon,
+	TextIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Badge, Button } from "@opencircle/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-	ArrowLeft,
-	Calendar,
-	Clock,
-	Hash,
-	Pencil,
-	Trash2,
-	Type,
-} from "lucide-react";
 import { useState } from "react";
 import { useChannel } from "../../../features/channels/hooks/useChannel";
 import { useDeleteChannel } from "../../../features/channels/hooks/useDeleteChannel";
@@ -53,7 +54,7 @@ function RouteComponent() {
 						to="/channels"
 						className="flex items-center text-muted-foreground text-sm transition-colors hover:text-foreground"
 					>
-						<ArrowLeft size={16} className="mr-2" />
+						<HugeiconsIcon icon={ArrowLeft01Icon} size={16} className="mr-2" />
 						Back to Channels
 					</Link>
 					<div className="flex items-center gap-4">
@@ -65,7 +66,7 @@ function RouteComponent() {
 								{channel.name}
 							</h1>
 							<div className="mt-1 flex items-center gap-2 text-muted-foreground text-sm">
-								<Hash size={14} />
+								<span>#</span>
 								<span className="font-mono">{channel.slug}</span>
 								<span>•</span>
 								<Badge
@@ -82,7 +83,7 @@ function RouteComponent() {
 				<div className="flex gap-3">
 					<Link to="/channels/edit/$id" params={{ id }}>
 						<Button variant="outline" className="gap-2">
-							<Pencil size={16} />
+							<HugeiconsIcon icon={PencilEdit01Icon} size={16} />
 							Edit Channel
 						</Button>
 					</Link>
@@ -92,7 +93,7 @@ function RouteComponent() {
 						disabled={isDeleting}
 						className="gap-2"
 					>
-						<Trash2 size={16} />
+						<HugeiconsIcon icon={Delete01Icon} size={16} />
 						Delete
 					</Button>
 				</div>
@@ -132,13 +133,13 @@ function RouteComponent() {
 						<div className="grid gap-6 p-6 sm:grid-cols-2">
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Hash size={14} /> Channel ID
+									<HugeiconsIcon icon={GridIcon} size={14} /> Channel ID
 								</label>
 								<p className="mt-2 font-mono text-sm">{channel.id}</p>
 							</div>
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Type size={14} /> Type
+									<HugeiconsIcon icon={TextIcon} size={14} /> Type
 								</label>
 								<p className="mt-2 text-sm capitalize">{channel.type}</p>
 							</div>
@@ -156,7 +157,7 @@ function RouteComponent() {
 						<div className="space-y-4 p-6">
 							<div>
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Calendar size={14} /> Created At
+									<HugeiconsIcon icon={Calendar01Icon} size={14} /> Created At
 								</label>
 								<p className="mt-1 text-sm">
 									{format(new Date(channel.created_at), "PPP")}
@@ -167,7 +168,7 @@ function RouteComponent() {
 							</div>
 							<div className="border-border border-t pt-4">
 								<label className="flex items-center gap-2 font-medium text-muted-foreground text-xs uppercase">
-									<Clock size={14} /> Last Updated
+									<HugeiconsIcon icon={Clock01Icon} size={14} /> Last Updated
 								</label>
 								<p className="mt-1 text-sm">
 									{format(new Date(channel.updated_at), "PPP")}
@@ -188,7 +189,7 @@ function RouteComponent() {
 						<div className="bg-destructive/10 p-6 pb-4">
 							<div className="flex items-center gap-4">
 								<div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/20 text-destructive">
-									<Trash2 size={24} />
+									<HugeiconsIcon icon={Delete01Icon} size={24} />
 								</div>
 								<div>
 									<h3 className="font-semibold text-destructive text-lg">

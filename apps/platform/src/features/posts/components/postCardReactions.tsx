@@ -1,6 +1,7 @@
+import { SmileIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { Post, ReactionsByEmoji } from "@opencircle/core";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { Smile } from "lucide-react";
 import { DropdownMenu, HoverCard, ScrollArea } from "radix-ui";
 import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
@@ -66,7 +67,11 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 							{!post.reactions.summary.some((reaction) => reaction.me) && (
 								<DropdownMenu.Root>
 									<DropdownMenu.Trigger className="ml-1">
-										<Smile strokeWidth={1.5} size={16} />
+										<HugeiconsIcon
+											icon={SmileIcon}
+											strokeWidth={1.5}
+											size={16}
+										/>
 									</DropdownMenu.Trigger>
 									<DropdownMenu.Content align="start" side="bottom">
 										<EmojiPicker
@@ -142,7 +147,7 @@ export const PostCardReactions = ({ post }: PostCardReactionsProps) => {
 				<div className="flex items-center gap-2">
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
-							<Smile strokeWidth={1.5} size={18} />
+							<HugeiconsIcon icon={SmileIcon} strokeWidth={1.5} size={18} />
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content align="start" side="bottom">
 							<EmojiPicker

@@ -1,7 +1,8 @@
+import { Comment01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Avatar } from "@opencircle/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
 import MDEditor from "@uiw/react-md-editor";
-import { MessageCircle } from "lucide-react";
 import { getInitials } from "../../../utils/common";
 import { PostCardReactions } from "../../posts/components/postCardReactions";
 import { PostCommentSummary } from "../../posts/components/postCommentSummary";
@@ -59,7 +60,7 @@ export const ArticleList = () => {
 						<section className="mt-4 flex items-center gap-4">
 							<PostCardReactions post={article} />
 							<div className="flex items-center gap-2 text-sm">
-								<MessageCircle size={18} />
+								<HugeiconsIcon icon={Comment01Icon} size={18} />
 								<div>{article.comment_count}</div>
 							</div>
 							{article.comment_summary?.names && (

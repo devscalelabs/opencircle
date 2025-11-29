@@ -1,6 +1,12 @@
+import {
+	Cancel01Icon,
+	FloppyDiskIcon,
+	Settings01Icon,
+	Upload01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { AppSettingsUpdate } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
-import { Save, Settings, Upload, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../../../utils/api";
@@ -110,7 +116,7 @@ export function AppSettings() {
 		<main className="max-w-4xl p-6">
 			<div className="mb-6">
 				<h1 className="flex items-center gap-2 font-medium text-2xl">
-					<Settings className="h-6 w-6" />
+					<HugeiconsIcon icon={Settings01Icon} size={24} className="h-6 w-6" />
 					App Settings
 				</h1>
 				<p className="mt-1 text-muted-foreground">
@@ -154,7 +160,11 @@ export function AppSettings() {
 								{isUploadingLogo ? (
 									<div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
 								) : (
-									<Upload className="h-4 w-4" />
+									<HugeiconsIcon
+										icon={Upload01Icon}
+										size={16}
+										className="h-4 w-4"
+									/>
 								)}
 								{isUploadingLogo ? "Uploading..." : "Upload Logo"}
 							</Button>
@@ -174,7 +184,11 @@ export function AppSettings() {
 									className="h-16 w-16 rounded border object-contain"
 								/>
 								<Button type="button" size="sm" onClick={handleDeleteLogo}>
-									<X className="h-4 w-4" />
+									<HugeiconsIcon
+										icon={Cancel01Icon}
+										size={16}
+										className="h-4 w-4"
+									/>
 								</Button>
 							</div>
 						)}
@@ -225,7 +239,11 @@ export function AppSettings() {
 								</>
 							) : (
 								<>
-									<Save className="mr-2 h-4 w-4" />
+									<HugeiconsIcon
+										icon={FloppyDiskIcon}
+										size={16}
+										className="mr-2 h-4 w-4"
+									/>
 									Save Changes
 								</>
 							)}

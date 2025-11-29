@@ -1,6 +1,7 @@
+import { MoreVerticalIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Avatar, Button } from "@opencircle/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { EllipsisVertical } from "lucide-react";
 import moment from "moment";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
@@ -84,7 +85,7 @@ function PostDetail() {
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild>
 							<div className="absolute top-4 right-4 flex h-6 w-6 items-center justify-center rounded-lg bg-background-secondary">
-								<EllipsisVertical size={12} className="" />
+								<HugeiconsIcon icon={MoreVerticalIcon} size={12} />
 							</div>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content

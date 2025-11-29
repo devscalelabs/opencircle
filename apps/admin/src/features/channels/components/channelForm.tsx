@@ -1,7 +1,8 @@
+import { SmileIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { ChannelCreate, ChannelType } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { Smile } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
 import slugify from "slugify";
@@ -112,7 +113,7 @@ export const ChannelForm = ({
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger asChild>
 								<Button type="button" variant="secondary" size="md">
-									<Smile strokeWidth={1.5} size={18} />
+									<HugeiconsIcon icon={SmileIcon} strokeWidth={1.5} size={18} />
 								</Button>
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content side="right">

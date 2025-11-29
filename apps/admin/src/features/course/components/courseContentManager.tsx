@@ -13,9 +13,10 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Add01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { SectionCreate, SectionUpdate } from "@opencircle/core";
 import { Button } from "@opencircle/ui";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import { SectionEditor } from "../../../features/section/components/sectionEditor";
 import { SectionListItem } from "../../../features/section/components/sectionListItem";
@@ -129,7 +130,7 @@ export const CourseContentManager = ({
 					onClick={() => setShowSectionForm(true)}
 					disabled={showSectionForm}
 				>
-					<Plus size={16} className="mr-2" />
+					<HugeiconsIcon icon={Add01Icon} size={16} className="mr-2" />
 					Add Section
 				</Button>
 			</div>
@@ -156,7 +157,7 @@ export const CourseContentManager = ({
 						Start building your course by adding your first section.
 					</p>
 					<Button onClick={() => setShowSectionForm(true)}>
-						<Plus size={16} className="mr-2" />
+						<HugeiconsIcon icon={Add01Icon} size={16} className="mr-2" />
 						Create First Section
 					</Button>
 				</div>

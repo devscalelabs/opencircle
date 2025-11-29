@@ -1,10 +1,11 @@
+import { FloppyDiskIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type {
 	CourseCreate,
 	CourseStatus,
 	CourseUpdate,
 } from "@opencircle/core";
 import { Button, Input } from "@opencircle/ui";
-import { Save } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useId, useState } from "react";
 import { CourseContentManager } from "./courseContentManager";
@@ -99,7 +100,7 @@ export const CourseEditor = ({
 							disabled={loading || !title.trim()}
 							className="min-w-[100px]"
 						>
-							<Save size={16} className="mr-2" />
+							<HugeiconsIcon icon={FloppyDiskIcon} size={16} className="mr-2" />
 							{loading ? "Saving..." : "Save Course"}
 						</Button>
 					</div>

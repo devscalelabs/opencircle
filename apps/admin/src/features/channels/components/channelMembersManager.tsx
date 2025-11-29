@@ -1,6 +1,7 @@
+import { Loading02Icon, Search01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { ChannelMember, User } from "@opencircle/core";
 import { Input } from "@opencircle/ui";
-import { Loader2, Search } from "lucide-react";
 import { ScrollArea } from "radix-ui";
 import { useMemo, useState } from "react";
 import { useUsers } from "../../user/hooks/useUsers";
@@ -74,7 +75,10 @@ export const ChannelMembersManager = ({
 	if (isUsersLoading || isMembersLoading) {
 		return (
 			<div className="flex items-center justify-center py-8">
-				<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+				<HugeiconsIcon
+					icon={Loading02Icon}
+					className="h-6 w-6 animate-spin text-muted-foreground"
+				/>
 			</div>
 		);
 	}
@@ -92,7 +96,10 @@ export const ChannelMembersManager = ({
 				</div>
 				<div className="border-border border-b p-2">
 					<div className="relative">
-						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<HugeiconsIcon
+							icon={Search01Icon}
+							className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground"
+						/>
 						<Input
 							placeholder="Search by name or username..."
 							value={availableSearch}
@@ -118,7 +125,10 @@ export const ChannelMembersManager = ({
 										className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
 									>
 										{pendingUserId === user.id ? (
-											<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+											<HugeiconsIcon
+												icon={Loading02Icon}
+												className="h-8 w-8 animate-spin text-muted-foreground"
+											/>
 										) : (
 											<div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary font-medium text-xs">
 												{user.name?.[0]?.toUpperCase() ||
@@ -156,7 +166,10 @@ export const ChannelMembersManager = ({
 				</div>
 				<div className="border-border border-b p-2">
 					<div className="relative">
-						<Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<HugeiconsIcon
+							icon={Search01Icon}
+							className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground"
+						/>
 						<Input
 							placeholder="Search by name or username..."
 							value={memberSearch}
@@ -182,7 +195,10 @@ export const ChannelMembersManager = ({
 										className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
 									>
 										{pendingUserId === user.id ? (
-											<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+											<HugeiconsIcon
+												icon={Loading02Icon}
+												className="h-8 w-8 animate-spin text-muted-foreground"
+											/>
 										) : (
 											<div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary font-medium text-xs">
 												{user.name?.[0]?.toUpperCase() ||
