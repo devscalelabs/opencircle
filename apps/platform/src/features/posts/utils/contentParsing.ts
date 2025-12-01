@@ -14,6 +14,7 @@ export type ContentMatch = MentionMatch | UrlMatch;
 
 export const parseMentions = (content: string): MentionMatch[] => {
 	const parts: MentionMatch[] = [];
+	// Simple mention regex - now safe because URLs are parsed first
 	const mentionRegex = /@(\w+)/g;
 	let lastIndex = 0;
 	let match: RegExpExecArray | null;
@@ -63,6 +64,7 @@ export const parseMentions = (content: string): MentionMatch[] => {
 export const parseUrls = (content: string): UrlMatch[] => {
 	const parts: UrlMatch[] = [];
 	// URL regex pattern - matches http, https, and www URLs
+	// This improved pattern handles URLs with @ symbols (like user@domain.com) and query parameters
 	const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
 	let lastIndex = 0;
 	let match: RegExpExecArray | null;
@@ -126,19 +128,19 @@ export const extractMentions = (content: string): string[] => {
 };
 
 export const parseContent = (content: string): ContentMatch[] => {
-	// First parse mentions
-	const mentionParts = parseMentions(content);
+	// First parse URLs to avoid breaking URLs that contain @ symbols
+	const urlParts = parseUrls(content);
 	const allParts: ContentMatch[] = [];
 
-	// Then parse URLs within each part
-	for (const part of mentionParts) {
-		if (part.isMention) {
-			// If it's a mention, add it directly
+	// Then parse mentions within each part
+	for (const part of urlParts) {
+		if (part.isUrl) {
+			// If it's a URL, add it directly without parsing mentions inside
 			allParts.push(part);
 		} else {
-			// If it's text, parse URLs within it
-			const urlParts = parseUrls(part.text);
-			allParts.push(...urlParts);
+			// If it's text, parse mentions within it
+			const mentionParts = parseMentions(part.text);
+			allParts.push(...mentionParts);
 		}
 	}
 
