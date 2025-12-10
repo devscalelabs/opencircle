@@ -3,7 +3,7 @@ import { api } from "../../../utils/api";
 
 export const useUsers = (
 	skip: number = 0,
-	limit: number = 100,
+	limit: number = 500,
 	query?: string,
 ) => {
 	const { data, isLoading, isError, error } = useQuery({
