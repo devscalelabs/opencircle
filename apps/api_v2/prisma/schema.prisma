@@ -1,0 +1,643 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum PostType {
+  post
+  comment
+  article
+  poll
+}
+
+enum ChannelType {
+  public
+  private
+}
+
+enum NotificationType {
+  mention
+  like
+  reply
+}
+
+enum NotificationFrequency {
+  immediate
+  daily
+  weekly
+  none
+}
+
+enum ActivityType {
+  create_post
+  like_post
+  comment_post
+  login
+  logout
+}
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+enum LessonType {
+  video
+  text
+  quiz
+  assignment
+}
+
+enum EnrollmentStatus {
+  active
+  completed
+  dropped
+}
+
+enum InviteCodeStatus {
+  active
+  used
+  expired
+}
+
+enum PasswordResetStatus {
+  active
+  used
+  expired
+}
+
+enum EmailVerificationStatus {
+  active
+  used
+  expired
+}
+
+enum RefreshTokenStatus {
+  active
+  revoked
+  expired
+}
+
+enum BroadcastStatus {
+  draft
+  sending
+  sent
+  failed
+}
+
+enum BroadcastRecipientType {
+  all_users
+  test_email
+  channel_members
+}
+
+enum BroadcastRecipientStatus {
+  pending
+  sent
+  failed
+}
+
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String?
+  bio          String?
+  username     String   @unique
+  email        String   @unique
+  password     String?
+  isActive     Boolean  @default(false) @map("is_active")
+  isVerified   Boolean  @default(false) @map("is_verified")
+  avatarUrl    String?  @map("avatar_url")
+  role         Role     @default(user)
+  inviteCodeId String?  @map("invite_code_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  settings                UserSettings?
+  social                  UserSocial?
+  posts                   Post[]
+  medias                  Media[]
+  resources               Resource[]
+  channelMembers          ChannelMember[]
+  reactions               Reaction[]
+  sentNotifications       Notification[]          @relation("SentNotifications")
+  receivedNotifications   Notification[]          @relation("ReceivedNotifications")
+  notificationPreferences NotificationPreferences?
+  passwordResets          PasswordReset[]
+  emailVerifications      EmailVerification[]
+  refreshTokens           RefreshToken[]
+  inviteCode              InviteCode?              @relation("InviteCodeUsedBy", fields: [inviteCodeId], references: [id])
+  courses                 Course[]
+  enrollments             EnrolledCourse[]
+  activities              Activity[]
+  presences               UserPresence[]
+  createdBroadcasts       Broadcast[]              @relation("BroadcastCreator")
+  createdInviteCodes      InviteCode[]              @relation("InviteCodeCreator")
+  broadcastRecipients     BroadcastRecipient[]
+  pendingNotificationEmails PendingNotificationEmail[] @relation("PendingNotificationEmailUser")
+
+  @@index([username])
+  @@index([email])
+  @@index([password])
+  @@map("users")
+}
+
+model UserSettings {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @unique @map("user_id") @db.Uuid
+  isOnboarded Boolean @default(false) @map("is_onboarded")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_settings")
+}
+
+model UserSocial {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @unique @map("user_id") @db.Uuid
+  twitterUrl String? @map("twitter_url")
+  linkedinUrl String? @map("linkedin_url")
+  githubUrl  String?  @map("github_url")
+  websiteUrl String?  @map("website_url")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_social")
+}
+
+model Post {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String?
+  content   String
+  type      PostType @default(post)
+  userId    String   @map("user_id") @db.Uuid
+  channelId String?  @map("channel_id") @db.Uuid
+  parentId  String?  @map("parent_id") @db.Uuid
+  isPinned  Boolean  @default(false) @map("is_pinned")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user     User      @relation(fields: [userId], references: [id])
+  channel  Channel?  @relation(fields: [channelId], references: [id])
+  parent   Post?     @relation("PostReplies", fields: [parentId], references: [id])
+  replies  Post[]    @relation("PostReplies")
+  medias   Media[]
+  reactions Reaction[]
+
+  @@index([userId])
+  @@index([channelId])
+  @@index([parentId])
+  @@map("posts")
+}
+
+model Media {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url       String
+  postId    String?  @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  post Post? @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([url])
+  @@index([postId])
+  @@index([userId])
+  @@map("medias")
+}
+
+model Channel {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  emoji       String      @default("😊")
+  name        String
+  description String?
+  slug        String      @unique
+  type        ChannelType @default(public)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?   @map("deleted_at")
+
+  members            ChannelMember[]
+  posts              Post[]
+  resources          Resource[]
+  inviteCodes        InviteCode[]  @relation("InviteCodeTargetChannel")
+  broadcasts         Broadcast[]    @relation("BroadcastChannel")
+
+  @@index([name])
+  @@map("channels")
+}
+
+model ChannelMember {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  channelId String   @map("channel_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  channel Channel @relation(fields: [channelId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([channelId, userId])
+  @@index([channelId])
+  @@index([userId])
+  @@map("channel_members")
+}
+
+model Reaction {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  emoji     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId, emoji])
+  @@index([userId])
+  @@index([postId])
+  @@map("reactions")
+}
+
+model Activity {
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String       @map("user_id") @db.Uuid
+  type       ActivityType
+  targetId   String?      @map("target_id")
+  targetType String?      @map("target_type")
+  data       Json?
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
+  deletedAt  DateTime?    @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("activities")
+}
+
+model Notification {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recipientId String           @map("recipient_id") @db.Uuid
+  senderId    String           @map("sender_id") @db.Uuid
+  type        NotificationType
+  data        Json?
+  isRead      Boolean          @default(false) @map("is_read")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?        @map("deleted_at")
+
+  recipient           User @relation("ReceivedNotifications", fields: [recipientId], references: [id])
+  sender              User @relation("SentNotifications", fields: [senderId], references: [id])
+  pendingEmails       PendingNotificationEmail[] @relation("PendingNotificationEmailNotification")
+
+  @@index([recipientId])
+  @@index([senderId])
+  @@map("notifications")
+}
+
+model NotificationPreferences {
+  id          String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String               @unique @map("user_id") @db.Uuid
+  mentionEmail NotificationFrequency @default(immediate) @map("mention_email")
+  likeEmail    NotificationFrequency @default(daily) @map("like_email")
+  replyEmail   NotificationFrequency @default(immediate) @map("reply_email")
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?            @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("notification_preferences")
+}
+
+model PendingNotificationEmail {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String             @map("user_id") @db.Uuid
+  notificationId   String             @map("notification_id") @db.Uuid
+  notificationType NotificationType   @map("notification_type")
+  frequency        NotificationFrequency
+  scheduledFor     DateTime           @map("scheduled_for")
+  isSent           Boolean            @default(false) @map("is_sent")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @default(now()) @updatedAt @map("updated_at")
+  deletedAt        DateTime?          @map("deleted_at")
+
+  user         User         @relation("PendingNotificationEmailUser", fields: [userId], references: [id])
+  notification Notification @relation("PendingNotificationEmailNotification", fields: [notificationId], references: [id])
+
+  @@index([userId])
+  @@index([notificationId])
+  @@index([scheduledFor])
+  @@index([isSent])
+  @@map("pending_notification_emails")
+}
+
+model Course {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  description  String?
+  thumbnailUrl String?      @map("thumbnail_url")
+  status       CourseStatus @default(draft)
+  instructorId String      @map("instructor_id") @db.Uuid
+  price        Float?
+  isFeatured   Boolean      @default(false) @map("is_featured")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
+  deletedAt    DateTime?    @map("deleted_at")
+
+  instructor  User            @relation(fields: [instructorId], references: [id])
+  sections    Section[]
+  enrollments EnrolledCourse[]
+
+  @@index([title])
+  @@index([instructorId])
+  @@map("courses")
+}
+
+model Section {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  order       Int
+  courseId    String   @map("course_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  course  Course   @relation(fields: [courseId], references: [id])
+  lessons Lesson[]
+
+  @@index([title])
+  @@index([courseId])
+  @@map("sections")
+}
+
+model Lesson {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  content   String?
+  videoUrl  String?    @map("video_url")
+  order     Int
+  type      LessonType @default(text)
+  sectionId String     @map("section_id") @db.Uuid
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+
+  section Section @relation(fields: [sectionId], references: [id])
+
+  @@index([title])
+  @@index([sectionId])
+  @@map("lessons")
+}
+
+model EnrolledCourse {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String           @map("user_id") @db.Uuid
+  courseId    String           @map("course_id") @db.Uuid
+  status      EnrollmentStatus @default(active)
+  enrolledAt  DateTime?       @map("enrolled_at")
+  completedAt DateTime?       @map("completed_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?       @map("deleted_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("enrolled_courses")
+}
+
+model InviteCode {
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code              String           @unique
+  maxUses           Int              @default(1) @map("max_uses")
+  usedCount         Int              @default(0) @map("used_count")
+  expiresAt         DateTime?        @map("expires_at")
+  status            InviteCodeStatus @default(active)
+  createdBy         String           @map("created_by") @db.Uuid
+  autoJoinChannelId String?          @map("auto_join_channel_id") @db.Uuid
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @default(now()) @updatedAt @map("updated_at")
+  deletedAt         DateTime?        @map("deleted_at")
+
+  createdByUser  User     @relation("InviteCodeCreator", fields: [createdBy], references: [id])
+  targetChannel  Channel? @relation("InviteCodeTargetChannel", fields: [autoJoinChannelId], references: [id])
+  usedBy         User[]   @relation("InviteCodeUsedBy")
+
+  @@index([code])
+  @@map("invite_codes")
+}
+
+model PasswordReset {
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code      String               @unique
+  email     String
+  status    PasswordResetStatus  @default(active)
+  expiresAt DateTime             @map("expires_at")
+  userId    String               @map("user_id") @db.Uuid
+  createdAt DateTime             @default(now()) @map("created_at")
+  updatedAt DateTime             @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime?            @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([code])
+  @@index([email])
+  @@map("password_resets")
+}
+
+model EmailVerification {
+  id        String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code      String                  @unique
+  email     String
+  status    EmailVerificationStatus @default(active)
+  expiresAt DateTime                @map("expires_at")
+  userId    String                  @map("user_id") @db.Uuid
+  createdAt DateTime                @default(now()) @map("created_at")
+  updatedAt DateTime                @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime?               @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([code])
+  @@index([email])
+  @@map("email_verifications")
+}
+
+model RefreshToken {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tokenHash   String              @unique @map("token_hash")
+  userId      String              @map("user_id") @db.Uuid
+  status      RefreshTokenStatus  @default(active)
+  expiresAt   DateTime            @map("expires_at")
+  deviceName  String?             @map("device_name")
+  deviceType  String?             @map("device_type")
+  browser     String?
+  os          String?
+  ipAddress   String?             @map("ip_address")
+  lastUsedAt  DateTime?           @map("last_used_at")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?           @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([tokenHash])
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model UrlPreview {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url         String    @unique
+  title       String?
+  description String?
+  imageUrl    String?   @map("image_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([url])
+  @@map("url_previews")
+}
+
+model Resource {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url         String
+  description String?
+  userId      String    @map("user_id") @db.Uuid
+  channelId   String    @map("channel_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
+
+  @@index([url])
+  @@index([userId])
+  @@index([channelId])
+  @@map("resources")
+}
+
+model AppSettings {
+  id                      String   @id @default("singleton")
+  appName                 String   @default("OpenCircle") @map("app_name")
+  appLogoUrl              String?  @map("app_logo_url")
+  enableSignUp            Boolean  @default(true) @map("enable_sign_up")
+  enableOpencircleBranding Boolean @default(true) @map("enable_opencircle_branding")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @default(now()) @updatedAt @map("updated_at")
+  deletedAt               DateTime? @map("deleted_at")
+
+  @@map("app_settings")
+}
+
+model AppLink {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  label     String
+  url       String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([url])
+  @@map("app_links")
+}
+
+model UserPresence {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  connectionId      String    @map("connection_id")
+  connectedAt      DateTime  @map("connected_at")
+  disconnectedAt    DateTime? @map("disconnected_at")
+  durationSeconds  Float?    @map("duration_seconds")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([connectionId])
+  @@index([connectedAt])
+  @@index([disconnectedAt])
+  @@map("user_presences")
+}
+
+model Broadcast {
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subject        String
+  content        String
+  recipientType  BroadcastRecipientType @default(test_email) @map("recipient_type")
+  testEmail      String?              @map("test_email")
+  channelId      String?              @map("channel_id") @db.Uuid
+  status         BroadcastStatus      @default(draft)
+  sentAt         DateTime?            @map("sent_at")
+  sentCount      Int                  @default(0) @map("sent_count")
+  failedCount    Int                  @default(0) @map("failed_count")
+  createdBy      String               @map("created_by") @db.Uuid
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @default(now()) @updatedAt @map("updated_at")
+  deletedAt      DateTime?            @map("deleted_at")
+
+  creator   User                 @relation("BroadcastCreator", fields: [createdBy], references: [id])
+  channel   Channel?             @relation("BroadcastChannel", fields: [channelId], references: [id])
+  recipients BroadcastRecipient[]
+
+  @@index([subject])
+  @@index([createdBy])
+  @@map("broadcasts")
+}
+
+model BroadcastRecipient {
+  id          String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  broadcastId String                  @map("broadcast_id") @db.Uuid
+  userId      String?                 @map("user_id") @db.Uuid
+  email       String
+  status      BroadcastRecipientStatus @default(pending)
+  sentAt      DateTime?               @map("sent_at")
+  errorMessage String?                @map("error_message")
+  createdAt   DateTime                @default(now()) @map("created_at")
+  updatedAt   DateTime                @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?               @map("deleted_at")
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id])
+  user      User?      @relation(fields: [userId], references: [id])
+
+  @@index([broadcastId])
+  @@index([userId])
+  @@index([email])
+  @@map("broadcast_recipients")
+}

@@ -1,0 +1,42 @@
+id: api-v2
+language: typescript
+
+tasks:
+  format:
+    command: "pnpm exec biome format --write src/"
+    options:
+      runInCI: false
+
+  lint:
+    command: "pnpm exec biome check src/"
+
+  lint-fix:
+    command: "pnpm exec biome check --write --unsafe src/"
+    options:
+      runInCI: false
+
+  typecheck:
+    command: "pnpm typecheck"
+
+  sync:
+    command: "pnpm install"
+    options:
+      runInCI: false
+
+  dev:
+    command: "pnpm dev"
+    options:
+      runInCI: false
+
+  build:
+    command: "pnpm build"
+
+  db-generate:
+    command: "pnpm db:generate"
+    options:
+      runInCI: false
+
+  db-migrate:
+    command: "pnpm db:migrate:dev"
+    options:
+      runInCI: false
